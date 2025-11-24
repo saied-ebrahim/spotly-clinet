@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import Header from "@/components/Layout/Header";
 
 export default async function MainLayout({
   children,

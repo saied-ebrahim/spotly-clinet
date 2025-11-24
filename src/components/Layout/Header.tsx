@@ -2,7 +2,7 @@
 import LinkTo from "@/components/Global/LinkTo";
 import { homeLinks } from "@/modules/Header";
 import { useTranslations } from "next-intl";
-import LanguageSwitcher from "./LanguageSwitcher";
+import LanguageSwitcher from "../LanguageSwitcher";
 import { useRouter } from "@/i18n/navigation";
 
 function Header() {
