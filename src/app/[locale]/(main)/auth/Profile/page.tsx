@@ -26,8 +26,8 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 pt-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-      <div className="max-w-6xl mx-auto h-[calc(100vh-6rem)] my-4">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 pt-24 pb-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto h-[calc(100vh-8rem)] mb-8">
         <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl overflow-hidden border border-white/20 animate-fade-in h-full">
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-0 h-full">
             {/* Sidebar */}
