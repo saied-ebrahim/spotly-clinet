@@ -1,47 +1,117 @@
 "use client";
-import LinkTo from "@/components/Global/LinkTo";
-import { homeLinks } from "@/modules/Header";
-import { useTranslations } from "next-intl";
-import LanguageSwitcher from "../LanguageSwitcher";
-import { useRouter } from "@/i18n/navigation";
 
-function Header() {
-  const t = useTranslations("");
-  const router = useRouter();
+import { useState } from "react";
+import Link from "next/link";
+import { useLocale } from "next-intl";
+import { usePathname } from "next/navigation";
+import SpotlyLogo from "@/components/Layout/SpotlyLogo";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+
+export default function Header() {
+  const pathname = usePathname();
+  const locale = useLocale();
+  const [open, setOpen] = useState(false);
+
+  const nav = [
+    { label: "Home", href: "/" },
+    { label: "Events", href: "/events" },
+    { label: "About", href: "/about" },
+    { label: "Contact", href: "/contact" },
+  ];
+
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 py-5 bg-white">
-      <div className="container flex justify-between items-center">
-        <button onClick={() => router.push("/")} className="text-2xl font-bold">
-          Logo
-        </button>
+    <header
+      className={`sticky top-0 z-50 bg-[#181828] text-white shadow-lg ${
+        locale === "ar" ? "rtl-header" : "ltr-header"
+      }`}
+    >
+      <div className="header-inner container mx-auto px-6 py-4 flex justify-between items-center">
+        {/* LOGO */}
+        <div className="flex items-center h-[60px]">
+          <SpotlyLogo />
+        </div>
 
-        <div className="">
-          <ul className="flex items-center gap-4">
-            {homeLinks.map((link) => (
-              <li key={link.href}>
-                <LinkTo href={link.href}>
-                  {t(link.title as keyof typeof t)}
-                </LinkTo>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="flex  gap-2">
+        {/* DESKTOP NAV */}
+        <nav className="hidden md:flex items-center space-x-8">
+          {nav.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="relative group transition inline-block"
+            >
+              {item.label}
+
+              {/* Active underline */}
+              {pathname === item.href ? (
+                <span className="absolute left-0 -bottom-1 h-[3px] w-full bg-yellow-400 rounded-md"></span>
+              ) : (
+                <span className="absolute left-0 -bottom-1 h-[3px] w-0 bg-yellow-400 rounded-md group-hover:w-full transition-all duration-300"></span>
+              )}
+            </Link>
+          ))}
+
           <LanguageSwitcher />
-          <LinkTo href="/auth/register">
-            <button className="bg-secondary text-white px-4 py-2 rounded-md">
-              Let&apos;s Started
-            </button>
-          </LinkTo>{" "}
-          <LinkTo href="/auth/login">
-            <button className="bg-secondary text-white px-4 py-2 rounded-md">
-              Login
-            </button>
-          </LinkTo>
-        </div>
+
+          <Link href="/login" className="hover:text-green-300 transition">
+            Login
+          </Link>
+
+          <button className="px-4 py-2 bg-yellow-400 text-black rounded-xl font-semibold shadow hover:scale-105 transition">
+            Sign Up
+          </button>
+        </nav>
+
+        <button
+          className="md:hidden text-3xl"
+          onClick={() => setOpen((prev) => !prev)}
+        >
+          ☰
+        </button>
       </div>
+
+      {/* MOBILE MENU */}
+      {open && (
+        <div className="md:hidden bg-[#1f1f2e] px-6 pb-4 space-y-4 animate-fadeIn">
+          {/* NAV LINKS */}
+          {nav.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`relative inline-block transition hover:text-green-300 ${
+                locale === "ar" ? "text-right" : "text-left"
+              }`}
+              onClick={() => setOpen(false)}
+            >
+              {item.label}
+
+              {pathname === item.href && (
+                <span
+                  className={`absolute bottom-0 h-[3px] bg-yellow-400 rounded-md ${
+                    locale === "ar" ? "right-0" : "left-0"
+                  } w-full`}
+                ></span>
+              )}
+            </Link>
+          ))}
+
+          {/* LANG SWITCHER */}
+          <LanguageSwitcher />
+
+          {/* LOGIN */}
+          <Link
+            href="/login"
+            className="block hover:text-green-300 transition"
+            onClick={() => setOpen(false)}
+          >
+            Login
+          </Link>
+
+          {/* SIGN UP */}
+          <button className="w-full py-2 bg-yellow-400 text-black rounded-xl font-semibold shadow">
+            Sign Up
+          </button>
+        </div>
+      )}
     </header>
   );
 }
-
-export default Header;
