@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { FiHeart, FiStar, FiTag } from "react-icons/fi";
 
 const EventCard = ({ event }) => {
@@ -10,7 +11,8 @@ const EventCard = ({ event }) => {
           alt={event.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
         />
-        {/* Category Tag overlay */}
+        {/* <Image src={event.imageUrl} alt={event.title} fill /> */}
+
         <span
           className={`absolute bottom-3 left-3 text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm ${event.categoryColor}`}
         >
@@ -35,7 +37,7 @@ const EventCard = ({ event }) => {
         </div>
 
         {/* Details Block (Right side) */}
-        <div className="flex flex-col gap-1 flex-grow font-medium">
+        <div className="flex flex-col gap-1 grow font-medium">
           <h3 className="text-lg leading-tight font-bold text-gray-900 line-clamp-2 h-[45px]">
             {event.title}
           </h3>
