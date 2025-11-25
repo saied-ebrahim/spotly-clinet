@@ -71,13 +71,13 @@ export default function Header() {
 
       {/* MOBILE MENU */}
       {open && (
-        <div className="md:hidden bg-[#1f1f2e] px-6 pb-4 space-y-4 animate-fadeIn">
+        <div className="md:hidden bg-[#1f1f2e] px-6 pb-4 space-y-4 animate-fadeIn gap-3">
           {/* NAV LINKS */}
           {nav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className={`relative inline-block transition hover:text-green-300 ${
+              className={`relative block transition hover:text-green-300 ${
                 locale === "ar" ? "text-right" : "text-left"
               }`}
               onClick={() => setOpen(false)}
@@ -88,7 +88,7 @@ export default function Header() {
                 <span
                   className={`absolute bottom-0 h-[3px] bg-yellow-400 rounded-md ${
                     locale === "ar" ? "right-0" : "left-0"
-                  } w-full`}
+                  }`}
                 ></span>
               )}
             </Link>
