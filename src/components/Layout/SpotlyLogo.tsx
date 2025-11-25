@@ -1,6 +1,6 @@
 export default function SpotlyLogo() {
   return (
-    <div className="flex items-center h-[60px]">
+    <div className="flex items-center h-[60px]" dir="ltr">
       <svg
         viewBox="0 0 350 150"
         xmlns="http://www.w3.org/2000/svg"

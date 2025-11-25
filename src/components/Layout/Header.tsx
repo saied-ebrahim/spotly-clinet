@@ -34,7 +34,11 @@ export default function Header() {
         </div>
 
         {/* DESKTOP NAV */}
-        <nav className="hidden md:flex items-center space-x-8">
+        <nav
+          className={`hidden md:flex items-center gap-8 ${
+            locale === "ar" ? "flex-row-reverse" : ""
+          }`}
+        >
           {nav.map((item) => (
             <Link
               key={item.href}
@@ -45,9 +49,17 @@ export default function Header() {
 
               {/* Active underline */}
               {pathname === item.href ? (
-                <span className="absolute left-0 -bottom-1 h-[3px] w-full bg-yellow-400 rounded-md"></span>
+                <span
+                  className={`absolute -bottom-1 h-[3px] w-full bg-yellow-400 rounded-md ${
+                    locale === "ar" ? "right-0" : "left-0"
+                  }`}
+                ></span>
               ) : (
-                <span className="absolute left-0 -bottom-1 h-[3px] w-0 bg-yellow-400 rounded-md group-hover:w-full transition-all duration-300"></span>
+                <span
+                  className={`absolute -bottom-1 h-[3px] w-0 bg-yellow-400 rounded-md group-hover:w-full transition-all duration-300 ${
+                    locale === "ar" ? "right-0" : "left-0"
+                  }`}
+                ></span>
               )}
             </Link>
           ))}
