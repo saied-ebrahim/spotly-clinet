@@ -1,6 +1,9 @@
 "use client";
 import Categories from "@/components/ui/home/Caregories";
 import PopularEvents from "@/components/ui/home/PopularEvents";
+import LocationSelector from "@/components/ui/home/LocationSelector";
+import EventSelector from "@/components/ui/home/EventSelector";
+// import { FiSearch } from "react-icons/fi";
 
 const Home = () => {
   return (
@@ -25,35 +28,10 @@ const Home = () => {
               happening locally and globally.
             </h1>
 
-            <div className="flex flex-col sm:flex-row bg-white p-2 rounded-xl shadow-2xl space-y-3 sm:space-y-0 sm:space-x-2">
-              <div className="flex flex-1 items-center bg-gray-50 p-3 rounded-xl sm:rounded-l-lg sm:rounded-r-none">
-                <i
-                  data-lucide="search"
-                  className="w-5 h-5 text-gray-400 mr-3 flex-shrink-0"
-                ></i>
-                <input
-                  type="text"
-                  placeholder="Search for events, webinars, or artists..."
-                  className="w-full focus:outline-none bg-transparent placeholder-gray-500 text-gray-900"
-                />
-              </div>
-              <div className="flex items-center bg-gray-50 p-3 rounded-xl sm:rounded-none">
-                <i
-                  data-lucide="map-pin"
-                  className="w-5 h-5 text-gray-400 mr-3 shrink-0"
-                ></i>
-                <select className="w-full focus:outline-none bg-transparent text-gray-900 font-medium">
-                  <option>Mumbai</option>
-                  <option>Delhi</option>
-                  <option>Bangalore</option>
-                  <option>Global</option>
-                </select>
-                <i
-                  data-lucide="chevron-down"
-                  className="w-4 h-4 text-gray-400 ml-1 shrink-0"
-                ></i>
-              </div>
-              <button className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl sm:rounded-r-lg shadow-lg transition duration-200 w-full sm:w-auto flex-shrink-0">
+            <div className="flex flex-col sm:flex-row flex-wrap bg-white p-2 rounded-xl shadow-2xl space-y-3 sm:space-y-0 sm:space-x-2 gap-2">
+              <EventSelector />
+              <LocationSelector />
+              <button className="bg-indigo-600 grow hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl sm:rounded-r-lg shadow-lg transition duration-200 w-full sm:w-auto flex-shrink-0">
                 Search
               </button>
             </div>

@@ -26,7 +26,47 @@ button {
 .container {
   @apply px-[10px] lg:px-[30px] max-w-7xl mx-auto;
 }
+/*  ----- scroll bar styling \/  */
 
+/* .scroll-list {
+  overflow-y: auto;
+} */
+::-webkit-scrollbar {
+  width: 8px;
+  /* scrollbar-gutter: stable; */
+}
+
+::-webkit-scrollbar-track {
+  background: #34495e;
+  /* border-radius: 4px; */
+  /* margin: 2px; */
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #7f8c8d;
+  border-radius: 8px;
+  /* border-radius: 4px; */
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #95a5a6;
+}
+/*  ----- scroll bar styling /\  */
+
+.search-event {
+  position: relative;
+}
+.search-event::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 2px;
+  height: 100%;
+  border-left: 4px solid lightgrey;
+  border-radius: 1px; /* Match the input's border radius */
+  pointer-events: none; /* Allow clicks to pass through */
+}
 @keyframes fadeIn {
   from {
     opacity: 0;
