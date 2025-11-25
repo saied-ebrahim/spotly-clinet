@@ -1,6 +1,7 @@
 "use client";
 
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
+import { useTranslations } from "next-intl";
 
 type ProfileSection = "account-info" | "change-email" | "change-password";
 
@@ -13,20 +14,22 @@ export default function ProfileSidebar({
   activeSection,
   onSectionChange,
 }: ProfileSidebarProps) {
+  const t = useTranslations("profile");
+
   const menuItems = [
     {
       id: "account-info" as ProfileSection,
-      label: "Account Info",
+      label: t("accountInfo"),
       icon: FaUser,
     },
     {
       id: "change-email" as ProfileSection,
-      label: "Change Email",
+      label: t("changeEmail"),
       icon: FaEnvelope,
     },
     {
       id: "change-password" as ProfileSection,
-      label: "Password",
+      label: t("password"),
       icon: FaLock,
     },
   ];
@@ -34,7 +37,7 @@ export default function ProfileSidebar({
   return (
     <div className="p-4 sm:p-6">
       <h2 className="text-xl font-bold text-gray-900 mb-6 tracking-tight">
-        Account Settings
+        {t("accountSettings")}
       </h2>
 
       <nav className="space-y-2">

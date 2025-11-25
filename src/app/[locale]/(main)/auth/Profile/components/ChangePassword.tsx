@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { FaLock, FaEye, FaEyeSlash, FaSave, FaShieldAlt } from "react-icons/fa";
+import { useTranslations } from "next-intl";
 
 export default function ChangePassword() {
+  const t = useTranslations("profile");
   const [formData, setFormData] = useState({
     currentPassword: "",
     newPassword: "",
@@ -22,12 +24,12 @@ export default function ChangePassword() {
     e.preventDefault();
 
     if (formData.newPassword !== formData.confirmPassword) {
-      alert("Passwords do not match!");
+      alert(t("passwordsDoNotMatch"));
       return;
     }
 
     if (formData.newPassword.length < 8) {
-      alert("Password must be at least 8 characters long!");
+      alert(t("passwordTooShort"));
       return;
     }
 
@@ -49,11 +51,9 @@ export default function ChangePassword() {
         {/* Header */}
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            Set Password
+            {t("setPassword")}
           </h1>
-          <p className="text-sm text-gray-600">
-            Create a secure password for your account
-          </p>
+          <p className="text-sm text-gray-600">{t("createSecurePassword")}</p>
         </div>
 
         {/* Alert */}
@@ -62,11 +62,10 @@ export default function ChangePassword() {
             <FaShieldAlt className="w-6 h-6 text-amber-600 shrink-0 mt-1" />
             <div>
               <h3 className="font-semibold text-amber-900 mb-1">
-                No Password Set
+                {t("noPasswordSet")}
               </h3>
               <p className="text-sm text-amber-800">
-                A password has not been set for your account. Click the button
-                below to create one.
+                {t("noPasswordSetMessage")}
               </p>
             </div>
           </div>
@@ -81,7 +80,7 @@ export default function ChangePassword() {
           >
             <span className="relative z-10 flex items-center gap-2">
               <FaLock className="w-5 h-5" />
-              Set Password
+              {t("setPassword")}
             </span>
             <div className="absolute inset-0 bg-linear-to-r from-purple-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </button>
@@ -95,24 +94,22 @@ export default function ChangePassword() {
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-gray-900 mb-2">
-          Change Password
+          {t("changePassword")}
         </h1>
-        <p className="text-sm text-gray-600">
-          Update your password to keep your account secure
-        </p>
+        <p className="text-sm text-gray-600">{t("updatePasswordMessage")}</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Current Password */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Current Password
+            {t("currentPassword")}
           </label>
           <div className="relative">
             <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type={showPassword.current ? "text" : "password"}
-              placeholder="Enter current password"
+              placeholder={t("enterCurrentPassword")}
               value={formData.currentPassword}
               onChange={(e) =>
                 handleInputChange("currentPassword", e.target.value)
@@ -137,13 +134,13 @@ export default function ChangePassword() {
         {/* New Password */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            New Password
+            {t("newPassword")}
           </label>
           <div className="relative">
             <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type={showPassword.new ? "text" : "password"}
-              placeholder="Enter new password"
+              placeholder={t("enterNewPassword")}
               value={formData.newPassword}
               onChange={(e) => handleInputChange("newPassword", e.target.value)}
               required
@@ -166,13 +163,13 @@ export default function ChangePassword() {
         {/* Confirm Password */}
         <div>
           <label className="block text-sm font-semibold text-gray-700 mb-2">
-            Confirm New Password
+            {t("confirmNewPassword")}
           </label>
           <div className="relative">
             <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
             <input
               type={showPassword.confirm ? "text" : "password"}
-              placeholder="Confirm new password"
+              placeholder={t("confirmNewPasswordPlaceholder")}
               value={formData.confirmPassword}
               onChange={(e) =>
                 handleInputChange("confirmPassword", e.target.value)
@@ -197,20 +194,20 @@ export default function ChangePassword() {
         {/* Password Requirements */}
         <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
           <h4 className="text-sm font-semibold text-blue-900 mb-2">
-            Password Requirements:
+            {t("passwordRequirements")}
           </h4>
           <ul className="text-sm text-blue-800 space-y-1">
             <li className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-blue-600" />
-              At least 8 characters long
+              {t("passwordMinLength")}
             </li>
             <li className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-blue-600" />
-              Include uppercase and lowercase letters
+              {t("passwordUpperLower")}
             </li>
             <li className="flex items-center gap-2">
               <div className="w-1.5 h-1.5 rounded-full bg-blue-600" />
-              Include at least one number
+              {t("passwordNumber")}
             </li>
           </ul>
         </div>
@@ -223,7 +220,7 @@ export default function ChangePassword() {
           >
             <span className="relative z-10 flex items-center gap-2">
               <FaSave className="w-5 h-5" />
-              Update Password
+              {t("updatePassword")}
             </span>
             <div className="absolute inset-0 bg-linear-to-r from-purple-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </button>
