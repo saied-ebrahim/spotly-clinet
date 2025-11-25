@@ -93,7 +93,68 @@ const eventsData = [
     categoryColor: "bg-yellow-100 text-yellow-800",
   },
 ];
+const filterEvents = (events, filterType) => {
+  // 1. Helper: Map month abbreviations to numbers (0-11)
+  const monthMap = {
+    JAN: 0,
+    FEB: 1,
+    MAR: 2,
+    APR: 3,
+    MAY: 4,
+    JUN: 5,
+    JUL: 6,
+    AUG: 7,
+    SEP: 8,
+    OCT: 9,
+    NOV: 10,
+    DEC: 11,
+  };
 
+  // 2. Helper: Convert event data to a JS Date object
+  const getEventDate = (event) => {
+    const currentYear = new Date().getFullYear();
+    const monthIndex = monthMap[event.month.toUpperCase()];
+    const day = parseInt(event.date, 10);
+
+    // Create date (Time set to 00:00:00 for accurate day comparison)
+    const date = new Date(currentYear, monthIndex, day);
+    date.setHours(0, 0, 0, 0);
+    return date;
+  };
+
+  // 3. Define "Today" for comparison
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  // 4. Filter Logic
+  return events.filter((event) => {
+    const eventDate = getEventDate(event);
+
+    switch (filterType) {
+      case "Today":
+        return eventDate.getTime() === today.getTime();
+
+      case "Tomorrow":
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        return eventDate.getTime() === tomorrow.getTime();
+
+      case "This Week":
+        // Logic: "This Week" = From Today up to 7 days from now
+        const nextWeek = new Date(today);
+        nextWeek.setDate(today.getDate() + 7);
+        return eventDate >= today && eventDate <= nextWeek;
+
+      case "Free":
+        // Checks if price is "FREE", "0", or if isFree is true
+        const priceStr = String(event.price).toUpperCase();
+        return priceStr === "FREE" || priceStr === "0" || event.isFree === true;
+
+      default:
+        return true; // Return all events if no filter matches
+    }
+  });
+};
 // 2. The Individual Event Card Component
 
 // 3. The Main Container Component
@@ -106,6 +167,12 @@ const PopularEvents = () => {
 
   console.log(currentFilter);
   // let eventArr = [...eventsData];
+  filterEvents(
+    events,
+    currentFilter.toLowerCase() === "this weekend"
+      ? "week"
+      : currentFilter.toLowerCase()
+  );
   useEffect(() => {
     fetch("http://localhost:8080/events")
       .then((res) => res.json())
@@ -140,7 +207,7 @@ const PopularEvents = () => {
 
       {/* Events Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {events.map((event) => (
+        {filterEvents(events, currentFilter).map((event) => (
           <EventCard key={event.id} event={event} />
         ))}
       </div>
