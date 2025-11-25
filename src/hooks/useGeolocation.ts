@@ -25,7 +25,7 @@ const useGeolocation = () => {
           //   `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
           `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
         );
-        console.log(response);
+        // console.log(response);
         const data = await response.json();
         // console.log(data);
         // Extract city/town/village from the address object

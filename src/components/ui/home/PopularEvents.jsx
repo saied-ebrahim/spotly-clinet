@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 // import { FiHeart, FiTag, FiStar } from "react-icons/fi";
+import PaginationList from "./PaginationList";
 import EventCard from "./EventCard";
 import useGeolocation from "@/hooks/useGeolocation";
 
+import filterEvents from "@/components/Custom/filterPopularEvents";
 // 1. Mock Data based on the image
 // In a real app, this would come from an API.
 const eventsData = [
@@ -93,91 +95,31 @@ const eventsData = [
     categoryColor: "bg-yellow-100 text-yellow-800",
   },
 ];
-const filterEvents = (events, filterType) => {
-  // 1. Helper: Map month abbreviations to numbers (0-11)
-  const monthMap = {
-    JAN: 0,
-    FEB: 1,
-    MAR: 2,
-    APR: 3,
-    MAY: 4,
-    JUN: 5,
-    JUL: 6,
-    AUG: 7,
-    SEP: 8,
-    OCT: 9,
-    NOV: 10,
-    DEC: 11,
-  };
 
-  // 2. Helper: Convert event data to a JS Date object
-  const getEventDate = (event) => {
-    const currentYear = new Date().getFullYear();
-    const monthIndex = monthMap[event.month.toUpperCase()];
-    const day = parseInt(event.date, 10);
-
-    // Create date (Time set to 00:00:00 for accurate day comparison)
-    const date = new Date(currentYear, monthIndex, day);
-    date.setHours(0, 0, 0, 0);
-    return date;
-  };
-
-  // 3. Define "Today" for comparison
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  // 4. Filter Logic
-  return events.filter((event) => {
-    const eventDate = getEventDate(event);
-
-    switch (filterType) {
-      case "Today":
-        return eventDate.getTime() === today.getTime();
-
-      case "Tomorrow":
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        return eventDate.getTime() === tomorrow.getTime();
-
-      case "This Week":
-        // Logic: "This Week" = From Today up to 7 days from now
-        const nextWeek = new Date(today);
-        nextWeek.setDate(today.getDate() + 7);
-        return eventDate >= today && eventDate <= nextWeek;
-
-      case "Free":
-        // Checks if price is "FREE", "0", or if isFree is true
-        const priceStr = String(event.price).toUpperCase();
-        return priceStr === "FREE" || priceStr === "0" || event.isFree === true;
-
-      default:
-        return true; // Return all events if no filter matches
-    }
-  });
-};
 // 2. The Individual Event Card Component
 
 // 3. The Main Container Component
 const PopularEvents = () => {
   const filters = ["All", "Today", "Tomorrow", "This Weekend", "Free"];
   const { location, error, loading } = useGeolocation(); // Custom hook to get user's location
-  console.log("User Location:", location, "Error:", error, "Loading:", loading);
+  // console.log("User Location:", location, "Error:", error, "Loading:", loading);
   const [events, setEvents] = useState([]);
   let [currentFilter, setCurrentFilter] = useState("All");
-
-  console.log(currentFilter);
+  // console.log("Events Data:", events);
+  let filteredEvents = filterEvents(events, currentFilter);
+  console.log(filteredEvents);
+  // console.log(currentFilter);
   // let eventArr = [...eventsData];
-  filterEvents(
-    events,
-    currentFilter.toLowerCase() === "this weekend"
-      ? "week"
-      : currentFilter.toLowerCase()
-  );
+  // filterEvents(
+  //   events,
+  //   currentFilter.toLowerCase() === "this weekend"
+  //     ? "week"
+  //     : currentFilter.toLowerCase()
+  // );
   useEffect(() => {
     fetch("http://localhost:8080/events")
       .then((res) => res.json())
       .then((data) => {
-        // console.log(data);
         setEvents(data);
       });
   }, []);
@@ -206,18 +148,22 @@ const PopularEvents = () => {
       </div>
 
       {/* Events Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filterEvents(events, currentFilter).map((event) => (
           <EventCard key={event.id} event={event} />
         ))}
-      </div>
+      </div> */}
+      {filteredEvents.length > 0 ? (
+        <PaginationList itemsPerPage={6} allEvents={filteredEvents} />
+      ) : (
+        <h1 className="text-center w-full text-xl">No Events Found</h1>
+      )}
 
-      {/* See More Button */}
-      <div className="mt-12 flex justify-center">
+      {/* <div className="mt-12 flex justify-center">
         <button className="px-8 py-3 bg-white border-2 border-gray-300 text-gray-700 font-semibold rounded-md hover:border-gray-900 hover:text-gray-900 transition-colors duration-300 tracking-wide uppercase text-sm">
           See More
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

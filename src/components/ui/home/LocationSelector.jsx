@@ -14,7 +14,7 @@ const LocationSelector = ({ location }) => {
       .then((data) => {
         // Note: This specific dataset returns objects with { "name": "Cairo", ... }
 
-        console.log(data[2].data);
+        // console.log(data[2].data);
         const arr = data[2].data.map((gov) => gov.city_name_en);
         //   setAllGovs(data);
         setAllGovs(arr);

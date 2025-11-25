@@ -15,7 +15,7 @@ const EventSelector = () => {
     "Giza",
     "Luxor",
   ];
-  console.log("eee");
+
   // Filter items based on user typing
   const filteredItems = governorates.filter((item) =>
     item.toLowerCase().includes(query.toLowerCase())

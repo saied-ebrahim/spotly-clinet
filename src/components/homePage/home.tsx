@@ -4,13 +4,9 @@ import PopularEvents from "@/components/ui/home/PopularEvents";
 import LocationSelector from "@/components/ui/home/LocationSelector";
 import EventSelector from "@/components/ui/home/EventSelector";
 import useGeolocation from "@/hooks/useGeolocation";
-import { useEffect, useState } from "react";
-
-// import { FiSearch } from "react-icons/fi";
 
 const Home = () => {
   const { location, error, loading } = useGeolocation(); // Custom hook to get user's location
-  console.log("User Location:", location, "Error:", error, "Loading:", loading);
   return (
     <div>
       <main>
@@ -53,23 +49,6 @@ const Home = () => {
         {/*  */}
 
         <section className="py-16 pt-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* <div className="text-center sm:text-left mb-8">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900">
-              Popular Events in Mumbai
-            </h2>
-            <p className="text-gray-500 text-lg">
-              Events that are trending right now in your city
-            </p>
-          </div>
-          <div
-            id="popular-events-grid"
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-          ></div>
-          <div className="text-center mt-10">
-            <button className="border border-indigo-600 text-indigo-600 hover:bg-indigo-50 px-8 py-3 rounded-xl font-semibold transition duration-200">
-              See More Events in Mumbai
-            </button>
-          </div> */}
           <PopularEvents location={location?.city} />
         </section>
 
