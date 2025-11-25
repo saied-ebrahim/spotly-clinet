@@ -2,10 +2,25 @@
 import { useState, useRef, useEffect } from "react";
 import { FiMapPin } from "react-icons/fi";
 
-const LocationSelector = () => {
+const LocationSelector = ({ location }) => {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+  const [allGovs, setAllGovs] = useState([]);
+  useEffect(() => {
+    fetch(
+      "https://raw.githubusercontent.com/Tech-Labs/egypt-governorates-and-cities-db/master/cities.json"
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        // Note: This specific dataset returns objects with { "name": "Cairo", ... }
 
+        console.log(data[2].data);
+        const arr = data[2].data.map((gov) => gov.city_name_en);
+        //   setAllGovs(data);
+        setAllGovs(arr);
+      });
+    // You can use the location data here to fetch events based on user's city
+  }, []);
   // The data
   const governorates = [
     "Cairo",
@@ -18,7 +33,7 @@ const LocationSelector = () => {
   ];
 
   // Filter items based on user typing
-  const filteredItems = governorates.filter((item) =>
+  const filteredItems = allGovs?.filter((item) =>
     item.toLowerCase().includes(query.toLowerCase())
   );
 
@@ -28,7 +43,7 @@ const LocationSelector = () => {
       {/* <div className="relative"> */}
       <input
         type="text"
-        value={query}
+        value={query || location}
         onChange={(e) => {
           setQuery(e.target.value);
           setIsOpen(true);
@@ -48,7 +63,7 @@ const LocationSelector = () => {
       )}
       {/* </div> */}
 
-      {isOpen && filteredItems.length > 0 && (
+      {isOpen && filteredItems?.length > 0 && (
         <ul className="absolute z-10 mt-2 w-full origin-top-right rounded-sm bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none max-h-60 overflow-auto">
           {filteredItems.map((city, index) => (
             <li

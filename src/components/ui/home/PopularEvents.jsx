@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 // import { FiHeart, FiTag, FiStar } from "react-icons/fi";
 import EventCard from "./EventCard";
+import useGeolocation from "@/hooks/useGeolocation";
 
 // 1. Mock Data based on the image
 // In a real app, this would come from an API.
@@ -98,6 +99,9 @@ const eventsData = [
 // 3. The Main Container Component
 const PopularEvents = () => {
   const filters = ["All", "Today", "Tomorrow", "This Weekend", "Free"];
+  const { location, error, loading } = useGeolocation(); // Custom hook to get user's location
+  console.log("User Location:", location, "Error:", error, "Loading:", loading);
+
   let [currentFilter, setCurrentFilter] = useState("All");
   console.log(currentFilter);
   let eventArr = [...eventsData];
@@ -105,7 +109,7 @@ const PopularEvents = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-gray-50 font-sans">
       {/* Header */}
       <h2 className="text-3xl font-bold text-gray-900 mb-6">
-        Popular Events in Mumbai
+        Popular Events in {location?.city || "Your Location"}
       </h2>
 
       {/* Filter Buttons */}

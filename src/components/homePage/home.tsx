@@ -3,9 +3,14 @@ import Categories from "@/components/ui/home/Caregories";
 import PopularEvents from "@/components/ui/home/PopularEvents";
 import LocationSelector from "@/components/ui/home/LocationSelector";
 import EventSelector from "@/components/ui/home/EventSelector";
+import useGeolocation from "@/hooks/useGeolocation";
+import { useEffect, useState } from "react";
+
 // import { FiSearch } from "react-icons/fi";
 
 const Home = () => {
+  const { location, error, loading } = useGeolocation(); // Custom hook to get user's location
+  console.log("User Location:", location, "Error:", error, "Loading:", loading);
   return (
     <div>
       <main>
@@ -24,13 +29,13 @@ const Home = () => {
               Don&apos;t miss out!
             </p>
             <h1 className="text-3xl sm:text-5xl font-extrabold text-white mb-8 leading-tight">
-              Explore relevant <span className="text-yellow-400">events</span>{" "}
+              Explore relevant <span className="text-yellow-400">events</span>
               happening locally and globally.
             </h1>
 
             <div className="flex flex-col sm:flex-row flex-wrap bg-white p-2 rounded-xl shadow-2xl space-y-3 sm:space-y-0 sm:space-x-2 gap-2">
               <EventSelector />
-              <LocationSelector />
+              <LocationSelector location={location?.city} />
               <button className="bg-indigo-600 grow hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl sm:rounded-r-lg shadow-lg transition duration-200 w-full sm:w-auto flex-shrink-0">
                 Search
               </button>
@@ -65,7 +70,7 @@ const Home = () => {
               See More Events in Mumbai
             </button>
           </div> */}
-          <PopularEvents />
+          <PopularEvents location={location?.city} />
         </section>
 
         <section className="py-16 bg-white border-t border-b border-gray-100">
