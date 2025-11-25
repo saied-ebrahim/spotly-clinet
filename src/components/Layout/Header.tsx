@@ -28,7 +28,9 @@ export default function Header() {
       <div className="header-inner container mx-auto px-6 py-4 flex justify-between items-center">
         {/* LOGO */}
         <div className="flex items-center h-[60px]">
-          <SpotlyLogo />
+          <Link href="/">
+            <SpotlyLogo />
+          </Link>
         </div>
 
         {/* DESKTOP NAV */}
