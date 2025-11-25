@@ -2,13 +2,7 @@
 
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 import { useTranslations } from "next-intl";
-
-type ProfileSection = "account-info" | "change-email" | "change-password";
-
-interface ProfileSidebarProps {
-  activeSection: ProfileSection;
-  onSectionChange: (section: ProfileSection) => void;
-}
+import { ProfileSection, ProfileSidebarProps } from "../interfaces";
 
 export default function ProfileSidebar({
   activeSection,

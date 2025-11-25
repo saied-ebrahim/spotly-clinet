@@ -5,8 +5,7 @@ import ProfileSidebar from "./components/ProfileSidebar";
 import AccountInfo from "./components/AccountInfo";
 import ChangeEmail from "./components/ChangeEmail";
 import ChangePassword from "./components/ChangePassword";
-
-type ProfileSection = "account-info" | "change-email" | "change-password";
+import { ProfileSection } from "./interfaces";
 
 export default function ProfilePage() {
   const [activeSection, setActiveSection] =
