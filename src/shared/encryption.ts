@@ -11,7 +11,7 @@ export const encryptData = (data: unknown): string => {
 };
 
 export const decryptData = (encodedData: string): object => {
-  const key = process.env.NEXT_PUBLIC_ENCRYPTION_KEY as string;
+  const key = (process.env.NEXT_PUBLIC_ENCRYPTION_KEY as string) || "secretkey";
 
   if (!key) {
     throw new Error("Encryption key missing");
