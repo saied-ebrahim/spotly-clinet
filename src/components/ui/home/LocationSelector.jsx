@@ -43,7 +43,7 @@ const LocationSelector = ({ location }) => {
       {/* <div className="relative"> */}
       <input
         type="text"
-        value={query || location}
+        value={query}
         onChange={(e) => {
           setQuery(e.target.value);
           setIsOpen(true);
@@ -51,7 +51,7 @@ const LocationSelector = ({ location }) => {
         onFocus={() => setIsOpen(true)}
         // Simple delay to allow clicking an item before blur hides the list
         onBlur={() => setTimeout(() => setIsOpen(false), 200)}
-        placeholder="Event location"
+        placeholder={"ex: " + location || "Event location"}
         className="w-full h-full bg-gray-50 text-gray-900 text-sm font-medium rounded-xl border-0 px-4 py-3 pl-10 shadow-sm placeholder-gray-400 ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 transition-all outline-none"
       />
 

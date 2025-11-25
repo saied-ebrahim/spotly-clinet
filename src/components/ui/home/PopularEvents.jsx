@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 // import { FiHeart, FiTag, FiStar } from "react-icons/fi";
 import EventCard from "./EventCard";
 import useGeolocation from "@/hooks/useGeolocation";
@@ -101,10 +101,19 @@ const PopularEvents = () => {
   const filters = ["All", "Today", "Tomorrow", "This Weekend", "Free"];
   const { location, error, loading } = useGeolocation(); // Custom hook to get user's location
   console.log("User Location:", location, "Error:", error, "Loading:", loading);
-
+  const [events, setEvents] = useState([]);
   let [currentFilter, setCurrentFilter] = useState("All");
+
   console.log(currentFilter);
-  let eventArr = [...eventsData];
+  // let eventArr = [...eventsData];
+  useEffect(() => {
+    fetch("http://localhost:8080/events")
+      .then((res) => res.json())
+      .then((data) => {
+        // console.log(data);
+        setEvents(data);
+      });
+  }, []);
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-gray-50 font-sans">
       {/* Header */}
@@ -131,7 +140,7 @@ const PopularEvents = () => {
 
       {/* Events Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {eventsData.map((event) => (
+        {events.map((event) => (
           <EventCard key={event.id} event={event} />
         ))}
       </div>

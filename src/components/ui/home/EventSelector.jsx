@@ -1,6 +1,6 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
-import { FiMapPin, FiSearch } from "react-icons/fi";
+import { useState, useEffect } from "react";
+import { FiSearch } from "react-icons/fi";
 const EventSelector = () => {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -15,7 +15,7 @@ const EventSelector = () => {
     "Giza",
     "Luxor",
   ];
-
+  console.log("eee");
   // Filter items based on user typing
   const filteredItems = governorates.filter((item) =>
     item.toLowerCase().includes(query.toLowerCase())
@@ -23,8 +23,6 @@ const EventSelector = () => {
 
   return (
     <div className="relative w-full sm:w-72 font-sans grow m-0">
-      {/* 1. The Input Field */}
-      {/* <div className="relative"> */}
       <input
         type="text"
         value={query}
