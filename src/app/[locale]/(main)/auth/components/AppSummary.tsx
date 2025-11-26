@@ -1,24 +1,24 @@
-import SpotlyLogo from "@/components/Layout/SpotlyLogo"
+import SpotlyLogo from "@/components/Layout/SpotlyLogo";
 
 export default function AppSummary() {
   return (
-    <div className="flex flex-col justify-start items-start w-1/2 h-screen bg-[#2B293D]">
-      
+    <div className="hidden lg:flex lg:flex-col lg:justify-start lg:items-start lg:w-1/2 lg:min-h-screen bg-[#2B293D] p-6 lg:p-8">
       {/* Logo Section */}
-      <div className="flex w-full justify-start items-start p-4">
+      <div className="flex w-full justify-start items-start mb-5">
         <SpotlyLogo />
       </div>
 
       {/* Text Section */}
-      <div className="flex items-center justify-center w-full h-1/2">
-        <div className="text-[48px] text-white items-start flex flex-col font-bold font-monster">
-          <p>Discover tailored <br /> events.</p>
+      <div className="flex items-center justify-center w-full flex-1">
+        <div className="text-3xl lg:text-4xl xl:text-5xl text-white flex flex-col font-bold font-monster leading-tight">
           <p>
-            Sign up for personalized <br /> recommendations <br /> today!
+            Discover tailored <br /> events!
+          </p>
+          <p className="mt-4">
+            Register for more personalized <br /> recommendations <br /> today!
           </p>
         </div>
       </div>
-      
     </div>
-  )
+  );
 }
