@@ -66,7 +66,7 @@ export default function Header() {
 
           <LanguageSwitcher />
 
-          <Link href="/login" className="hover:text-green-300 transition">
+          <Link href="/auth/login" className="hover:text-green-300 transition">
             Login
           </Link>
 
@@ -113,7 +113,7 @@ export default function Header() {
 
           {/* LOGIN */}
           <Link
-            href="/login"
+            href="/auth/login"
             className="block hover:text-green-300 transition"
             onClick={() => setOpen(false)}
           >
