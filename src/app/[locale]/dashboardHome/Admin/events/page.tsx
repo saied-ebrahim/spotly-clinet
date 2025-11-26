@@ -1,9 +1,10 @@
+import { AdminEventsTable } from "@/components/Dashboard/Events/AdminEventsTable";
+import dummyEvents from "@/data/dummyEvents.json";
+
 export default function AdminEventsPage() {
   return (
-    <div className="flex h-full items-center justify-center">
-      <h1 className="text-2xl font-bold text-slate-800">
-        Admin Events Component
-      </h1>
+    <div className="h-full space-y-6">
+      <AdminEventsTable initialData={dummyEvents} />
     </div>
   );
 }
