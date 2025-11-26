@@ -99,12 +99,12 @@ const PaginatedEvents = ({
   //   console.log(itemsPerPage);
   return (
     <div className="max-w-7xl mx-auto">
-      <div className="mb-8 text-center sm:text-left">
+      {/* <div className="mb-8 text-center sm:text-left">
         <h2 className="text-3xl font-bold text-gray-900">Upcoming Events</h2>
         <p className="text-gray-500 mt-2">
           Browse through our latest events and workshops.
         </p>
-      </div>
+      </div> */}
 
       <div
         key={currentPage}

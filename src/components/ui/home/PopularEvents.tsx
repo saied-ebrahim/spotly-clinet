@@ -49,7 +49,12 @@ const PopularEvents = () => {
             </button>
           ))}
         </div>
-
+        <div className="mb-8 text-center sm:text-left">
+          <h2 className="text-3xl font-bold text-gray-900">Upcoming Events</h2>
+          <p className="text-gray-500 mt-2">
+            Browse through our latest events and workshops.
+          </p>
+        </div>
         {filteredEvents.length > 0 ? (
           <PaginationList itemsPerPage={6} allEvents={filteredEvents} />
         ) : (

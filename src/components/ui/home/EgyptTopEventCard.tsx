@@ -39,11 +39,14 @@
 //     </div>
 //   );
 // }
+import { OnlineEvent } from "@/types/OnlineEventInterface";
 import Image from "next/image";
 
-export default function OnlineEventCard({ event }) {
+export default function EgyptTopEventCard({ event }: { event: OnlineEvent }) {
   return (
-    <div className="mb-10 bg-linear-to-r from-emerald-600 to-teal-500 p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-8">
+    <div
+      className={`mb-10 bg-linear-to-r ${event.colorSchemeDark} p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-8`}
+    >
       {/* Image Section */}
       <div className="relative lg:w-1/3 w-full h-48 lg:h-64">
         <Image

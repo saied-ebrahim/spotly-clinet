@@ -1,15 +1,17 @@
 import Image from "next/image";
 import { FiHeart, FiStar, FiTag } from "react-icons/fi";
+import { EventObject } from "@/types/PaginationInterface";
 
-const EventCard = ({ event }) => {
+const EventCard = ({ event }: { event: EventObject }) => {
   return (
     <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 font-sans cursor-pointer group">
       {/* Image Header Section */}
       <div className="relative h-48 overflow-hidden">
-        <img
+        <Image
           src={event.imageUrl}
           alt={event.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          fill
         />
         {/* <Image src={event.imageUrl} alt={event.title} fill /> */}
 
@@ -49,12 +51,18 @@ const EventCard = ({ event }) => {
             {/* Price Section */}
             <div
               className={`flex items-center gap-1 text-sm ${
-                event.isFree ? "text-green-600 font-bold" : "text-gray-700"
+                parseInt(event.price) === 0
+                  ? "text-green-600 font-bold"
+                  : "text-gray-700"
               }`}
             >
               <FiTag
                 size={14}
-                className={event.isFree ? "text-green-600" : "text-gray-400"}
+                className={
+                  parseInt(event.price) === 0
+                    ? "text-green-600"
+                    : "text-gray-400"
+                }
               />
               <span>{event.price}</span>
             </div>
