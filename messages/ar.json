@@ -1,8 +1,11 @@
 {
   "header": {
-    "home": "Home",
-    "about": "About",
-    "contact": "Contact"
+    "home": "الرئيسية",
+    "events": "الفعاليات",
+    "about": "من نحن",
+    "contact": "اتصل بنا",
+    "login": "تسجيل الدخول",
+    "signUp": "إنشاء حساب"
   },
   "home": {
     "title": "Home",

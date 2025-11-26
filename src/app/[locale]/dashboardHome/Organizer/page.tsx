@@ -12,7 +12,7 @@ export default function EventsDashboard() {
         <div className="mb-8 border-b border-slate-200">
           <nav className="-mb-px flex space-x-8">
             <button className="border-b-2 border-brand-primary pb-4 text-sm font-medium text-brand-primary">
-              Events
+             Organizer Events
             </button>
             <button className="border-b-2 border-transparent pb-4 text-sm font-medium text-slate-500 hover:border-slate-300 hover:text-slate-700">
               Collections

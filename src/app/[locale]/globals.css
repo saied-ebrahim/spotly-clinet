@@ -9,6 +9,11 @@
   --secondary: #0bb7b4;
   --accent: #94bc73;
   --text-primary: #114268;
+  
+  /* Brand Colors */
+  --brand-primary: #0F5C3B;
+  --brand-secondary: #A3D74F;
+  --brand-orange: #EA580C;
 }
 
 button {
@@ -20,6 +25,11 @@ button {
   --color-secondary: var(--primary);
   --color-accent: var(--accent);
   --color-text-primary: var(--text-primary);
+  
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-secondary: var(--brand-secondary);
+  --color-brand-orange: var(--brand-orange);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

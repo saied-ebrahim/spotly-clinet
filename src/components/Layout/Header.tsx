@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import SpotlyLogo from "@/components/Layout/SpotlyLogo";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -10,13 +10,14 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 export default function Header() {
   const pathname = usePathname();
   const locale = useLocale();
+  const t = useTranslations("header");
   const [open, setOpen] = useState(false);
 
   const nav = [
-    { label: "Home", href: "/" },
-    { label: "Events", href: "/events" },
-    { label: "About", href: "/about" },
-    { label: "Contact", href: "/contact" },
+    { label: t("home"), href: "/" },
+    { label: t("events"), href: "/events" },
+    { label: t("about"), href: "/about" },
+    { label: t("contact"), href: "/contact" },
   ];
 
   return (
@@ -67,11 +68,11 @@ export default function Header() {
           <LanguageSwitcher />
 
           <Link href="/login" className="hover:text-green-300 transition">
-            Login
+            {t("login")}
           </Link>
 
           <button className="px-4 py-2 bg-yellow-400 text-black rounded-xl font-semibold shadow hover:scale-105 transition">
-            Sign Up
+            {t("signUp")}
           </button>
         </nav>
 
@@ -117,12 +118,12 @@ export default function Header() {
             className="block hover:text-green-300 transition"
             onClick={() => setOpen(false)}
           >
-            Login
+            {t("login")}
           </Link>
 
           {/* SIGN UP */}
           <button className="w-full py-2 bg-yellow-400 text-black rounded-xl font-semibold shadow">
-            Sign Up
+            {t("signUp")}
           </button>
         </div>
       )}
