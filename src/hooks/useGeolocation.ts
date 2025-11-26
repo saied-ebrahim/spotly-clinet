@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from "react";
 
 const useGeolocation = () => {
@@ -19,16 +20,12 @@ const useGeolocation = () => {
       const { latitude, longitude } = position.coords;
 
       try {
-        // 2. We have coords, now let's get the city name (Reverse Geocoding)
-        // Using OpenStreetMap's free Nominatim API
         const response = await fetch(
-          //   `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`
           `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
         );
-        // console.log(response);
+
         const data = await response.json();
-        // console.log(data);
-        // Extract city/town/village from the address object
+
         const city = data.city || "Unknown location";
 
         setLocation({

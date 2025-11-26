@@ -105,12 +105,27 @@
 //   );
 // };
 // export default Categories;
+//------------------------------------
+//------------------------------------
+//------------------------------------
 "use client";
+import { CategoryItemInterface } from "@/types/CategoryInterface";
 import Image from "next/image";
-import React from "react";
+
+// interface Category {
+//   imageUrl: string;
+//   title: string;
+//   ringColor: string;
+//   categoryColor: string;
+// }
 
 // 2. Individual Category Item Component
-export const CategoryItem = ({ category }) => {
+export const CategoryItem = ({
+  category,
+}: {
+  category: CategoryItemInterface;
+}) => {
+  // console.log(category);
   // const [imgSrc, setImgSrc] = useState(category.imageUrl);
   return (
     // Updated Width Classes:
@@ -136,23 +151,24 @@ export const CategoryItem = ({ category }) => {
               }}
             /> */}
         <Image
-          // src={category.imageUrl}
-          src="/event.jpg"
-          alt={category.name}
+          src={category.imageUrl}
+          alt={category.title}
           fill
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src =
-              "https://placehold.co/150x150/CCCCCC/000000?text=Category";
-          }}
+          // onError={(e) => {
+          //   const target = e.target as HTMLImageElement;
+          //   target.onerror = null;
+          //   target.src =
+          //     "https://images.unsplash.com/photo-1523580494863-6f3031224c94?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80";
+          // }}
         />
       </div>
 
       {/* Label */}
       <span
-        className={`mt-4 text-sm sm:text-base font-bold text-gray-700 transition-colors duration-300 ${category.color} text-center px-1 truncate w-full`}
+        className={`mt-4 text-sm sm:text-base font-bold text-gray-700 transition-colors duration-300 ${category.categoryColor} text-center px-1 truncate w-full`}
       >
-        {category.name}
+        {/* {category.name} */}
+        {category.title}
       </span>
     </div>
   );

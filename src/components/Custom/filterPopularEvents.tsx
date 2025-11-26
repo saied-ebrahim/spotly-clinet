@@ -1,3 +1,4 @@
+import { EventObject } from "@/types/PaginationInterface";
 // const filterEvents = (events, filterType) => {
 //   // 1. Helper: Map month abbreviations to numbers (0-11)
 //   const monthMap = {
@@ -61,9 +62,12 @@
 //   });
 // };
 // export default filterEvents;
-const filterEvents = (events, filterType) => {
+// ---------------------------------------------------
+// ---------------------------------------------------
+// ---------------------------------------------------
+const filterEvents = (events: EventObject[], filterType: string) => {
   // 1. Helper: Map month abbreviations to numbers (0-11)
-  const monthMap = {
+  const monthMap: Record<string, number> = {
     JAN: 0,
     FEB: 1,
     MAR: 2,
@@ -81,9 +85,9 @@ const filterEvents = (events, filterType) => {
   // 2. Define "Today" for comparison (without time)
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-
+  // console.log(events);
   // 3. Helper: Convert event data to a JS Date object and adjust the year
-  const getEventDate = (event) => {
+  const getEventDate = (event: EventObject) => {
     const currentYear = new Date().getFullYear();
     const monthIndex = monthMap[event.month.toUpperCase()];
     const day = parseInt(event.date, 10);
@@ -136,7 +140,8 @@ const filterEvents = (events, filterType) => {
           // Checks if price is "FREE", "0", or if isFree is true
           const priceStr = String(event.price).toUpperCase();
           return (
-            priceStr === "FREE" || priceStr === "0" || event.isFree === true
+            priceStr === "FREE" ||
+            priceStr === "0" /* || event.isFree === true */
           );
 
         default:

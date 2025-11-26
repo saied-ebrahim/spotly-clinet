@@ -1,57 +1,18 @@
 "use client";
-import React, { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CategoryItem } from "./CategoryItem";
 
-// 1. Mock Data
-const categories = [
-  {
-    name: "Entertainment",
-    imageUrl: "https://placehold.co/150x150/1F2937/ffffff?text=Music",
-    color: "hover:text-indigo-600",
-    ringColor: "hover:ring-indigo-500",
-  },
-  {
-    name: "Educational",
-    imageUrl: "https://placehold.co/150x150/4B5563/ffffff?text=Edu",
-    color: "hover:text-gray-600",
-    ringColor: "hover:ring-gray-500",
-  },
-  {
-    name: "Cultural & Arts",
-    imageUrl: "https://placehold.co/150x150/EF4444/ffffff?text=Art",
-    color: "hover:text-red-600",
-    ringColor: "hover:ring-red-500",
-  },
-  {
-    name: "Sports",
-    imageUrl: "https://placehold.co/150x150/10B981/ffffff?text=Sport",
-    color: "hover:text-green-600",
-    ringColor: "hover:ring-green-500",
-  },
-  {
-    name: "Technology",
-    imageUrl: "https://placehold.co/150x150/3B82F6/ffffff?text=Tech",
-    color: "hover:text-blue-600",
-    ringColor: "hover:ring-blue-500",
-  },
-  {
-    name: "Travel",
-    imageUrl: "https://placehold.co/150x150/F59E0B/ffffff?text=Travel",
-    color: "hover:text-yellow-600",
-    ringColor: "hover:ring-yellow-500",
-  },
-  {
-    name: "Dining",
-    imageUrl: "https://placehold.co/150x150/EC4899/ffffff?text=Food",
-    color: "hover:text-pink-600",
-    ringColor: "hover:ring-pink-500",
-  },
-];
-
-// 3. Main Slider Component
+// Main Slider Component
 const Categories = () => {
-  const sliderRef = useRef(null);
-
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const [events, setEvents] = useState([]);
+  useEffect(() => {
+    fetch("http://localhost:8080/events")
+      .then((res) => res.json())
+      .then((data) => {
+        setEvents(data);
+      });
+  }, []);
   const scrollLeft = () => {
     if (sliderRef.current) {
       // Scroll by roughly one screen width
@@ -127,23 +88,20 @@ const Categories = () => {
             // - gap-6 (24px) on md+
             className="flex overflow-x-auto pb-8 gap-4 md:gap-6 snap-x snap-mandatory scroll-smooth no-scrollbar p-3"
           >
-            {categories.map((category, index) => (
+            {events.map((category, index) => (
               <CategoryItem key={index} category={category} />
             ))}
+            {/* {categories.map((category, index) => (
+              <CategoryItem key={index} category={category} />
+            ))} */}
           </div>
         </div>
       </div>
 
       {/* CSS to hide scrollbar */}
-      <style jsx global>{`
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .no-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
+      {/* <style jsx global>{`
+       
+      `}</style> */}
     </section>
   );
 };

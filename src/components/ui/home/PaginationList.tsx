@@ -1,89 +1,25 @@
+"use client";
 import React, { useState } from "react";
 
 import EventCard from "./EventCard";
-import { it } from "node:test";
+// import PaginatedEventElement from "@/types/PaginatedEventElement";
+
+import {
+  PaginationProps,
+  PaginationEventsProps,
+} from "@/types/PaginationInterface";
 
 // 1. Mock Data Generator
-
-// const allEvents = generateEvents(24); // Generating 24 items for 4 pages of 6
-
-const PaginatedEvents = ({ itemsPerPage, allEvents }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-
-  // Logic for displaying current items
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = allEvents.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(allEvents.length / itemsPerPage);
-
-  // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-  const nextPage = () =>
-    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-  const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
-  console.log(allEvents.length);
-  console.log(itemsPerPage);
-  return (
-    <div className="max-w-7xl mx-auto">
-      <div className="mb-8 text-center sm:text-left">
-        <h2 className="text-3xl font-bold text-gray-900">Upcoming Events</h2>
-        <p className="text-gray-500 mt-2">
-          Browse through our latest events and workshops.
-        </p>
-      </div>
-
-      <div
-        key={currentPage}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 animate-slide-in"
-      >
-        {currentItems.map((event) => (
-          <EventCard key={event.id} event={event} />
-        ))}
-      </div>
-
-      {/* Pagination Controls */}
-      {allEvents.length > itemsPerPage && (
-        <Pagination
-          itemsPerPage={itemsPerPage}
-          totalItems={allEvents.length}
-          paginate={paginate}
-          currentPage={currentPage}
-          nextPage={nextPage}
-          prevPage={prevPage}
-        />
-      )}
-
-      {/* Custom Styles for Animation */}
-      <style>{`
-        @keyframes slideIn {
-          from {
-            opacity: 0;
-            transform: translateY(15px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        .animate-slide-in {
-          animation: slideIn 0.4s ease-out forwards;
-        }
-      `}</style>
-    </div>
-  );
-};
-export default PaginatedEvents;
-// 3. Pagination Component
 const Pagination = ({
   itemsPerPage,
-  totalItems,
+  allEvents,
   paginate,
   currentPage,
   nextPage,
   prevPage,
-}) => {
+}: PaginationProps) => {
   const pageNumbers = [];
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalPages: number = Math.ceil(allEvents.length / itemsPerPage);
 
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
@@ -101,7 +37,7 @@ const Pagination = ({
             : "border-gray-300 text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
         }`}
       >
-        {/* <ChevronLeft className="w-5 h-5" /> */} Prev
+        Prev
       </button>
 
       {/* Page Numbers */}
@@ -141,3 +77,57 @@ const Pagination = ({
     </nav>
   );
 };
+
+const PaginatedEvents = ({
+  itemsPerPage,
+  allEvents,
+}: PaginationEventsProps) => {
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Logic for displaying current items
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = allEvents.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(allEvents.length / itemsPerPage);
+
+  // Change page
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+  const nextPage = () =>
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+  //   console.log(allEvents.length);
+  //   console.log(itemsPerPage);
+  return (
+    <div className="max-w-7xl mx-auto">
+      <div className="mb-8 text-center sm:text-left">
+        <h2 className="text-3xl font-bold text-gray-900">Upcoming Events</h2>
+        <p className="text-gray-500 mt-2">
+          Browse through our latest events and workshops.
+        </p>
+      </div>
+
+      <div
+        key={currentPage}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12 animate-slide-in"
+      >
+        {currentItems.map((event) => (
+          <EventCard key={event.id} event={event} />
+        ))}
+      </div>
+
+      {/* Pagination Controls */}
+      {allEvents.length > itemsPerPage && (
+        <Pagination
+          itemsPerPage={itemsPerPage}
+          allEvents={allEvents}
+          paginate={paginate}
+          currentPage={currentPage}
+          nextPage={nextPage}
+          prevPage={prevPage}
+        />
+      )}
+    </div>
+  );
+};
+export default PaginatedEvents;
+// 3. Pagination Component
