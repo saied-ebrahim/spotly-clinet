@@ -18,12 +18,26 @@ export function DashboardSidebar() {
             )}
             <div className="flex flex-col gap-2">
               {section.items.map((item) => {
+                // Determine the role from the pathname (e.g., /dashboardHome/Admin/...)
+                const pathSegments = pathname.split("/");
+                const dashboardIndex = pathSegments.indexOf("dashboardHome");
+                const role =
+                  dashboardIndex !== -1 && pathSegments[dashboardIndex + 1]
+                    ? pathSegments[dashboardIndex + 1]
+                    : "Admin"; // Default to Admin if not found, though redirect should handle this
+
+                // Construct the link based on the role
+                const linkPath =
+                  item.link === ""
+                    ? `/dashboardHome/${role}`
+                    : `/dashboardHome/${role}/${item.link}`;
+
                 const isActive =
-                  pathname.includes("/dashboardHome/" + item.link) ||
-                  (item.link === "" && pathname.endsWith("/dashboardHome"));
+                  pathname === linkPath || pathname.startsWith(linkPath + "/");
+
                 return (
                   <LinkTo
-                    href={"/dashboardHome/" + item.link}
+                    href={linkPath}
                     key={item.key}
                     className={`group relative flex w-full flex-col items-center justify-center rounded-lg py-3 text-xs font-medium transition ${
                       isActive

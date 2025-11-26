@@ -12,7 +12,7 @@ export default function EventsDashboard() {
         <div className="mb-8 border-b border-slate-200">
           <nav className="-mb-px flex space-x-8">
             <button className="border-b-2 border-brand-primary pb-4 text-sm font-medium text-brand-primary">
-             Organizer Events
+              Organizer Events
             </button>
             <button className="border-b-2 border-transparent pb-4 text-sm font-medium text-slate-500 hover:border-slate-300 hover:text-slate-700">
               Collections
@@ -35,7 +35,7 @@ export default function EventsDashboard() {
             </div>
 
             <div className="flex items-center gap-2">
-              <button className="inline-flex items-center gap-x-1.5 rounded-full bg-brand-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary">
+              <button className="inline-flex items-center gap-x-1.5 rounded-full bg-brand-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-primary">
                 <FiList className="-ml-0.5 h-5 w-5" aria-hidden="true" />
                 List
               </button>
@@ -54,7 +54,7 @@ export default function EventsDashboard() {
               <FiChevronDown className="h-5 w-5" />
               All events
             </button>
-            <button className="inline-flex items-center justify-center rounded-md bg-brand-orange px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange">
+            <button className="inline-flex items-center justify-center rounded-md bg-brand-orange px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange">
               Create Event
             </button>
           </div>
