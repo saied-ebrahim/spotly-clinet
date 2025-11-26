@@ -1,11 +1,16 @@
 "use client";
+import useGeolocation from "@/hooks/useGeolocation";
 import { useState, useRef, useEffect } from "react";
 import { FiMapPin } from "react-icons/fi";
 
-const LocationSelector = ({ location }) => {
+const LocationSelector = () => {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [allGovs, setAllGovs] = useState([]);
+  const {
+    location: { city },
+  } = useGeolocation(); // Custom hook to get user's location
+
   useEffect(() => {
     fetch(
       "https://raw.githubusercontent.com/Tech-Labs/egypt-governorates-and-cities-db/master/cities.json"
@@ -22,15 +27,15 @@ const LocationSelector = ({ location }) => {
     // You can use the location data here to fetch events based on user's city
   }, []);
   // The data
-  const governorates = [
-    "Cairo",
-    "Mansoura",
-    "Tanta",
-    "Sohag",
-    "Alexandria",
-    "Giza",
-    "Luxor",
-  ];
+  // const governorates = [
+  //   "Cairo",
+  //   "Mansoura",
+  //   "Tanta",
+  //   "Sohag",
+  //   "Alexandria",
+  //   "Giza",
+  //   "Luxor",
+  // ];
 
   // Filter items based on user typing
   const filteredItems = allGovs?.filter((item) =>
@@ -51,7 +56,7 @@ const LocationSelector = ({ location }) => {
         onFocus={() => setIsOpen(true)}
         // Simple delay to allow clicking an item before blur hides the list
         onBlur={() => setTimeout(() => setIsOpen(false), 200)}
-        placeholder={"ex: " + location || "Event location"}
+        placeholder={"ex: " + city || "Event location"}
         className="w-full h-full bg-gray-50 text-gray-900 text-sm font-medium rounded-xl border-0 px-4 py-3 pl-10 shadow-sm placeholder-gray-400 ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 transition-all outline-none"
       />
 

@@ -1,22 +1,30 @@
 "use client";
+import GeoLocationInterface from "@/types/GeplocationInterface";
 import { useState, useEffect } from "react";
 
-const useGeolocation = () => {
-  const [location, setLocation] = useState({
+const useGeolocation = (): {
+  location: GeoLocationInterface;
+  error: string | null;
+  loading: boolean;
+} => {
+  const [location, setLocation] = useState<GeoLocationInterface>({
     city: null,
   });
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     // 1. Check if the browser supports geolocation
     if (!("geolocation" in navigator)) {
-      setError("Geolocation is not supported by your browser");
-      setLoading(false);
+      // Schedule state updates to the next tick to avoid synchronous setState in an effect
+      setTimeout(() => {
+        setError("Geolocation is not supported by your browser");
+        setLoading(false);
+      }, 0);
       return;
     }
 
-    const handleSuccess = async (position) => {
+    const handleSuccess = async (position: GeolocationPosition) => {
       const { latitude, longitude } = position.coords;
 
       try {
@@ -28,11 +36,10 @@ const useGeolocation = () => {
 
         const city = data.city || "Unknown location";
 
-        setLocation({
-          city,
-        });
+        setLocation({ city, latitude, longitude });
         setLoading(false);
       } catch (err) {
+        console.error("Reverse geocode error:", err);
         // If the API fails, we still have the coordinates
         setLocation((prev) => ({ ...prev, latitude, longitude }));
         setError("Found coordinates, but could not determine city name.");
@@ -40,16 +47,17 @@ const useGeolocation = () => {
       }
     };
 
-    const handleError = (error) => {
+    const handleError = (err: GeolocationPositionError) => {
       setLoading(false);
-      switch (error.code) {
-        case error.PERMISSION_DENIED:
+      // Use numeric codes to avoid relying on instance properties
+      switch (err.code) {
+        case 1: // PERMISSION_DENIED
           setError("User denied the request for Geolocation.");
           break;
-        case error.POSITION_UNAVAILABLE:
+        case 2: // POSITION_UNAVAILABLE
           setError("Location information is unavailable.");
           break;
-        case error.TIMEOUT:
+        case 3: // TIMEOUT
           setError("The request to get user location timed out.");
           break;
         default:
