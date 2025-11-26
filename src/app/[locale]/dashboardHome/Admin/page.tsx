@@ -57,7 +57,7 @@ export default function EventsDashboard() {
             </button>
           </div>
         </div>
- 
+  
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <div className="relative mb-4 h-40 w-40 rounded-full bg-slate-50 flex items-center justify-center">
             <FiCalendar className="h-16 w-16 text-slate-300" />
