@@ -8,7 +8,6 @@ export default function EventsDashboard() {
           <h1 className="text-4xl font-extrabold text-slate-900">Events</h1>
         </div>
 
-        {/* Tabs */}
         <div className="mb-8 border-b border-slate-200">
           <nav className="-mb-px flex space-x-8">
             <button className="border-b-2 border-brand-primary pb-4 text-sm font-medium text-brand-primary">
@@ -20,7 +19,6 @@ export default function EventsDashboard() {
           </nav>
         </div>
 
-        {/* Search and Filters */}
         <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-1 items-center gap-4">
             <div className="relative flex-1 sm:max-w-md">
@@ -60,10 +58,8 @@ export default function EventsDashboard() {
           </div>
         </div>
 
-        {/* Empty State */}
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <div className="relative mb-4 h-40 w-40 rounded-full bg-slate-50 flex items-center justify-center">
-            {/* Placeholder for illustration */}
             <FiCalendar className="h-16 w-16 text-slate-300" />
           </div>
           <h3 className="mt-2 text-lg font-semibold text-slate-900">
