@@ -6,10 +6,12 @@ const FilterSection = ({
   title,
   options,
   defaultOpen = true,
+  onChange,
 }: {
   title: string;
   options: string[];
   defaultOpen?: boolean;
+  onChange: (category: string, value: string, isChecked: boolean) => void;
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
@@ -35,6 +37,7 @@ const FilterSection = ({
                 name={`filter-${title}`}
                 type="checkbox"
                 className="h-4 w-4 rounded border-slate-300 text-brand-primary focus:ring-brand-primary"
+                onChange={(e) => onChange(title, option, e.target.checked)}
               />
               <label
                 htmlFor={`filter-${title}-${option}`}
@@ -53,14 +56,22 @@ const FilterSection = ({
   );
 };
 
-export function EventFilters() {
+interface EventFiltersProps {
+  onFilterChange: (category: string, value: string, isChecked: boolean) => void;
+}
+
+export function EventFilters({ onFilterChange }: EventFiltersProps) {
   return (
     <div className="w-64 shrink-0 pr-8 hidden lg:block">
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-lg font-bold text-slate-900">Filters</h2>
       </div>
 
-      <FilterSection title="Price" options={["Free", "Paid"]} />
+      <FilterSection
+        title="Price"
+        options={["Free", "Paid"]}
+        onChange={onFilterChange}
+      />
       <FilterSection
         title="Date"
         options={[
@@ -70,6 +81,7 @@ export function EventFilters() {
           "This Weekend",
           "Pick a Date",
         ]}
+        onChange={onFilterChange}
       />
       <FilterSection
         title="Category"
@@ -80,6 +92,7 @@ export function EventFilters() {
           "Beer Festivals",
           "Benefit Concerts",
         ]}
+        onChange={onFilterChange}
       />
       <FilterSection
         title="Format"
@@ -90,6 +103,7 @@ export function EventFilters() {
           "Experiential Events",
           "Festivals & Fairs",
         ]}
+        onChange={onFilterChange}
       />
     </div>
   );

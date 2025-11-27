@@ -1,5 +1,5 @@
 import { AdminEventsTable } from "@/components/Dashboard/Events/AdminEventsTable";
-import dummyEvents from "@/data/dummyEvents.json";
+import dummyEvents from "@/data/eventsdata/dummyEvents.json";
 
 export default function AdminEventsPage() {
   return (

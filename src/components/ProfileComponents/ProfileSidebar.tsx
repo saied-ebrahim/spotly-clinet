@@ -2,7 +2,10 @@
 
 import { FaUser, FaEnvelope, FaLock } from "react-icons/fa";
 import { useTranslations } from "next-intl";
-import { ProfileSection, ProfileSidebarProps } from "../interfaces";
+import {
+  ProfileSection,
+  ProfileSidebarProps,
+} from "../../types/Profileinterfaces";
 
 export default function ProfileSidebar({
   activeSection,

@@ -1,6 +1,14 @@
 import { FiSearch, FiMapPin, FiChevronDown } from "react-icons/fi";
 
-export function EventSearchSection() {
+interface EventSearchSectionProps {
+  onSearchChange: (query: string) => void;
+  onLocationChange: (location: string) => void;
+}
+
+export function EventSearchSection({
+  onSearchChange,
+  onLocationChange,
+}: EventSearchSectionProps) {
   return (
     <div className="relative w-full h-[300px] rounded-2xl overflow-hidden mb-8 bg-slate-800 flex flex-col items-center justify-center px-4">
       {/* Background Image Placeholder - User will add image here */}
@@ -21,6 +29,7 @@ export function EventSearchSection() {
               type="text"
               placeholder="Search events"
               className="w-full outline-none text-slate-700 placeholder:text-slate-400"
+              onChange={(e) => onSearchChange(e.target.value)}
             />
           </div>
 
@@ -31,6 +40,7 @@ export function EventSearchSection() {
               <select
                 className="w-full appearance-none outline-none text-slate-700 bg-transparent cursor-pointer"
                 defaultValue=""
+                onChange={(e) => onLocationChange(e.target.value)}
               >
                 <option value="" disabled>
                   Select Location
