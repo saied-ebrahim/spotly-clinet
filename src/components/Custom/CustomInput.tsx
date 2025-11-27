@@ -173,8 +173,8 @@ export default function CustomInput({
                 error
                   ? "bg-red-50 text-red-500 border-red-200"
                   : focus
-                  ? "bg-primary/10 text-primary border-primary/20"
-                  : "bg-primary/5 text-primary border-primary/20"
+                  ? "bg-[#2B293D]/10 text-[#2B293D] border-[#2B293D]/20"
+                  : "bg-[#2B293D]/5 text-[#2B293D] border-[#2B293D]/20"
               }`}
             >
               {icon}
@@ -194,10 +194,10 @@ export default function CustomInput({
               isLoading={loadingOptions}
               isClearable={true}
               noOptionsMessage={() => (
-                <div className="text-primary">{t("auth.noOptions")}</div>
+                <div className="text-[#2B293D]">{t("auth.noOptions")}</div>
               )}
               loadingMessage={() => (
-                <div className="text-primary">{t("auth.loading")}</div>
+                <div className="text-[#2B293D]">{t("auth.loading")}</div>
               )}
               placeholder={t("auth.selectPlaceholder")}
               options={
@@ -242,7 +242,7 @@ export default function CustomInput({
                     return (
                       <div
                         {...safeInnerProps}
-                        className="px-3 py-2 text-primary font-medium text-center cursor-pointer"
+                        className="px-3 py-2 text-[#2B293D] font-medium text-center cursor-pointer"
                       >
                         {t("auth.seeMore")}
                       </div>
@@ -257,14 +257,11 @@ export default function CustomInput({
           <div className="">
             <PhoneInput
               labels={locales[locale as keyof typeof locales]}
-              style={{
-                border: props?.value === undefined && "1px solid #00cfe8",
-              }}
               ref={phoneRef}
               defaultCountry={"EG"}
               className={`phoneNumber ${Boolean(error) ? "error" : ""} ${
                 active ? "main" : ""
-              } ${props?.value === undefined ? "error" : ""} `}
+              }`}
               placeholder="123-456-7890"
               {...props}
               value={props?.value as string | undefined}
@@ -287,7 +284,6 @@ export default function CustomInput({
               onCalendarOpen={() => setOpenDate(true)}
               onCalendarClose={() => setOpenDate(false)}
               selected={props.value as Date | null | undefined}
-
               onChange={(date) =>
                 props.onChange?.(
                   date as unknown as ChangeEvent<HTMLInputElement>
@@ -302,8 +298,8 @@ export default function CustomInput({
                         error
                           ? "bg-red-50 text-red-500 border-red-200"
                           : focus
-                          ? "bg-primary/10 text-primary border-primary/20"
-                          : "bg-primary/5 text-primary border-primary/20"
+                          ? "bg-[#2B293D]/10 text-[#2B293D] border-[#2B293D]/20"
+                          : "bg-[#2B293D]/5 text-[#2B293D] border-[#2B293D]/20"
                       }`}
                     >
                       {icon}
@@ -324,7 +320,7 @@ export default function CustomInput({
                       size == "small" ? "py-2.5" : "py-3.5"
                     } ${
                       icon ? "ps-14" : "ps-4"
-                    } outline-none rounded-md pe-4! border ${"bg-primary/5"} border-primary/20  focus:border-primary focus:ring-2 focus:ring-primary/20  disabled:opacity-80 ${
+                    } outline-none rounded-md pe-4! border ${"bg-[#2B293D]/5"} border-[#2B293D]/20  focus:border-[#2B293D] focus:ring-2 focus:ring-[#2B293D]/20  disabled:opacity-80 ${
                       className || ""
                     } ${
                       error
@@ -356,8 +352,8 @@ export default function CustomInput({
                   error
                     ? "bg-red-50 text-red-500 border-red-200"
                     : focus
-                    ? "bg-primary/10 text-primary border-primary/20"
-                    : "bg-primary/5 text-primary border-primary/20"
+                    ? "bg-[#2B293D]/10 text-[#2B293D] border-[#2B293D]/20"
+                    : "bg-[#2B293D]/5 text-[#2B293D] border-[#2B293D]/20"
                 }`}
               >
                 {icon}
@@ -384,7 +380,7 @@ export default function CustomInput({
                   size == "small" ? "py-2.5" : "py-3.5"
                 } ${
                   icon ? "ps-14" : "ps-4"
-                } pe-4 outline-none rounded-md border bg-primary/5 border-primary/20  focus:border-primary focus:ring-2 focus:ring-primary/20  disabled:opacity-80 ${
+                } pe-4 outline-none rounded-md border bg-[#2B293D]/5 border-[#2B293D]/20  focus:border-[#2B293D] focus:ring-2 focus:ring-[#2B293D]/20  disabled:opacity-80 ${
                   className || ""
                 } ${
                   error
@@ -407,8 +403,8 @@ export default function CustomInput({
                   } duration-200 ${size == "small" ? "py-2.5" : "py-3.5"} ${
                     icon ? "ps-14" : "ps-4"
                   } outline-none rounded-md border ${
-                    type === "color" ? "bg-background-two" : "bg-primary/5"
-                  } border-primary/20  focus:border-primary focus:ring-2 focus:ring-primary/20  disabled:opacity-80 ${
+                    type === "color" ? "bg-background-two" : "bg-[#2B293D]/5"
+                  } border-[#2B293D]/20  focus:border-[#2B293D] focus:ring-2 focus:ring-[#2B293D]/20  disabled:opacity-80 ${
                     className || ""
                   } ${
                     error
@@ -420,7 +416,7 @@ export default function CustomInput({
                 {type === "password" && (
                   <button
                     type="button"
-                    className="absolute h-full flex items-center pe-3! end-3 transform text-xl text-primary/70 hover:text-primary duration-200"
+                    className="absolute h-full flex items-center pe-3! end-3 transform text-xl text-[#2B293D]/70 hover:text-[#2B293D] duration-200"
                     onClick={() => setActive(!active)}
                   >
                     {active ? <FaRegEye /> : <FaRegEyeSlash />}
@@ -430,7 +426,7 @@ export default function CustomInput({
                   <button
                     type="button"
                     onClick={() => setOpen(true)}
-                    className="absolute h-full flex items-center end-3 transform text-xl text-primary/70 hover:text-primary duration-200"
+                    className="absolute h-full flex items-center end-3 transform text-xl text-[#2B293D]/70 hover:text-[#2B293D] duration-200"
                   >
                     <IoIosArrowDown />
                   </button>

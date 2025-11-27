@@ -70,9 +70,12 @@ export default function Header() {
             Login
           </Link>
 
-          <button className="px-4 py-2 bg-yellow-400 text-black rounded-xl font-semibold shadow hover:scale-105 transition">
-            Sign Up
-          </button>
+          <Link
+  href="/auth/register"
+  className="px-4 py-2 bg-yellow-400 text-black rounded-xl font-semibold shadow hover:scale-105 transition text-center"
+>
+  Sign Up
+</Link>
         </nav>
 
         <button
@@ -121,9 +124,12 @@ export default function Header() {
           </Link>
 
           {/* SIGN UP */}
-          <button className="w-full py-2 bg-yellow-400 text-black rounded-xl font-semibold shadow">
-            Sign Up
-          </button>
+<Link
+  href="/auth/register"
+  className="w-full py-2 bg-yellow-400 text-black rounded-xl font-semibold shadow text-center block"
+>
+  Sign Up
+</Link>
         </div>
       )}
     </header>

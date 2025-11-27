@@ -1,24 +1,19 @@
 "use client";
 import { Controller, Resolver, useForm, useWatch } from "react-hook-form";
 import CustomInput from "@/components/Custom/CustomInput";
-import { ParentFormData } from "@/hooks/useRegisterForm";
-import {
-  FaUser,
-  FaPhone,
-  FaEnvelope,
-  FaArrowLeft,
-} from "react-icons/fa";
+import { AttendeeFormData } from "@/hooks/useRegisterForm";
+import { FaUser, FaPhone, FaEnvelope, FaArrowLeft } from "react-icons/fa";
 import { TbLockPassword } from "react-icons/tb";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { parentRegisterSchema } from "@/schemas/registerSchema";
+import { attendeeRegisterSchema } from "@/schemas/registerSchema";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { FaMapLocationDot } from "react-icons/fa6";
 import { TiLocationOutline } from "react-icons/ti";
 import { RiUserLocationLine } from "react-icons/ri";
 
-export default function ParentRegisterForm() {
-  const onSubmit = (data: ParentFormData) => console.log(data);
+export default function AttendeeRegisterForm() {
+  const onSubmit = (data: AttendeeFormData) => console.log(data);
   const t = useTranslations("");
   const router = useRouter();
   const locale = useLocale();
@@ -28,7 +23,7 @@ export default function ParentRegisterForm() {
     setValue,
     trigger,
     formState: { errors },
-  } = useForm<ParentFormData>({
+  } = useForm<AttendeeFormData>({
     defaultValues: {
       firstName: "",
       lastName: "",
@@ -41,8 +36,8 @@ export default function ParentRegisterForm() {
       confirmPassword: "",
     },
     resolver: yupResolver(
-      parentRegisterSchema(t)
-    ) as unknown as Resolver<ParentFormData>,
+      attendeeRegisterSchema(t)
+    ) as unknown as Resolver<AttendeeFormData>,
     mode: "onChange",
   });
 
@@ -106,23 +101,6 @@ export default function ParentRegisterForm() {
 
       <Controller
         control={control}
-        name="phone"
-        render={({ field: { value, onChange } }) => (
-          <CustomInput
-            type="tel"
-            placeholder={messages.phone}
-            id="phone"
-            icon={<FaPhone />}
-            label={messages.phone}
-            error={errors.phone?.message}
-            value={value}
-            onChange={onChange}
-          />
-        )}
-      />
-
-      <Controller
-        control={control}
         name="email"
         render={({ field: { value, onChange } }) => (
           <CustomInput
@@ -132,6 +110,23 @@ export default function ParentRegisterForm() {
             icon={<FaEnvelope />}
             label={messages.email}
             error={errors.email?.message}
+            value={value}
+            onChange={onChange}
+          />
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="phone"
+        render={({ field: { value, onChange } }) => (
+          <CustomInput
+            type="tel"
+            placeholder={messages.phone}
+            id="phone"
+            icon={<FaPhone />}
+            label={messages.phone}
+            error={errors.phone?.message}
             value={value}
             onChange={onChange}
           />
@@ -247,7 +242,7 @@ export default function ParentRegisterForm() {
         )}
       />
 
-      <div className="flex  ">
+      <div className="flex">
         <div className="flex w-full items-center justify-between mt-8 pt-6 border-t border-gray-200">
           <button
             type="button"
@@ -262,7 +257,7 @@ export default function ParentRegisterForm() {
 
           <button
             type="submit"
-            className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${"btn-gradient-primary shadow-md hover:shadow-lg"}`}
+            className="bg-[#2B293D] w-full py-3 text-white text-lg font-bold rounded-md transition-all duration-200 hover:bg-[#4A4763] hover:scale-[1.02] active:scale-[0.98] disabled:bg-[#2B293D]/60 disabled:cursor-not-allowed"
           >
             {messages.register}
           </button>
