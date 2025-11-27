@@ -19,7 +19,6 @@ export function EventCard({ event }: EventCardProps) {
     <div className="flex flex-col sm:flex-row bg-white rounded-xl overflow-hidden border border-slate-200 hover:shadow-md transition-shadow">
       {/* Image Section */}
       <div className="relative w-full sm:w-48 h-48 bg-slate-200 shrink-0">
-        {/* Placeholder for Image */}
         {event.image ? (
           <Image
             src={event.image}
@@ -53,7 +52,7 @@ export function EventCard({ event }: EventCardProps) {
 
           <div className="space-y-1 mb-3">
             <div className="flex items-center text-sm text-slate-600">
-              <span className="font-medium mr-1">Date | Venue</span>
+              <span className="font-medium mr-1">{event.date} | {event.venue}</span>
             </div>
             <div className="text-sm text-slate-500">{event.time}</div>
           </div>

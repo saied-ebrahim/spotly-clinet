@@ -3,6 +3,7 @@ import React from "react";
 import { EventSearchSection } from "@/components/Dashboard/Events/EventSearchSection";
 import { EventFilters } from "@/components/Dashboard/Events/EventFilters";
 import { EventCard } from "@/components/Dashboard/Events/EventCard";
+import { DateSelectionModal } from "@/components/Dashboard/Events/DateSelectionModal";
 import dummyEvents from "@/data/eventsdata/dummyEvents.json";
 import { FiChevronDown } from "react-icons/fi";
 
@@ -12,12 +13,27 @@ const EventsPage = () => {
   const [selectedFilters, setSelectedFilters] = React.useState<
     Record<string, string[]>
   >({});
+  const [isDateModalOpen, setIsDateModalOpen] = React.useState(false);
+  const [customDate, setCustomDate] = React.useState<string | null>(null);
 
   const handleFilterChange = (
     category: string,
     value: string,
     isChecked: boolean
   ) => {
+    if (category === "Date" && value === "Pick a Date") {
+      if (isChecked) {
+        setIsDateModalOpen(true);
+      } else {
+        setCustomDate(null);
+        setSelectedFilters((prev) => ({
+          ...prev,
+          [category]: (prev[category] || []).filter((item) => item !== value),
+        }));
+      }
+      return;
+    }
+
     setSelectedFilters((prev) => {
       const currentCategoryFilters = prev[category] || [];
       if (isChecked) {
@@ -34,44 +50,131 @@ const EventsPage = () => {
     });
   };
 
+  const handleDateSelect = (date: string) => {
+    setCustomDate(date);
+    setSelectedFilters((prev) => ({
+      ...prev,
+      Date: [
+        ...(prev.Date || []).filter((item) => item !== "Pick a Date"),
+        "Pick a Date",
+      ],
+    }));
+    setIsDateModalOpen(false);
+  };
+
+  const parseEventDate = (dateStr: string): Date | null => {
+    // Expected format: "Oct 15, 2025"
+    const date = new Date(dateStr);
+    return isNaN(date.getTime()) ? null : date;
+  };
+
+  const checkPriceFilter = (
+    eventPrice: string,
+    selectedPrices: string[] | undefined
+  ): boolean => {
+    if (!selectedPrices || selectedPrices.length === 0) return true;
+    const isFree = eventPrice.toLowerCase() === "free";
+    const isPaid = !isFree;
+
+    return selectedPrices.some((price) => {
+      if (price === "Free") return isFree;
+      if (price === "Paid") return isPaid;
+      return false;
+    });
+  };
+
+  const checkDateFilter = (
+    eventDateStr: string,
+    selectedDates: string[] | undefined
+  ): boolean => {
+    if (!selectedDates || selectedDates.length === 0) return true;
+    const eventDate = parseEventDate(eventDateStr);
+    if (!eventDate) return false;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    return selectedDates.some((filter) => {
+      if (filter === "Today") {
+        return eventDate.getTime() === today.getTime();
+      }
+      if (filter === "Tomorrow") {
+        return eventDate.getTime() === tomorrow.getTime();
+      }
+      if (filter === "This Week") {
+        const nextWeek = new Date(today);
+        nextWeek.setDate(today.getDate() + 7);
+        return eventDate >= today && eventDate <= nextWeek;
+      }
+      if (filter === "This Weekend") {
+        const friday = new Date(today);
+        friday.setDate(today.getDate() + ((5 - today.getDay() + 7) % 7));
+        const sunday = new Date(friday);
+        sunday.setDate(friday.getDate() + 2);
+        return eventDate >= friday && eventDate <= sunday;
+      }
+      if (filter === "Pick a Date" && customDate) {
+        const selected = new Date(customDate);
+        selected.setHours(0, 0, 0, 0);
+        // Compare year, month, day to avoid time issues if eventDate has time (it shouldn't based on parsing)
+        return (
+          eventDate.getFullYear() === selected.getFullYear() &&
+          eventDate.getMonth() === selected.getMonth() &&
+          eventDate.getDate() === selected.getDate()
+        );
+      }
+      return false;
+    });
+  };
+
   const filteredEvents = dummyEvents.filter((event) => {
     // Search Filter
-    // Safely access properties and handle missing description
     const matchesSearch =
-      (event.title &&
-        event.title.toLowerCase().includes(searchQuery.toLowerCase())) ;
+      event.title &&
+      event.title.toLowerCase().includes(searchQuery.toLowerCase());
 
     // Location Filter
-    // Mapping 'location' filter to 'venue' property in data
     const matchesLocation =
       location === "" ||
       (event.venue &&
         event.venue.toLowerCase().includes(location.toLowerCase()));
 
+    // Price Filter
+    const matchesPrice = checkPriceFilter(
+      event.price,
+      selectedFilters["Price"]
+    );
+
+    // Date Filter
+    const matchesDate = checkDateFilter(event.date, selectedFilters["Date"]);
+
     // Category/Other Filters
-    const matchesFilters = Object.entries(selectedFilters).every(
+    const matchesOtherFilters = Object.entries(selectedFilters).every(
       ([category, values]) => {
+        if (category === "Price" || category === "Date") return true; // Handled separately
         if (values.length === 0) return true;
 
-        // Map UI filter categories to Event properties
-        let eventProperty;
-        if (category === "Price") eventProperty = event.price;
-        else if (category === "Category") eventProperty = event.category;
-        // else if (category === "Format") eventProperty = event.format; // format not in dummy data
-        // Date filtering is complex (Today, Tomorrow, etc.), skipping for now or implementing basic string match if event.date exists
-        else return true; // Skip unknown filters for now
+        let eventProperty: any;
+        if (category === "Category") eventProperty = event.category;
+        else return true;
 
-        if (!eventProperty) return true; // If event doesn't have this property, don't filter out (or do, depending on requirements)
+        if (!eventProperty) return true;
 
-        // Check if event property matches any of the selected values
-        // Assuming eventProperty is a string. If it's an array (e.g. multiple categories), use includes.
         return values.some((val) =>
           eventProperty.toString().toLowerCase().includes(val.toLowerCase())
         );
       }
     );
 
-    return matchesSearch && matchesLocation && matchesFilters;
+    return (
+      matchesSearch &&
+      matchesLocation &&
+      matchesPrice &&
+      matchesDate &&
+      matchesOtherFilters
+    );
   });
 
   return (
@@ -110,6 +213,12 @@ const EventsPage = () => {
           </div>
         </div>
       </div>
+
+      <DateSelectionModal
+        isOpen={isDateModalOpen}
+        onClose={() => setIsDateModalOpen(false)}
+        onSelectDate={handleDateSelect}
+      />
     </div>
   );
 };
