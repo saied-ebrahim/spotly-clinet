@@ -10,7 +10,8 @@ const Categories = () => {
     fetch("http://localhost:8080/events")
       .then((res) => res.json())
       .then((data) => {
-        setEvents(data);
+        const arr = data.slice(0, 7);
+        setEvents(arr);
       });
   }, []);
   const scrollLeft = () => {
@@ -28,8 +29,8 @@ const Categories = () => {
   };
 
   return (
-    <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="w-full py-12 bg-gray-50">
+    <section className="md:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full py-12 sm:pb-0">
         <div className="max-w-7xl mx-auto p-3">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900">
@@ -87,7 +88,7 @@ const Categories = () => {
               // Gap logic:
               // - gap-4 (16px) on mobile
               // - gap-6 (24px) on md+
-              className="flex overflow-x-auto pb-8 gap-4 md:gap-6 snap-x snap-mandatory scroll-smooth no-scrollbar p-3"
+              className="flex overflow-x-auto pb-8 gap-5 md:gap-6 xl:gap-[25px] snap-x snap-mandatory scroll-smooth no-scrollbar p-3"
             >
               {events.map((category, index) => (
                 <CategoryItem key={index} category={category} />

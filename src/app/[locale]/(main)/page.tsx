@@ -2,8 +2,7 @@
 // import Home from "@/components/homePage/home";
 // import HeroSection from "@/components/homePageComponent/HeroSection";
 import Categories from "@/components/ui/home/Caregories";
-import EventSelector from "@/components/ui/home/EventSelector";
-import LocationSelector from "@/components/ui/home/LocationSelector";
+
 import OnlineEvents from "@/components/ui/home/OnlineEvents";
 
 import PopularEvents from "@/components/ui/home/PopularEvents";
@@ -16,17 +15,16 @@ import SearchEvent from "@/components/ui/home/SearchEvent";
 
 function Page() {
   return (
-    <div>
+    <div className="mt-20">
       <main>
         <div className="relative bg-gray-900 py-24 sm:py-32">
           <div
             className="absolute inset-0 bg-cover bg-center opacity-40"
             style={{
-              backgroundImage:
-                "url('https://placehold.co/1920x600/1f2937/white?text=Events+Crowd')",
+              backgroundImage: "url('/hero.png')",
             }}
           ></div>
-          <div className="absolute inset-0 bg-black/50"></div>
+          <div className="absolute inset-0 bg-black/30"></div>
 
           <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <p className="text-xl sm:text-2xl font-light text-yellow-300 mb-2">
@@ -37,22 +35,12 @@ function Page() {
               happening locally and globally.
             </h1>
 
-            {/* <div className="flex flex-col sm:flex-row flex-wrap bg-white p-2 rounded-xl shadow-2xl space-y-3 sm:space-y-0 sm:space-x-2 gap-2">
-              <EventSelector />
-              <LocationSelector />
-              <button className="bg-indigo-600 grow hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl sm:rounded-r-lg shadow-lg transition duration-200 w-full sm:w-auto shrink-0">
-                Search
-              </button>
-            </div> */}
             <SearchEvent />
           </div>
         </div>
 
         <Categories />
 
-        {/* <div className="min-h-screen bg-gray-50 p-4 sm:p-10">
-      
-    </div> */}
         <PopularEvents />
 
         <OnlineEvents />
@@ -72,7 +60,7 @@ function Page() {
 
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link
-                href="/auth/signup"
+                href="/auth/register"
                 className="inline-flex items-center justify-center bg-gray-900 hover:bg-gray-800 text-white px-8 py-4 rounded-xl font-bold text-lg shadow-xl transition-transform duration-300 hover:-translate-y-1"
               >
                 <IoSparkles className="w-5 h-5 mr-2" />

@@ -8,6 +8,7 @@ import {
   PaginationProps,
   PaginationEventsProps,
 } from "@/types/PaginationInterface";
+import Link from "next/link";
 
 // 1. Mock Data Generator
 const Pagination = ({
@@ -83,7 +84,7 @@ const PaginatedEvents = ({
   allEvents,
 }: PaginationEventsProps) => {
   const [currentPage, setCurrentPage] = useState(1);
-
+  // const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
   // Logic for displaying current items
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;

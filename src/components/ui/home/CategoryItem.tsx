@@ -165,7 +165,7 @@ export const CategoryItem = ({
 
       {/* Label */}
       <span
-        className={`mt-4 text-sm sm:text-base font-bold text-gray-700 transition-colors duration-300 ${category.categoryColor} text-center px-1 truncate w-full`}
+        className={`mt-4 text-sm sm:text-base font-bold text-gray-700 transition-colors duration-300 ${category.categoryColor} text-center px-1 truncate w-full rounded-xl`}
       >
         {/* {category.name} */}
         {category.title}
