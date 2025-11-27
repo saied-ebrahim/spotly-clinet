@@ -156,7 +156,7 @@ const EventsPage = () => {
         if (category === "Price" || category === "Date") return true; // Handled separately
         if (values.length === 0) return true;
 
-        let eventProperty: any;
+        let eventProperty;
         if (category === "Category") eventProperty = event.category;
         else return true;
 
