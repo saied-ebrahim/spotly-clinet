@@ -153,7 +153,7 @@ export default function AccountInfo() {
   );
 }
 
-import { InputFieldProps } from "../interfaces";
+import { InputFieldProps } from "../../types/Profileinterfaces";
 
 function InputField({
   label,

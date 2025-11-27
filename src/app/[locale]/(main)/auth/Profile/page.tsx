@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import ProfileSidebar from "./components/ProfileSidebar";
-import AccountInfo from "./components/AccountInfo";
-import ChangeEmail from "./components/ChangeEmail";
-import ChangePassword from "./components/ChangePassword";
-import { ProfileSection } from "./interfaces";
+import ProfileSidebar from "../../../../../components/ProfileComponents/ProfileSidebar";
+import AccountInfo from "../../../../../components/ProfileComponents/AccountInfo";
+import ChangeEmail from "../../../../../components/ProfileComponents/ChangeEmail";
+import ChangePassword from "../../../../../components/ProfileComponents/ChangePassword";
+import { ProfileSection } from "../../../../../types/Profileinterfaces";
 
 export default function ProfilePage() {
   const [activeSection, setActiveSection] =

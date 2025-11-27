@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "title": "Tech Innovation Summit 2025",
+    "date": "Nov 27, 2025",
+    "venue": "Cairo International Convention Centre",
+    "time": "09:00 AM - 05:00 PM",
+    "price": "EGP 500",
+    "category": "Technology & Innovation",
+    "image": ""
+  },
+  {
+    "id": 2,
+    "title": "Digital Marketing Masterclass",
+    "date": "Nov 28, 2025",
+    "venue": "Greek Campus, Cairo",
+    "time": "10:00 AM - 04:00 PM",
+    "price": "EGP 350",
+    "category": "Marketing",
+    "image": ""
+  },
+  {
+    "id": 3,
+    "title": "Startup Pitch Night",
+    "date": "Nov 10, 2025",
+    "venue": "Consoleya, Cairo",
+    "time": "06:00 PM - 09:00 PM",
+    "price": "Free",
+    "category": "Business",
+    "image": ""
+  },
+  {
+    "id": 4,
+    "title": "Art & Design Exhibition",
+    "date": "Dec 05, 2025",
+    "venue": "Cairo Opera House",
+    "time": "11:00 AM - 08:00 PM",
+    "price": "EGP 150",
+    "category": "Art Exhibitions",
+    "image": ""
+  },
+  {
+    "id": 5,
+    "title": "Music Festival 2025",
+    "date": "Dec 20, 2025",
+    "venue": "Family Park, Cairo",
+    "time": "02:00 PM - 11:00 PM",
+    "price": "EGP 800",
+    "category": "Concerts & Performances",
+    "image": ""
+  },
+  {
+    "id": 6,
+    "title": "Future of AI Conference",
+    "date": "Jan 15, 2026",
+    "venue": "Smart Village, Giza",
+    "time": "09:00 AM - 06:00 PM",
+    "price": "EGP 1200",
+    "category": "Technology & Innovation",
+    "image": ""
+  }
+]
