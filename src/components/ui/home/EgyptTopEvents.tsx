@@ -1,8 +1,8 @@
-import { OnlineEvent } from "@/types/OnlineEventInterface";
+import { EgyptTopEventInterace } from "@/types/EgyptTopEventInterface";
 import { useState } from "react";
 import OnlineEventCard from "./EgyptTopEventCard";
 
-export const online: OnlineEvent[] = [
+export const online: EgyptTopEventInterace[] = [
   {
     id: 101,
     category: "Featured Webinar",

@@ -1,8 +1,12 @@
-import { OnlineEvent } from "@/types/OnlineEventInterface";
+import { EgyptTopEventInterace } from "@/types/EgyptTopEventInterface";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function EgyptTopEventCard({ event }: { event: OnlineEvent }) {
+export default function EgyptTopEventCard({
+  event,
+}: {
+  event: EgyptTopEventInterace;
+}) {
   return (
     <Link href={`/events/${event.id}`}>
       <div

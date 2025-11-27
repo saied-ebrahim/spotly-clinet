@@ -12,7 +12,7 @@ const PopularEvents = () => {
   const filters = ["All", "Today", "Tomorrow", "This Weekend", "Free"];
   const {
     location: { city },
-  } = useGeolocation(); // Custom hook to get user's location
+  } = useGeolocation();
   const [events, setEvents] = useState<EventObject[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("All");
 
@@ -26,8 +26,8 @@ const PopularEvents = () => {
       });
   }, []);
   return (
-    <section className="py-16 pt-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-gray-50 font-sans">
+    <section className="py-16 pb-0 pt-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 font-sans">
         {/* Header */}
         <h2 className="text-3xl font-bold text-gray-900 mb-6">
           Popular Events in {city || "Your Location"}
@@ -42,7 +42,7 @@ const PopularEvents = () => {
               className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-200 border ${
                 filter === currentFilter
                   ? "bg-gray-900 text-white border-gray-900" // Active style for "All"
-                  : "bg-white text-gray-600 border-gray-300 hover:border-gray-900 hover:text-gray-900" // Inactive style
+                  : "bg-white text-gray-600 border-gray-300 hover:border-gray-900 hover:text-gray-900"
               }`}
             >
               {filter}
@@ -56,7 +56,7 @@ const PopularEvents = () => {
           </p>
         </div>
         {filteredEvents.length > 0 ? (
-          <PaginationList itemsPerPage={6} allEvents={filteredEvents} />
+          <PaginationList itemsPerPage={6} allEvents={filteredEvents} /> // this is a COMMON COMPONENT for pagination
         ) : (
           <h1 className="text-center w-full text-xl">No Events Found</h1>
         )}

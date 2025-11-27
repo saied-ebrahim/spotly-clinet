@@ -1,4 +1,4 @@
-export interface OnlineEvent {
+export interface EgyptTopEventInterace {
   id: number;
   category: string;
   title: string;

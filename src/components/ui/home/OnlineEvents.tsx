@@ -4,16 +4,9 @@ import { useEffect, useState } from "react";
 import PaginationList from "./PaginationList";
 
 import { EventObject } from "@/types/PaginationInterface";
-// import useGeolocation from "@/hooks/useGeolocation";
 
-// 3. The Main Container Component
 const OnlineEvents = () => {
-  // const filters = ["All", "Today", "Tomorrow", "This Weekend"];
-
   const [events, setEvents] = useState<EventObject[]>([]);
-  // const [currentFilter, setCurrentFilter] = useState<string>("All");
-
-  // const filteredEvents = filterEvents(events, currentFilter);
 
   useEffect(() => {
     fetch("http://localhost:8080/events")
@@ -24,7 +17,7 @@ const OnlineEvents = () => {
   }, []);
   return (
     <section className="py-16 pt-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-gray-50 font-sans">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 font-sans">
         <h2 className="text-3xl font-bold text-gray-900 mb-6">
           Discover Best of Online Events
         </h2>
