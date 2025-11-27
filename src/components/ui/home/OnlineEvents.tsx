@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 
 import PaginationList from "./PaginationList";
 
-import filterEvents from "@/components/Custom/filterPopularEvents";
 import { EventObject } from "@/types/PaginationInterface";
 // import useGeolocation from "@/hooks/useGeolocation";
 

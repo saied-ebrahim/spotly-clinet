@@ -5,14 +5,14 @@ import Categories from "@/components/ui/home/Caregories";
 import EventSelector from "@/components/ui/home/EventSelector";
 import LocationSelector from "@/components/ui/home/LocationSelector";
 import OnlineEvents from "@/components/ui/home/OnlineEvents";
-import OnlineEventsList from "@/components/ui/home/EgyptTopEvents";
+
 import PopularEvents from "@/components/ui/home/PopularEvents";
-import useGeolocation from "@/hooks/useGeolocation";
-import Image from "next/image";
+
 import EgyptTopEvents from "@/components/ui/home/EgyptTopEvents";
 import Link from "next/link";
-import { BsArrowRight } from "react-icons/bs";
+
 import { IoSparkles } from "react-icons/io5";
+import SearchEvent from "@/components/ui/home/SearchEvent";
 
 function Page() {
   return (
@@ -37,13 +37,14 @@ function Page() {
               happening locally and globally.
             </h1>
 
-            <div className="flex flex-col sm:flex-row flex-wrap bg-white p-2 rounded-xl shadow-2xl space-y-3 sm:space-y-0 sm:space-x-2 gap-2">
+            {/* <div className="flex flex-col sm:flex-row flex-wrap bg-white p-2 rounded-xl shadow-2xl space-y-3 sm:space-y-0 sm:space-x-2 gap-2">
               <EventSelector />
               <LocationSelector />
               <button className="bg-indigo-600 grow hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl sm:rounded-r-lg shadow-lg transition duration-200 w-full sm:w-auto shrink-0">
                 Search
               </button>
-            </div>
+            </div> */}
+            <SearchEvent />
           </div>
         </div>
 

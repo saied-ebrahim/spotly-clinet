@@ -1,3 +1,8 @@
+export interface LocationObject {
+  area: string;
+  city: string;
+  country: string;
+}
 export interface EventObject {
   id: number;
   title: string;
@@ -5,6 +10,7 @@ export interface EventObject {
   imageUrl: string;
   category: string;
   month: string;
+  location: LocationObject;
   date: string;
   time: string;
   price: string;
