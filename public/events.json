@@ -1,0 +1,226 @@
+{
+  "events": [
+    {
+      "id": 1,
+      "title": "Lakeside Camping at Pawna",
+      "organizer": "Adventure Geek - Explore the Unexplored",
+      "location": {
+        "area": "New Cairo",
+        "city": "Cairo",
+        "country": "Egypt"
+      },
+      "imageUrl": "https://images.unsplash.com/photo-1523580494863-6f3031224c94?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+      "category": "Travel & Adventure",
+      "month": "NOV",
+      "date": "25",
+      "time": "8:30 AM - 7:30 PM",
+      "price": "INR 1,400",
+      "interested": 14,
+      "categoryColor": "bg-yellow-100 text-yellow-800"
+    },
+    {
+      "id": 2,
+      "title": "Sound Of Christmas 2023",
+      "organizer": "Bal Gandharva Rang Mandir, Mumbai",
+      "location": {
+        "area": "Downtown Cairo",
+        "city": "Cairo",
+        "country": "Egypt"
+      },
+      "imageUrl": "https://images.unsplash.com/photo-1551634979-2b11f8c946fe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+      "category": "Cultural & Arts",
+      "month": "DEC",
+      "date": "02",
+      "time": "6:30 PM - 9:30 PM",
+      "price": "INR 499",
+      "interested": 16,
+      "categoryColor": "bg-green-100 text-green-800"
+    },
+    {
+      "id": 3,
+      "title": "event 111",
+      "organizer": "Sofitel Mumbai BKC, Mumbai",
+      "location": {
+        "area": "Dokki",
+        "city": "Cairo",
+        "country": "Egypt"
+      },
+      "imageUrl": "https://images.unsplash.com/photo-1551634979-2b11f8c946fe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+      "category": "Educational & Business",
+      "month": "DEC",
+      "date": "02",
+      "time": "10 AM - 5 PM",
+      "price": "FREE",
+      "isFree": true,
+      "interested": 0,
+      "categoryColor": "bg-blue-100 text-blue-800"
+    },
+    {
+      "id": 4,
+      "title": "Global Engineering Education Expo 2023",
+      "organizer": "The St. Regis, Mumbai",
+      "imageUrl": "https://images.unsplash.com/photo-1523580494863-6f3031224c94?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+      "category": "Educational & Business",
+      "month": "DEC",
+      "location": {
+        "area": "Giza",
+        "city": "Giza",
+        "country": "Egypt"
+      },
+      "date": "03",
+      "time": "10 AM - 2 PM",
+      "price": "FREE",
+      "isFree": true,
+      "interested": 48,
+      "categoryColor": "bg-blue-100 text-blue-800"
+    },
+    {
+      "id": 5,
+      "title": "Cricket Business Meetup",
+      "organizer": "Play The Turf, Malad, Mumbai",
+      "location": {
+        "area": "Helwan",
+        "city": "Cairo",
+        "country": "Egypt"
+      },
+      "imageUrl": "https://images.unsplash.com/photo-1531415074968-036ba1b575da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+      "category": "Sports & Fitness",
+      "month": "DEC",
+      "date": "08",
+      "time": "6:30 PM - 9:30 PM",
+      "price": "INR 399",
+      "interested": 0,
+      "categoryColor": "bg-lime-100 text-lime-800"
+    },
+    {
+      "id": 6,
+      "title": "Valentine's Day Sail on a Yacht in Mumbai",
+      "organizer": "Mumbai",
+      "location": {
+        "area": "Alexandria",
+        "city": "Alexandria",
+        "country": "Egypt"
+      },
+      "imageUrl": "https://images.unsplash.com/photo-1531415074968-036ba1b575da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+
+      "category": "Travel & Adventure",
+      "month": "FEB",
+      "date": "14",
+      "time": "7 AM - 8 PM",
+      "price": "INR 2,999",
+      "interested": 160,
+      "categoryColor": "bg-yellow-100 text-yellow-800"
+    },
+    {
+      "id": 7,
+      "title": "Lakeside Camping at Pawna",
+      "organizer": "Adventure Geek - Explore the Unexplored",
+      "location": {
+        "area": "Luxor",
+        "city": "Luxor",
+        "country": "Egypt"
+      },
+      "imageUrl": "https://images.unsplash.com/photo-1523580494863-6f3031224c94?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+      "category": "Travel & Adventure",
+      "month": "NOV",
+      "date": "25",
+      "time": "8:30 AM - 7:30 PM",
+      "price": "INR 1,400",
+      "interested": 14,
+      "categoryColor": "bg-yellow-100 text-yellow-800"
+    },
+    {
+      "id": 8,
+      "title": "Sound Of Christmas 2023",
+      "organizer": "Bal Gandharva Rang Mandir, Mumbai",
+      "location": {
+        "area": "Aswan",
+        "city": "Aswan",
+        "country": "Egypt"
+      },
+      "category": "Cultural & Arts",
+      "imageUrl": "https://images.unsplash.com/photo-1523580494863-6f3031224c94?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+
+      "month": "DEC",
+      "date": "02",
+      "time": "6:30 PM - 9:30 PM",
+      "price": "INR 499",
+      "interested": 16,
+      "categoryColor": "bg-green-100 text-green-800"
+    },
+    {
+      "id": 9,
+      "title": "Lakeside Camping at Pawna",
+      "organizer": "Adventure Geek - Explore the Unexplored",
+      "location": {
+        "area": "Sheikh Zayed",
+        "city": "Giza",
+        "country": "Egypt"
+      },
+      "imageUrl": "https://images.unsplash.com/photo-1523580494863-6f3031224c94?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+      "category": "Travel & Adventure",
+      "month": "NOV",
+      "date": "25",
+      "time": "8:30 AM - 7:30 PM",
+      "price": "INR 1,400",
+      "interested": 14,
+      "categoryColor": "bg-yellow-100 text-yellow-800"
+    },
+    {
+      "id": 10,
+      "title": "Sound Of Christmas 2023",
+      "organizer": "Bal Gandharva Rang Mandir, Mumbai",
+      "location": {
+        "area": "6th of October City",
+        "city": "Giza",
+        "country": "Egypt"
+      },
+      "imageUrl": "https://images.unsplash.com/photo-1551634979-2b11f8c946fe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+      "category": "Cultural & Arts",
+      "month": "DEC",
+      "date": "02",
+      "time": "6:30 PM - 9:30 PM",
+      "price": "INR 499",
+      "interested": 16,
+      "categoryColor": "bg-green-100 text-green-800"
+    },
+    {
+      "id": 11,
+      "title": "Meet the Royal College of Art in Mumbai 2023",
+      "organizer": "Sofitel Mumbai BKC, Mumbai",
+      "location": {
+        "area": "Nasr City",
+        "city": "Cairo",
+        "country": "Egypt"
+      },
+      "imageUrl": "https://images.unsplash.com/photo-1551634979-2b11f8c946fe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+      "category": "Educational & Business",
+      "month": "DEC",
+      "date": "02",
+      "time": "10 AM - 5 PM",
+      "price": "FREE",
+      "isFree": true,
+      "interested": 0,
+      "categoryColor": "bg-blue-100 text-blue-800"
+    },
+    {
+      "id": 12,
+      "title": "Global Engineering Education Expo 2023",
+      "organizer": "The St. Regis, Mumbai",
+      "location": {
+        "area": "Maadi",
+        "city": "Cairo",
+        "country": "Egypt"
+      },
+      "imageUrl": "https://images.unsplash.com/photo-1523580494863-6f3031224c94?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
+      "category": "Educational & Business",
+      "month": "DEC",
+      "date": "03",
+      "time": "10 AM - 2 PM",
+      "price": "FREE",
+      "isFree": true,
+      "interested": 48,
+      "categoryColor": "bg-blue-100 text-blue-800"
+    }
+  ]
+}
