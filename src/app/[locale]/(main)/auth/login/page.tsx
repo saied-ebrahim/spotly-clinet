@@ -1,4 +1,5 @@
 import LoginForm from "@/components/auth/LoginForm";
+import TypewriterText from "@/components/auth/TypewriterText";
 import { register } from "@/svg/register";
 
 export default function LoginPage() {
@@ -13,9 +14,7 @@ export default function LoginPage() {
           <h1 className="text-3xl md:text-4xl font-monster text-white font-bold text-center mb-2">
             Welcome Back
           </h1>
-          <p className="text-gray-300 text-sm text-center">
-            Sign in to continue to your account
-          </p>
+          <TypewriterText />
         </div>
 
         {/* Login Form Card */}
@@ -25,8 +24,6 @@ export default function LoginPage() {
           </h2>
           <LoginForm />
         </div>
-
-        
       </div>
     </div>
   );
