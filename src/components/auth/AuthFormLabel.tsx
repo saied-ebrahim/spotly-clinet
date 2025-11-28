@@ -8,10 +8,7 @@ export default function AuthFormLabel({
   children,
 }: AuthFormLabelProps) {
   return (
-    <label
-      htmlFor={htmlFor}
-      className="text-base sm:text-lg lg:text-xl font-sans text-[#636363] tracking-wide font-medium"
-    >
+    <label htmlFor={htmlFor} className="text-sm font-medium text-gray-700">
       {children}
     </label>
   );

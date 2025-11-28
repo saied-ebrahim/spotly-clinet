@@ -1,11 +1,33 @@
-import AppSummary from "@/components/auth/AppSummary";
-import LoginSection from "@/components/auth/LoginSection";
+import LoginForm from "@/components/auth/LoginForm";
+import { register } from "@/svg/register";
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen w-full bg-[#2B293D] flex flex-col lg:flex-row">
-      <AppSummary />
-      <LoginSection />
+    <div className="min-h-screen w-full bg-gradient-to-br from-[#2B293D] via-[#3a3850] to-[#2B293D] flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
+        {/* Logo/Brand Section */}
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-32 h-32 mb-4">
+            <span dangerouslySetInnerHTML={{ __html: register }}></span>
+          </div>
+          <h1 className="text-3xl md:text-4xl font-monster text-white font-bold text-center mb-2">
+            Welcome Back
+          </h1>
+          <p className="text-gray-300 text-sm text-center">
+            Sign in to continue to your account
+          </p>
+        </div>
+
+        {/* Login Form Card */}
+        <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8">
+          <h2 className="text-2xl font-monster text-[#2B293D] font-bold mb-6">
+            Login
+          </h2>
+          <LoginForm />
+        </div>
+
+        
+      </div>
     </div>
   );
 }
