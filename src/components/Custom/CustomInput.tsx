@@ -200,6 +200,26 @@ export default function CustomInput({
                 <div className="text-[#2B293D]">{t("auth.loading")}</div>
               )}
               placeholder={t("auth.selectPlaceholder")}
+              styles={{
+                control: (base) => ({
+                  ...base,
+                  backgroundColor: "rgba(43, 41, 61, 0.05)",
+                  borderColor: "rgba(43, 41, 61, 0.2)",
+                  boxShadow: "none",
+                  minHeight: "48px",
+                  ":hover": {
+                    borderColor: "rgba(43, 41, 61, 0.4)",
+                  },
+                }),
+                singleValue: (base) => ({
+                  ...base,
+                  color: "#000",
+                }),
+                placeholder: (base) => ({
+                  ...base,
+                  color: "#787878",
+                }),
+              }}
               options={
                 (props.options as OptionsOrGroups<
                   OptionType,
@@ -259,8 +279,8 @@ export default function CustomInput({
               labels={locales[locale as keyof typeof locales]}
               ref={phoneRef}
               defaultCountry={"EG"}
-              className={`phoneNumber ${Boolean(error) ? "error" : ""} ${
-                active ? "main" : ""
+              className={`phoneNumber w-full bg-[#2B293D]/5 border border-[#2B293D]/20 rounded-md px-4 py-3 ${
+                error ? "border-red-500 bg-red-50" : ""
               }`}
               placeholder="123-456-7890"
               {...props}

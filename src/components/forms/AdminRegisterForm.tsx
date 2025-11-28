@@ -1,142 +1,56 @@
 "use client";
-import React, { useState } from "react";
-import { Controller, useForm, Resolver, useWatch } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useTranslations } from "next-intl";
-import {
-  FaUser,
-  FaPhone,
-  FaEnvelope,
-  FaCalendarAlt,
-  FaBuilding,
-  FaIdCard,
-  FaUserShield,
-} from "react-icons/fa";
-import { FaMapLocationDot } from "react-icons/fa6";
-import { RiUserLocationLine } from "react-icons/ri";
-import { TiLocationOutline } from "react-icons/ti";
+import { Controller, Resolver, useForm, useWatch } from "react-hook-form";
 import CustomInput from "@/components/Custom/CustomInput";
-import StepNavigation from "./StepNavigation";
-import { adminStep1Schema, adminStep2Schema } from "@/schemas/registerSchema";
-import {
-  AdminFormData,
-  AdminFormDataStep1,
-  AdminFormDataStep2,
-} from "@/hooks/useRegisterForm";
-import { BsGenderMale } from "react-icons/bs";
-import { useRouter } from "@/i18n/navigation";
+import { AttendeeFormData } from "@/hooks/useRegisterForm";
+import { FaUser, FaPhone, FaEnvelope, FaArrowLeft } from "react-icons/fa";
 import { TbLockPassword } from "react-icons/tb";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { attendeeRegisterSchema } from "@/schemas/registerSchema";
+import { useLocale, useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
+import { FaMapLocationDot } from "react-icons/fa6";
+import { TiLocationOutline } from "react-icons/ti";
+import { RiUserLocationLine } from "react-icons/ri";
 
 export default function AdminRegisterForm() {
+  const onSubmit = (data: AttendeeFormData) => console.log(data);
   const t = useTranslations("");
-  const [step, setStep] = useState<number>(1);
-  const [fullFormData, setFullFormData] = useState<Partial<AdminFormData>>({});
-
-  const handleNext = (data: Partial<typeof fullFormData>) => {
-    setFullFormData((prev) => ({ ...prev, ...data }));
-    setStep((prev) => prev + 1);
-    window.scrollTo({ top: 0, behavior: "instant" });
-  };
-
-  const submitAdmin = (data: AdminFormDataStep2) => {
-    const allData: Partial<AdminFormData> = { ...fullFormData, ...data };
-    setFullFormData(allData);
-    console.log("submitAdmin", allData);
-  };
-
-  const handleBack = (data: Partial<AdminFormData>) => {
-    setFullFormData((prev) => ({ ...prev, ...data }));
-    setStep((prev) => prev - 1);
-    window.scrollTo({ top: 0, behavior: "instant" });
-  };
-
-  const renderStep = () => {
-    switch (step) {
-      case 1:
-        return (
-          <Step1Form
-            t={t}
-            onNext={handleNext}
-            step={step}
-            fullFormData={fullFormData}
-          />
-        );
-      case 2:
-        return (
-          <Step2Form
-            t={t}
-            onBack={handleBack}
-            step={step}
-            fullFormData={fullFormData}
-            submitAdmin={submitAdmin}
-          />
-        );
-      default:
-        return null;
-    }
-  };
-
-  return <div className="">{renderStep()}</div>;
-}
-
-const Step1Form = ({
-  t,
-  onNext,
-  step,
-  fullFormData,
-}: {
-  t: ReturnType<typeof useTranslations<"">>;
-  onNext: (data: AdminFormDataStep1) => void;
-  step: number;
-  fullFormData: Partial<AdminFormData>;
-}) => {
   const router = useRouter();
-  const messages = {
-    firstName: t("auth.firstName"),
-    lastName: t("auth.lastName"),
-    phone: t("auth.phone"),
-    email: t("auth.email"),
-    gender: t("auth.gender"),
-    birthDate: t("auth.birthDate"),
-  };
-
+  const locale = useLocale();
   const {
     control,
     handleSubmit,
     setValue,
     trigger,
     formState: { errors },
-  } = useForm<AdminFormDataStep1>({
+  } = useForm<AttendeeFormData>({
     defaultValues: {
-      firstName: fullFormData.firstName || "",
-      lastName: fullFormData.lastName || "",
-      phone: fullFormData.phone || "",
-      email: fullFormData.email || "",
-      country:
-        fullFormData.country ||
-        (null as unknown as { label: string; value: string }),
-      state:
-        fullFormData.state ||
-        (null as unknown as { label: string; value: string }),
-      city:
-        fullFormData.city ||
-        (null as unknown as { label: string; value: string }),
-      gender:
-        fullFormData.gender ||
-        (null as unknown as { label: string; value: string }),
-      birthDate: fullFormData.birthDate
-        ? new Date(fullFormData.birthDate)
-        : new Date(),
-      password: fullFormData.password || "",
-      confirmPassword: fullFormData.confirmPassword || "",
+      firstName: "",
+      lastName: "",
+      phone: "",
+      email: "",
+      country: null as unknown as { label: string; value: string },
+      state: null as unknown as { label: string; value: string },
+      city: null as unknown as { label: string; value: string },
+      password: "",
+      confirmPassword: "",
     },
     resolver: yupResolver(
-      adminStep1Schema(t)
-    ) as unknown as Resolver<AdminFormDataStep1>,
+      attendeeRegisterSchema(t)
+    ) as unknown as Resolver<AttendeeFormData>,
     mode: "onChange",
   });
 
-  const onSubmit = (data: AdminFormDataStep1) => onNext(data);
+  const messages = {
+    firstName: t("auth.firstName"),
+    lastName: t("auth.lastName"),
+    phone: t("auth.phone"),
+    email: t("auth.email"),
+    country: t("auth.country"),
+    password: t("auth.password"),
+    confirmPassword: t("auth.confirmPassword"),
+    register: t("auth.register"),
+  };
 
   const country = useWatch({
     control,
@@ -148,27 +62,21 @@ const Step1Form = ({
   });
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-3 animate-fadeIn"
-    >
-      <h3 className="text-xl font-bold text-center mb-4">
-        {t("form.step")} {step}: {t("form.personalInformation")}
-      </h3>
-
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         <Controller
           control={control}
           name="firstName"
-          render={({ field }) => (
+          render={({ field: { value, onChange } }) => (
             <CustomInput
-              {...field}
               type="text"
-              id="firstName"
-              label={messages.firstName}
               placeholder={messages.firstName}
+              id="firstName"
               icon={<FaUser />}
+              label={messages.firstName}
               error={errors.firstName?.message}
+              value={value}
+              onChange={onChange}
             />
           )}
         />
@@ -176,15 +84,16 @@ const Step1Form = ({
         <Controller
           control={control}
           name="lastName"
-          render={({ field }) => (
+          render={({ field: { value, onChange } }) => (
             <CustomInput
-              {...field}
               type="text"
-              id="lastName"
-              label={messages.lastName}
               placeholder={messages.lastName}
+              id="lastName"
               icon={<FaUser />}
+              label={messages.lastName}
               error={errors.lastName?.message}
+              value={value}
+              onChange={onChange}
             />
           )}
         />
@@ -193,15 +102,16 @@ const Step1Form = ({
       <Controller
         control={control}
         name="email"
-        render={({ field }) => (
+        render={({ field: { value, onChange } }) => (
           <CustomInput
-            {...field}
             type="email"
-            id="email"
-            label={messages.email}
             placeholder={messages.email}
+            id="email"
             icon={<FaEnvelope />}
+            label={messages.email}
             error={errors.email?.message}
+            value={value}
+            onChange={onChange}
           />
         )}
       />
@@ -209,18 +119,20 @@ const Step1Form = ({
       <Controller
         control={control}
         name="phone"
-        render={({ field }) => (
+        render={({ field: { value, onChange } }) => (
           <CustomInput
-            {...field}
             type="tel"
-            id="phone"
-            label={messages.phone}
             placeholder={messages.phone}
+            id="phone"
             icon={<FaPhone />}
+            label={messages.phone}
             error={errors.phone?.message}
+            value={value}
+            onChange={onChange}
           />
         )}
       />
+
       <Controller
         control={control}
         name="country"
@@ -298,51 +210,14 @@ const Step1Form = ({
       />
       <Controller
         control={control}
-        name="gender"
-        render={({ field }) => (
-          <CustomInput
-            {...field}
-            type="select"
-            id="gender"
-            label={messages.gender}
-            placeholder={messages.gender}
-            icon={<BsGenderMale />}
-            error={errors.gender?.message}
-            options={[
-              { label: t("auth.male"), value: "male" },
-              {
-                label: t("auth.female"),
-                value: "female",
-              },
-            ]}
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name="birthDate"
-        render={({ field }) => (
-          <CustomInput
-            {...field}
-            type="date"
-            id="birthDate"
-            label={messages.birthDate}
-            placeholder={messages.birthDate}
-            icon={<FaCalendarAlt />}
-            error={errors.birthDate?.message}
-          />
-        )}
-      />
-      <Controller
-        control={control}
         name="password"
         render={({ field: { value, onChange } }) => (
           <CustomInput
             type="password"
-            placeholder={t("auth.password")}
+            placeholder={messages.password}
             id="password"
             icon={<TbLockPassword />}
-            label={t("auth.password")}
+            label={messages.password}
             error={errors.password?.message}
             value={value}
             onChange={onChange}
@@ -356,173 +231,38 @@ const Step1Form = ({
         render={({ field: { value, onChange } }) => (
           <CustomInput
             type="password"
-            placeholder={t("auth.confirmPassword")}
+            placeholder={messages.confirmPassword}
             id="confirmPassword"
             icon={<TbLockPassword />}
-            label={t("auth.confirmPassword")}
+            label={messages.confirmPassword}
             error={errors.confirmPassword?.message}
             value={value}
             onChange={onChange}
           />
         )}
       />
-      <StepNavigation
-        currentStep={step}
-        totalSteps={2}
-        nextLabel={t("form.next")}
-        onBack={() => {
-          router.push("/auth/register");
-        }}
-      />
-    </form>
-  );
-};
 
-const Step2Form = ({
-  t,
-  onBack,
-  step,
-  fullFormData,
-  submitAdmin,
-}: {
-  t: ReturnType<typeof useTranslations<"">>;
-  onBack: (data: Partial<AdminFormData>) => void;
-  step: number;
-  fullFormData: Partial<AdminFormData>;
-  submitAdmin: (data: AdminFormDataStep2) => void;
-}) => {
-  const {
-    control,
-    handleSubmit,
-    getValues,
-    formState: { errors },
-  } = useForm<AdminFormDataStep2>({
-    defaultValues: {
-      adminCode: fullFormData.adminCode || "",
-      department:
-        fullFormData.department ||
-        (null as unknown as { label: string; value: string }),
-      adminRole:
-        fullFormData.adminRole ||
-        (null as unknown as { label: string; value: string }),
-    },
-    resolver: yupResolver(
-      adminStep2Schema(t)
-    ) as unknown as Resolver<AdminFormDataStep2>,
-    mode: "onChange",
-  });
+      <div className="flex">
+        <div className="flex w-full items-center justify-between mt-8 pt-6 border-t border-gray-200">
+          <button
+            type="button"
+            onClick={() => router.push("/auth/register")}
+            className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${"bg-white text-gray-700 hover:bg-gray-50 border border-gray-200/60"}`}
+          >
+            <FaArrowLeft className={`${locale === "ar" ? "rotate-180" : ""}`} />
+            {t("form.back")}
+          </button>
 
-  const onSubmit = (data: AdminFormDataStep2) => submitAdmin(data);
+          <div className="flex items-center gap-2"></div>
 
-  return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-6 animate-fadeIn"
-    >
-      <h3 className="text-center text-xl font-semibold mb-2">
-        {t("form.step")} {step}: {t("form.adminCredentials")}
-      </h3>
-
-      <div className="space-y-6 animate-fadeIn">
-        <Controller
-          control={control}
-          name="adminCode"
-          render={({ field: { value, onChange } }) => (
-            <CustomInput
-              type="text"
-              placeholder={t("form.adminCode")}
-              id="adminCode"
-              icon={<FaIdCard />}
-              label={t("form.adminCode")}
-              error={errors?.adminCode?.message || ""}
-              value={value}
-              onChange={onChange}
-            />
-          )}
-        />
-
-        <Controller
-          control={control}
-          name="department"
-          render={({ field: { value, onChange } }) => (
-            <CustomInput
-              type="select"
-              placeholder={t("form.department")}
-              id="department"
-              icon={<FaBuilding />}
-              label={t("form.department")}
-              error={errors?.department?.message || ""}
-              value={value}
-              onChange={onChange}
-              options={[
-                {
-                  label: t("form.operations"),
-                  value: "operations",
-                },
-                {
-                  label: t("form.support"),
-                  value: "support",
-                },
-                {
-                  label: t("form.marketing"),
-                  value: "marketing",
-                },
-                {
-                  label: t("form.development"),
-                  value: "development",
-                },
-                {
-                  label: t("form.management"),
-                  value: "management",
-                },
-              ]}
-            />
-          )}
-        />
-
-        <Controller
-          control={control}
-          name="adminRole"
-          render={({ field: { value, onChange } }) => (
-            <CustomInput
-              type="select"
-              placeholder={t("form.adminRole")}
-              id="adminRole"
-              icon={<FaUserShield />}
-              label={t("form.adminRole")}
-              error={errors?.adminRole?.message || ""}
-              value={value}
-              onChange={onChange}
-              options={[
-                {
-                  label: t("form.superAdmin"),
-                  value: "super-admin",
-                },
-                {
-                  label: t("form.contentModerator"),
-                  value: "content-moderator",
-                },
-                {
-                  label: t("form.supportAdmin"),
-                  value: "support-admin",
-                },
-                {
-                  label: t("form.analyticsAdmin"),
-                  value: "analytics-admin",
-                },
-              ]}
-            />
-          )}
-        />
+          <button
+            type="submit"
+            className="bg-[#2B293D] w-full py-3 text-white text-lg font-bold rounded-md transition-all duration-200 hover:bg-[#4A4763] hover:scale-[1.02] active:scale-[0.98] disabled:bg-[#2B293D]/60 disabled:cursor-not-allowed"
+          >
+            {messages.register}
+          </button>
+        </div>
       </div>
-
-      <StepNavigation
-        currentStep={step}
-        totalSteps={2}
-        onBack={() => onBack(getValues())}
-        nextLabel={t("form.finish")}
-        backLabel={t("form.back")}
-      />
     </form>
   );
-};
+}
