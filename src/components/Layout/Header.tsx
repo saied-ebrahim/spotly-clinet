@@ -1,16 +1,84 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useLocale } from "next-intl";
 import { usePathname } from "next/navigation";
 import SpotlyLogo from "@/components/Layout/SpotlyLogo";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import Cookies from "js-cookie";
+import { decryptData, encryptData } from "@/shared/encryption";
+import { FaUserCircle, FaChevronDown } from "react-icons/fa";
+import { authService } from "@/services/authService";
+import { parseJwt } from "@/shared/jwt";
 
 export default function Header() {
   const pathname = usePathname();
   const locale = useLocale();
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState<{ name?: string } | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    const checkSession = async () => {
+      const cookie = Cookies.get("sub");
+      let userData = null;
+
+      if (cookie) {
+        const decrypted = decryptData(cookie) as any;
+        if (decrypted && decrypted.token) {
+          userData = decrypted.user || { name: "User" };
+        }
+      }
+
+      if (userData) {
+        setUser(userData);
+      } else {
+        // Try to restore session via refresh token
+        try {
+          const deviceID = authService.getDeviceID();
+          console.log(
+            "Attempting session restoration with Device ID:",
+            deviceID
+          );
+
+          if (deviceID) {
+            const response = await authService.refreshToken(deviceID);
+            console.log("Refresh Token Response:", response);
+
+            if (response.token) {
+              const decodedToken = parseJwt(response.token);
+              const user = {
+                name:
+                  decodedToken?.name?.split(" ")[0] ||
+                  decodedToken?.email?.split("@")[0] ||
+                  "User",
+                ...decodedToken,
+              };
+
+              const encryptedData = encryptData({
+                token: response.token,
+                user: user,
+              });
+              Cookies.set("sub", encryptedData, { path: "/" });
+              setUser(user);
+              console.log("Session restored successfully");
+            }
+          }
+        } catch (error) {
+          console.log("Session restoration failed:", error);
+        }
+      }
+    };
+
+    checkSession();
+  }, []);
+
+  const handleLogout = () => {
+    Cookies.remove("sub");
+    setUser(null);
+    window.location.href = "/";
+  };
 
   const nav = [
     { label: "Home", href: "/" },
@@ -66,16 +134,63 @@ export default function Header() {
 
           <LanguageSwitcher />
 
-          <Link href="/auth/login" className="hover:text-green-300 transition">
-            Login
-          </Link>
+          {user ? (
+            <div className="relative">
+              <button
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className="flex items-center gap-2 hover:text-green-300 transition focus:outline-none"
+              >
+                <FaUserCircle className="text-2xl" />
+                <span className="font-medium">{user.name}</span>
+                <FaChevronDown
+                  className={`text-sm transition-transform duration-200 ${
+                    dropdownOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-3 w-48 bg-white text-[#181828] rounded-xl shadow-2xl py-2 animate-fadeIn border border-gray-100 overflow-hidden">
+                  <Link
+                    href="/dashboard"
+                    className="block px-4 py-2.5 hover:bg-gray-50 transition-colors font-medium"
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    Dashboard
+                  </Link>
+                  <Link
+                    href="/profile"
+                    className="block px-4 py-2.5 hover:bg-gray-50 transition-colors font-medium"
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    Profile
+                  </Link>
+                  <div className="h-px bg-gray-100 my-1"></div>
+                  <button
+                    onClick={handleLogout}
+                    className="block w-full text-left px-4 py-2.5 hover:bg-red-50 text-red-600 transition-colors font-medium"
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <>
+              <Link
+                href="/auth/login"
+                className="hover:text-green-300 transition"
+              >
+                Login
+              </Link>
 
-          <Link
-  href="/auth/register"
-  className="px-4 py-2 bg-yellow-400 text-black rounded-xl font-semibold shadow hover:scale-105 transition text-center"
->
-  Sign Up
-</Link>
+              <Link
+                href="/auth/register"
+                className="px-4 py-2 bg-yellow-400 text-black rounded-xl font-semibold shadow hover:scale-105 transition text-center"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
         </nav>
 
         <button
@@ -114,22 +229,53 @@ export default function Header() {
           {/* LANG SWITCHER */}
           <LanguageSwitcher />
 
-          {/* LOGIN */}
-          <Link
-            href="/auth/login"
-            className="block hover:text-green-300 transition"
-            onClick={() => setOpen(false)}
-          >
-            Login
-          </Link>
+          {user ? (
+            <div className="border-t border-gray-700 pt-4 mt-4">
+              <div className="flex items-center gap-3 mb-4 text-yellow-400">
+                <FaUserCircle className="text-2xl" />
+                <span className="font-bold">{user.name}</span>
+              </div>
+              <Link
+                href="/dashboard"
+                className="block py-2 hover:text-green-300 transition"
+                onClick={() => setOpen(false)}
+              >
+                Dashboard
+              </Link>
+              <Link
+                href="/profile"
+                className="block py-2 hover:text-green-300 transition"
+                onClick={() => setOpen(false)}
+              >
+                Profile
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="block w-full text-left py-2 text-red-400 hover:text-red-300 transition"
+              >
+                Logout
+              </button>
+            </div>
+          ) : (
+            <>
+              {/* LOGIN */}
+              <Link
+                href="/auth/login"
+                className="block hover:text-green-300 transition"
+                onClick={() => setOpen(false)}
+              >
+                Login
+              </Link>
 
-          {/* SIGN UP */}
-<Link
-  href="/auth/register"
-  className="w-full py-2 bg-yellow-400 text-black rounded-xl font-semibold shadow text-center block"
->
-  Sign Up
-</Link>
+              {/* SIGN UP */}
+              <Link
+                href="/auth/register"
+                className="w-full py-2 bg-yellow-400 text-black rounded-xl font-semibold shadow text-center block"
+              >
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
       )}
     </header>
