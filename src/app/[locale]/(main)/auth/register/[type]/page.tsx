@@ -5,6 +5,7 @@ import AdminRegisterForm from "@/components/forms/AdminRegisterForm";
 import { FaBuilding, FaUser, FaUserShield } from "react-icons/fa";
 import { actor } from "@/svg/actor";
 import { redirect } from "next/navigation";
+import TypewriterText from "@/components/auth/TypewriterText";
 
 export default async function RegisterPage({
   params,
@@ -35,13 +36,13 @@ const RegisterFormComponent = ({
   const getIcon = () => {
     switch (type) {
       case "attendee":
-        return <FaUser className="text-2xl text-dark" />;
+        return <FaUser className="text-3xl text-white" />;
       case "organizer":
-        return <FaBuilding className="text-2xl text-dark" />;
+        return <FaBuilding className="text-3xl text-white" />;
       case "admin":
-        return <FaUserShield className="text-2xl text-dark" />;
+        return <FaUserShield className="text-3xl text-white" />;
       default:
-        return <FaUser className="text-2xl text-dark" />;
+        return <FaUser className="text-3xl text-white" />;
     }
   };
 
@@ -49,11 +50,11 @@ const RegisterFormComponent = ({
   const getTitle = () => {
     switch (type) {
       case "attendee":
-        return t("auth.attendeeTitle");
+        return "Join as Attendee";
       case "organizer":
-        return t("auth.organizerTitle");
+        return "Become an Organizer";
       case "admin":
-        return t("auth.adminTitle");
+        return "Admin Access";
       default:
         return "";
     }
@@ -63,11 +64,11 @@ const RegisterFormComponent = ({
   const getDescription = () => {
     switch (type) {
       case "attendee":
-        return t("auth.attendeeDescription");
+        return "Discover and book amazing events";
       case "organizer":
-        return t("auth.organizerDescription");
+        return "Create and manage your events";
       case "admin":
-        return t("auth.adminDescription");
+        return "Manage platform operations";
       default:
         return "";
     }
@@ -77,49 +78,28 @@ const RegisterFormComponent = ({
   const getIllustration = () => actor;
 
   return (
-    <div className="min-h-screen w-full bg-[#2B293D] flex flex-col lg:flex-row">
-      {/* Left: Illustration - Hidden on mobile */}
-      <div className="hidden lg:flex lg:flex-col lg:justify-center lg:items-center lg:w-1/2 lg:min-h-screen bg-[#2B293D] p-6 lg:p-8">
-        <div className="w-full max-w-md">
-          <span
-            dangerouslySetInnerHTML={{
-              __html: getIllustration(),
-            }}
-          ></span>
-        </div>
-        <div className="mt-8 text-3xl lg:text-4xl xl:text-5xl text-white flex flex-col font-bold font-monster leading-tight text-center">
-          <p>Discover amazing events!</p>
-          <p className="mt-4">
-            Register to get personalized <br /> event recommendations <br /> and
-            manage your bookings <br /> today!
-          </p>
-        </div>
-      </div>
-
-      {/* Right: Form Section */}
-      <div className="flex justify-center items-start w-full lg:w-1/2 min-h-screen bg-white lg:rounded-tl-[80px] lg:rounded-bl-[80px] p-6 sm:p-8 md:p-12 lg:p-16">
-        <div className="flex flex-col items-center justify-center gap-6 sm:gap-8 w-full max-w-md lg:max-w-lg">
-          <div className="flex w-full items-center justify-start gap-4">
-            <div className="w-12 h-12 rounded-lg bg-[#2B293D]/10 flex items-center justify-center">
-              {getIcon()}
-            </div>
-            <div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-monster text-[#2B293D] font-bold">
-                {getTitle()}
-              </h1>
-              <p className="text-sm text-gray-500 mt-1">{getDescription()}</p>
-            </div>
+    <div className="min-h-screen w-full bg-gradient-to-br from-[#2B293D] via-[#3a3850] to-[#2B293D] flex items-center justify-center p-4">
+      <div className="w-full max-w-3xl">
+        {/* Logo/Brand Section */}
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-24 h-24 mb-4 flex items-center justify-center bg-white/10 rounded-full p-4">
+            {getIcon()}
           </div>
+          <h1 className="text-3xl md:text-4xl font-monster text-white font-bold text-center mb-2">
+            {getTitle()}
+          </h1>
+          <TypewriterText />
+        </div>
 
-          <div className="flex w-full items-center justify-start font-monster">
-            {type === "attendee" ? (
-              <AttendeeRegisterForm />
-            ) : type === "organizer" ? (
-              <OrganizerRegisterForm />
-            ) : type === "admin" ? (
-              <AdminRegisterForm />
-            ) : null}
-          </div>
+        {/* Registration Form Card */}
+        <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8">
+          {type === "attendee" ? (
+            <AttendeeRegisterForm />
+          ) : type === "organizer" ? (
+            <OrganizerRegisterForm />
+          ) : type === "admin" ? (
+            <AdminRegisterForm />
+          ) : null}
         </div>
       </div>
     </div>
