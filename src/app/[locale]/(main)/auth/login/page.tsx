@@ -1,5 +1,5 @@
-import AppSummary from "../components/AppSummary";
-import LoginSection from "../components/LoginSection";
+import AppSummary from "@/components/auth/AppSummary";
+import LoginSection from "@/components/auth/LoginSection";
 
 export default function LoginPage() {
   return (

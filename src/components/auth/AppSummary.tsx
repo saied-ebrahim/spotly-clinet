@@ -7,12 +7,12 @@ export default function AppSummary() {
         <span dangerouslySetInnerHTML={{ __html: register }}></span>
       </div>
       <div className="mt-8 text-3xl lg:text-4xl xl:text-5xl text-white flex flex-col font-bold font-monster leading-tight text-center">
-          <p>Discover amazing events!</p>
-          <p className="mt-4">
-            Register to get personalized <br /> event recommendations <br /> and
-            manage your bookings <br /> today!
-          </p>
-        </div>
+        <p>Discover amazing events!</p>
+        <p className="mt-4">
+          Register to get personalized <br /> event recommendations <br /> and
+          manage your bookings <br /> today!
+        </p>
+      </div>
     </div>
   );
 }

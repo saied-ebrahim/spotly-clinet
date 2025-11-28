@@ -6,9 +6,7 @@ import Link from "next/link";
 
 export default function LoginForm() {
   return (
-    <form
-      className="flex flex-col gap-5 sm:gap-6 justify-start w-full items-start"
-    >
+    <form className="flex flex-col gap-5 sm:gap-6 justify-start w-full items-start">
       <div className="flex flex-col w-full gap-2">
         <AuthFormLabel htmlFor="email">E-mail Address</AuthFormLabel>
         <AuthFormInput
@@ -20,11 +18,7 @@ export default function LoginForm() {
 
       <div className="flex flex-col w-full gap-2">
         <AuthFormLabel htmlFor="password">Password</AuthFormLabel>
-        <AuthFormInput
-          name="password"
-          placeHolder="Password"
-          type="password"
-        />
+        <AuthFormInput name="password" placeHolder="Password" type="password" />
       </div>
 
       <div className="flex justify-center items-center w-full mt-2">
