@@ -136,10 +136,25 @@ const EventCard = ({ event }: { event: EventObject }) => {
             fill
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
-
-          <span className="absolute bottom-3 left-3 text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-blue-600 text-white bg-opacity-90">
-            {Array.isArray(event.category) ? event.category[0] : event.category}
-          </span>
+          <div className="w-[93%] flex justify-between absolute bottom-3 left-3 ">
+            {/* <span className="absolute bottom-3 left-3 text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-blue-600 text-white bg-opacity-90">
+              {Array.isArray(event.category)
+                ? event.category[0]
+                : event.category}
+            </span> */}
+            <span className=" text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-blue-600 text-white bg-opacity-90">
+              {Array.isArray(event.category)
+                ? event.category[0]
+                : event.category}
+            </span>
+            {event.type === "hybrid" ? (
+              <span className=" text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-fuchsia-800 text-white bg-opacity-90">
+                Hybrid
+              </span>
+            ) : (
+              <span className=""></span>
+            )}
+          </div>
         </div>
 
         {/* Content Section - Responsive Padding */}
@@ -157,14 +172,40 @@ const EventCard = ({ event }: { event: EventObject }) => {
           {/* Details Block (Right side) - Flex Grow to fill space */}
           <div className="flex flex-col gap-1 grow font-medium min-w-0">
             {/* Title - Responsive Text & Auto Height */}
-            <h3 className="text-base sm:text-lg leading-tight font-bold text-gray-900 line-clamp-2 min-h-10">
+            <h3 className="text-base sm:text-lg leading-tight font-bold text-gray-900 line-clamp-2 min-h-[45px]">
               {event.title}
             </h3>
 
-            <p className="text-xs text-gray-500 truncate w-full">
+            <p className="text-xs text-gray-500 truncate w-full mb-2">
               {event.organizer}
             </p>
-            <p className="text-xs text-gray-400 mb-3 truncate">{event.time}</p>
+            {/* <div className="flex justify-start items-center text-left flex-col-reverse xs:flex-row w-full">
+              <p className="text-xs text-gray-400 mb-3  w-full">{event.time}</p>
+              <p className="text-xs text-gray-400 mb-3  pr-4 w-full text-right ">
+                {`${event.location.city}/${event.location.district}`}
+              </p>
+            </div> */}
+            <div className="flex w-full flex-col-reverse items-start text-left min-[350px]:flex-row min-[350px]:items-center min-[350px]:justify-between">
+              {/* Time: Bottom on mobile, Left on desktop */}
+              <p className="text-xs text-gray-400 mt-3 min-[350px]:mt-0">
+                {event.time}
+              </p>
+
+              {/* Location: Top on mobile, Right on desktop */}
+              {event.type !== "online" ? (
+                <p className="text-xs text-gray-400 text-left min-[350px]:text-right pr-4">
+                  {`${event.location.city}/${event.location.district}`}
+                </p>
+              ) : (
+                <p
+                  className={`text-sm ${
+                    event.type === "online" ? "text-amber-400" : ""
+                  } text-left min-[350px]:text-right pr-4 fw-bolder`}
+                >
+                  {event.type}
+                </p>
+              )}
+            </div>
 
             {/* Price and Interest Footer - Pushed to bottom */}
             <div className="relative left-[-46px] flex items-center justify-between mt-auto pt-3 border-t border-dashed border-gray-100 w-[calc(100%+30px)]">
@@ -210,7 +251,7 @@ const EventCard = ({ event }: { event: EventObject }) => {
         className="absolute top-3 right-3 bg-white/90 p-2 rounded-full shadow-sm hover:text-red-500 transition-colors z-20 cursor-pointer active:scale-95 text-gray-600"
         aria-label="Add to favorites"
       >
-        <FiHeart size={18} />
+        <FiStar size={18} />
       </button>
     </div>
   );

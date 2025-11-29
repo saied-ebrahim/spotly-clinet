@@ -4,11 +4,13 @@
       "id": 1,
       "title": "Cairo Tech Summit 2025",
       "description": "The largest gathering of software engineers, AI researchers, and startups in the MENA region. Join us for 3 days of workshops and networking.",
-      "date": "2025-12-15T09:00:00.000Z",
+      "date": "2025-11-29T09:00:00.000Z",
       "time": "09:00 AM",
+      "type": "hybrid",
       "location": {
         "country": "Egypt",
         "city": "Cairo",
+        "district": "New Cairo",
         "address": "Egypt International Exhibition Center, New Cairo",
         "latitude": 30.0055,
         "longitude": 31.4771
@@ -34,6 +36,7 @@
       "tags": ["tag1", "tag2"],
       "category": ["Travel & Adventure"],
       "organizer": "hamada organizer",
+      "isonline": false,
       "price": 500
     },
     {
@@ -42,9 +45,11 @@
       "description": "An ethereal evening of electronic and orchestral music set against the backdrop of the Great Pyramids of Giza.",
       "date": "2026-01-10T18:00:00.000Z",
       "time": "06:00 PM",
+      "type": "offline",
       "location": {
         "country": "Egypt",
         "city": "Giza",
+        "district": "Haram",
         "address": "Giza Necropolis, Al Haram",
         "latitude": 29.9792,
         "longitude": 31.1342
@@ -72,11 +77,13 @@
       "id": 3,
       "title": "Alexandria Digital Arts Expo",
       "description": "A showcase of digital illustration, UI/UX design trends, and 3D modeling hosted at the historic library.",
-      "date": "2025-11-20T10:00:00.000Z",
+      "date": "2025-12-02T10:00:00.000Z",
       "time": "10:00 AM",
+      "type": "online",
       "location": {
         "country": "Egypt",
         "city": "Alexandria",
+        "district": "Shatby",
         "address": "Bibliotheca Alexandrina, Shatby",
         "latitude": 31.2089,
         "longitude": 29.9092
@@ -104,11 +111,13 @@
       "id": 4,
       "title": "Cairo Tech Summit 2025",
       "description": "The largest gathering of software engineers, AI researchers, and startups in the MENA region. Join us for 3 days of workshops and networking.",
-      "date": "2025-12-15T09:00:00.000Z",
+      "date": "2025-11-30T09:00:00.000Z",
       "time": "09:00 AM",
+      "type": "hybrid",
       "location": {
         "country": "Egypt",
         "city": "Cairo",
+        "district": "New Cairo",
         "address": "Egypt International Exhibition Center, New Cairo",
         "latitude": 30.0055,
         "longitude": 31.4771
@@ -142,9 +151,11 @@
       "description": "An ethereal evening of electronic and orchestral music set against the backdrop of the Great Pyramids of Giza.",
       "date": "2026-01-10T18:00:00.000Z",
       "time": "06:00 PM",
+      "type": "offline",
       "location": {
         "country": "Egypt",
         "city": "Giza",
+        "district": "Haram",
         "address": "Giza Necropolis, Al Haram",
         "latitude": 29.9792,
         "longitude": 31.1342
@@ -172,11 +183,13 @@
       "id": 6,
       "title": "Alexandria Digital Arts Expo",
       "description": "A showcase of digital illustration, UI/UX design trends, and 3D modeling hosted at the historic library.",
-      "date": "2025-11-20T10:00:00.000Z",
+      "date": "2025-12-04T10:00:00.000Z",
       "time": "10:00 AM",
+      "type": "offline",
       "location": {
         "country": "Egypt",
         "city": "Alexandria",
+        "district": "Shatby",
         "address": "Bibliotheca Alexandrina, Shatby",
         "latitude": 31.2089,
         "longitude": 29.9092
@@ -204,11 +217,13 @@
       "id": 7,
       "title": "Cairo Tech Summit 2025",
       "description": "The largest gathering of software engineers, AI researchers, and startups in the MENA region. Join us for 3 days of workshops and networking.",
-      "date": "2025-12-15T09:00:00.000Z",
+      "date": "2025-12-01T09:00:00.000Z",
       "time": "09:00 AM",
+      "type": "hybrid",
       "location": {
         "country": "Egypt",
         "city": "Cairo",
+        "district": "New Cairo",
         "address": "Egypt International Exhibition Center, New Cairo",
         "latitude": 30.0055,
         "longitude": 31.4771
@@ -242,9 +257,11 @@
       "description": "An ethereal evening of electronic and orchestral music set against the backdrop of the Great Pyramids of Giza.",
       "date": "2026-01-10T18:00:00.000Z",
       "time": "06:00 PM",
+      "type": "offline",
       "location": {
         "country": "Egypt",
         "city": "Giza",
+        "district": "Haram",
         "address": "Giza Necropolis, Al Haram",
         "latitude": 29.9792,
         "longitude": 31.1342
@@ -274,9 +291,11 @@
       "description": "A showcase of digital illustration, UI/UX design trends, and 3D modeling hosted at the historic library.",
       "date": "2025-11-20T10:00:00.000Z",
       "time": "10:00 AM",
+      "type": "online",
       "location": {
         "country": "Egypt",
         "city": "Alexandria",
+        "district": "Shatby",
         "address": "Bibliotheca Alexandrina, Shatby",
         "latitude": 31.2089,
         "longitude": 29.9092
@@ -304,11 +323,13 @@
       "id": 10,
       "title": "Cairo Tech Summit 2025",
       "description": "The largest gathering of software engineers, AI researchers, and startups in the MENA region. Join us for 3 days of workshops and networking.",
-      "date": "2025-12-15T09:00:00.000Z",
+      "date": "2025-12-03T09:00:00.000Z",
       "time": "09:00 AM",
+      "type": "hybrid",
       "location": {
         "country": "Egypt",
         "city": "Cairo",
+        "district": "New Cairo",
         "address": "Egypt International Exhibition Center, New Cairo",
         "latitude": 30.0055,
         "longitude": 31.4771
@@ -342,9 +363,11 @@
       "description": "An ethereal evening of electronic and orchestral music set against the backdrop of the Great Pyramids of Giza.",
       "date": "2026-01-10T18:00:00.000Z",
       "time": "06:00 PM",
+      "type": "offline",
       "location": {
         "country": "Egypt",
         "city": "Giza",
+        "district": "Dokki",
         "address": "Giza Necropolis, Al Haram",
         "latitude": 29.9792,
         "longitude": 31.1342
@@ -374,9 +397,11 @@
       "description": "A showcase of digital illustration, UI/UX design trends, and 3D modeling hosted at the historic library.",
       "date": "2025-11-20T10:00:00.000Z",
       "time": "10:00 AM",
+      "type": "online",
       "location": {
         "country": "Egypt",
         "city": "Alexandria",
+        "district": "Shatby",
         "address": "Bibliotheca Alexandrina, Shatby",
         "latitude": 31.2089,
         "longitude": 29.9092

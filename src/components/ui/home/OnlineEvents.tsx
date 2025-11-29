@@ -12,7 +12,10 @@ const OnlineEvents = () => {
     fetch("http://localhost:8080/events")
       .then((res) => res.json())
       .then((data) => {
-        setEvents(data);
+        const onlineEvents = data.filter(
+          (e: EventObject) => e.type === "online"
+        );
+        setEvents(onlineEvents);
       });
   }, []);
   return (

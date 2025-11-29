@@ -1,10 +1,5 @@
-export interface EgyptTopEventInterace {
-  id: number;
-  category: string;
-  title: string;
-  description: string;
-  date: string;
-  registeredCount?: string;
-  image: string;
+import { EventObject } from "./PaginationInterface";
+
+export interface EgyptTopEventInterace extends EventObject {
   colorSchemeDark?: string;
 }

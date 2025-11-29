@@ -10,7 +10,7 @@ import useGeolocation from "@/hooks/useGeolocation";
 
 // 3. The Main Container Component
 const PopularEvents = () => {
-  const filters = ["All", "Today", "Tomorrow", "This Weekend", "Free"];
+  const filters = ["All", "Today", "Tomorrow", "This Week", "Hybrid", "Free"];
   const {
     location: { city },
   } = useGeolocation();

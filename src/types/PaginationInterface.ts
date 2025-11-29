@@ -10,12 +10,14 @@ export interface EventObject {
   tags: string[];
   category: string[];
   organizer: string;
+  type: "online" | "offline" | "hybrid";
   price: number | string;
 }
 
 export interface Location {
   country: string;
   city: string;
+  district: string;
   address: string;
   latitude: number;
   longitude: number;
