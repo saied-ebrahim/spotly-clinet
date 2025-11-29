@@ -11,7 +11,6 @@ import { decryptData, encryptData } from "@/shared/encryption";
 import { FaUserCircle, FaChevronDown } from "react-icons/fa";
 import { authService } from "@/services/authService";
 import { parseJwt } from "@/shared/jwt";
-
 export default function Header() {
   const pathname = usePathname();
   const locale = useLocale();
@@ -21,61 +20,87 @@ export default function Header() {
 
   useEffect(() => {
     const checkSession = async () => {
-      const cookie = Cookies.get("sub");
+      const cookie = Cookies.get("session_data");
       let userData = null;
+      let token = null;
+      let storedDeviceID = "";
 
       if (cookie) {
-        const decrypted = decryptData(cookie) as any;
-        if (decrypted && decrypted.token) {
-          userData = decrypted.user || { name: "User" };
+        try {
+          const decrypted = decryptData(cookie) as {
+            token?: string;
+            user?: { name?: string };
+            deviceID?: string;
+          };
+
+          if (decrypted && decrypted.token) {
+            userData = decrypted.user || { name: "User" };
+            token = decrypted.token;
+            storedDeviceID = decrypted.deviceID || "";
+          }
+        } catch (err) {
+          console.error("Header: Decryption failed", err);
         }
       }
 
-      if (userData) {
-        setUser(userData);
-      } else {
-        // Try to restore session via refresh token
-        try {
-          const deviceID = authService.getDeviceID();
-          console.log(
-            "Attempting session restoration with Device ID:",
-            deviceID
-          );
+      if (userData && token) {
+        const decodedToken = parseJwt(token);
 
-          if (deviceID) {
-            const response = await authService.refreshToken(deviceID);
-            console.log("Refresh Token Response:", response);
-
-            if (response.token) {
-              const decodedToken = parseJwt(response.token);
-              const user = {
-                name:
-                  decodedToken?.name?.split(" ")[0] ||
-                  decodedToken?.email?.split("@")[0] ||
-                  "User",
-                ...decodedToken,
-              };
-
-              const encryptedData = encryptData({
-                token: response.token,
-                user: user,
-              });
-              Cookies.set("sub", encryptedData, { path: "/" });
-              setUser(user);
-              console.log("Session restored successfully");
-            }
-          }
-        } catch (error) {
-          console.log("Session restoration failed:", error);
+        // If userData is just the default placeholder, try to get better info from the token
+        if (userData.name === "User" && decodedToken) {
+          const name =
+            decodedToken.name ||
+            decodedToken.unique_name ||
+            decodedToken.email?.split("@")[0] ||
+            "User";
+          userData = { ...userData, name };
         }
+
+        const currentTime = Date.now() / 1000;
+
+        if (
+          decodedToken &&
+          decodedToken.exp &&
+          decodedToken.exp - currentTime < 3600 // Refresh if less than 1 hour remains (e.g. after 23h of a 24h token)
+        ) {
+          console.log("Token expired or expiring soon, refreshing...");
+          try {
+            const deviceID = storedDeviceID || authService.getDeviceID();
+            if (deviceID) {
+              const response = await authService.refreshToken(deviceID);
+              if (response.token) {
+                const newDecodedToken = parseJwt(response.token);
+                const newUser = {
+                  name:
+                    newDecodedToken?.name?.split(" ")[0] ||
+                    newDecodedToken?.email?.split("@")[0] ||
+                    "User",
+                  ...newDecodedToken,
+                };
+                const encryptedData = encryptData({
+                  token: response.token,
+                  deviceID,
+                });
+                Cookies.set("session_data", encryptedData, { path: "/" });
+                setUser(newUser);
+                console.log("Token refreshed successfully");
+                return;
+              }
+            }
+          } catch (error) {
+            console.log("Token refresh failed:", error);
+          }
+        }
+
+        setUser(userData);
       }
     };
-
     checkSession();
-  }, []);
-
+    const interval = setInterval(checkSession, 60 * 60 * 1000); // Check every 1 hour
+    return () => clearInterval(interval);
+  }, [pathname]);
   const handleLogout = () => {
-    Cookies.remove("sub");
+    Cookies.remove("session_data");
     setUser(null);
     window.location.href = "/";
   };

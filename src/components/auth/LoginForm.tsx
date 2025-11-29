@@ -41,19 +41,20 @@ export default function LoginForm() {
       if (response.token) {
         const decodedToken = parseJwt(response.token);
         console.log("Decoded Token Payload:", decodedToken);
-        const user = {
-          name:
-            decodedToken?.name?.split(" ")[0] ||
-            decodedToken?.email?.split("@")[0] ||
-            "User",
-          ...decodedToken,
-        };
-
         const encryptedData = encryptData({
           token: response.token,
-          user: user,
+          deviceID,
         });
-        Cookies.set("sub", encryptedData, { path: "/" });
+        console.log("Login: Encrypted data length:", encryptedData.length);
+
+        // Store in a separate cookie that is NOT HttpOnly so client can read it
+        Cookies.set("session_data", encryptedData, {
+          path: "/",
+          expires: 1,
+          secure: false,
+          sameSite: "Lax",
+        });
+
         toast.success(t("auth.loginSuccess") || "Login successful");
         window.location.href = "/";
       } else {

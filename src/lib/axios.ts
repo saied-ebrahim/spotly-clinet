@@ -4,7 +4,7 @@ import { decryptData, encryptData } from "@/shared/encryption";
 import { getDeviceID } from "@/shared/device";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:5000/api/v1",
+  baseURL: "/api/v1",
   headers: {
     "Content-Type": "application/json",
   },
@@ -12,9 +12,12 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const cookie = Cookies.get("sub");
+    const cookie = Cookies.get("session_data");
     if (cookie) {
-      const decrypted = decryptData(cookie) as any;
+      const decrypted = decryptData(cookie) as {
+        token?: string;
+        deviceID?: string;
+      };
       if (decrypted?.token) {
         config.headers.Authorization = `Bearer ${decrypted.token}`;
       }
@@ -34,29 +37,49 @@ axiosInstance.interceptors.response.use(
 
       try {
         const deviceID = getDeviceID();
+        const cookie = Cookies.get("session_data");
+        let token = "";
+        if (cookie) {
+          const decrypted = cookie
+            ? (decryptData(cookie) as { token?: string })
+            : {};
+          token = decrypted?.token || "";
+        }
+
         const response = await axios.post(
-          "http://localhost:5000/api/v1/auth/refreshToken",
+          "/api/v1/auth/refreshToken",
           {
             deviceID,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
         );
 
         if (response.data?.token) {
-          const cookie = Cookies.get("sub");
-          const decrypted = cookie ? (decryptData(cookie) as any) : {};
+          const cookie = Cookies.get("session_data");
+          const decrypted = cookie
+            ? (decryptData(cookie) as {
+                token?: string;
+                deviceID?: string;
+                user?: any;
+              })
+            : {};
 
           const newEncryptedData = encryptData({
             ...decrypted,
             token: response.data.token,
           });
 
-          Cookies.set("sub", newEncryptedData, { path: "/" });
+          Cookies.set("session_data", newEncryptedData, { path: "/" });
 
           originalRequest.headers.Authorization = `Bearer ${response.data.token}`;
           return axiosInstance(originalRequest);
         }
       } catch (refreshError) {
-        Cookies.remove("sub");
+        Cookies.remove("session_data");
         window.location.href = "/auth/login";
         return Promise.reject(refreshError);
       }

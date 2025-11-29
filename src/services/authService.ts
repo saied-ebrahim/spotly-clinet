@@ -1,6 +1,8 @@
 import axiosInstance from "@/lib/axios";
 import axios from "axios";
 import { getDeviceID } from "@/shared/device";
+import Cookies from "js-cookie";
+import { decryptData } from "@/shared/encryption";
 
 const API_URL = "/auth/login";
 
@@ -32,14 +34,26 @@ export const authService = {
 
   refreshToken: async (deviceID: string) => {
     // Use direct axios to avoid interceptor loop/redirects
+    const cookie = Cookies.get("session_data");
+    let token = "";
+    if (cookie) {
+      try {
+        const decrypted = decryptData(cookie) as { token?: string };
+        token = decrypted?.token || "";
+      } catch (e) {
+        console.error("Failed to decrypt token for refresh", e);
+      }
+    }
+
     const response = await axios.post(
-      "http://localhost:5000/api/v1/auth/refreshToken",
+      "/api/v1/auth/refreshToken",
       {
         deviceID,
       },
       {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       }
     );
