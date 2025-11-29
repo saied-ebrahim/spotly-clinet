@@ -126,7 +126,9 @@ export const CategoryItem = ({
   category: CategoryItemInterface;
 }) => {
   // console.log(category);
+  console.log(category.media[0].mediaUrl);
   // const [imgSrc, setImgSrc] = useState(category.imageUrl);
+
   return (
     // Updated Width Classes:
     // Mobile: w-[calc(50%-8px)] -> Fits 2 items with gap-4 (16px/2 = 8px)
@@ -140,18 +142,10 @@ export const CategoryItem = ({
     >
       {/* Circle Container - Responsive sizing */}
       <div
-        className={`relative w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] lg:w-[140px] lg:h-[140px] rounded-full overflow-hidden shadow-lg border-4 border-white transition-all duration-300 transform hover:scale-110 ${category.ringColor} ring-2 ring-transparent`}
+        className={`relative w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] lg:w-[140px] lg:h-[140px] rounded-full overflow-hidden shadow-lg border-4 border-white transition-all duration-300 transform hover:scale-110  ring-2 ring-transparent`}
       >
-        {/* <img
-              src={imgSrc}
-              alt={category.name}
-              className="w-full h-full object-cover"
-              onError={() => {
-                setImgSrc("https://placehold.co/150x150/CCCCCC/000000?text=Error");
-              }}
-            /> */}
         <Image
-          src={category.imageUrl}
+          src={category.media[0].mediaUrl}
           alt={category.title}
           fill
           // onError={(e) => {
@@ -165,7 +159,7 @@ export const CategoryItem = ({
 
       {/* Label */}
       <span
-        className={`mt-4 text-sm sm:text-base font-bold text-gray-700 transition-colors duration-300 ${category.categoryColor} text-center px-1 truncate w-full rounded-xl`}
+        className={`mt-4 text-sm sm:text-base font-bold text-gray-700 transition-colors duration-300 text-center px-1 truncate w-full rounded-xl`}
       >
         {/* {category.name} */}
         {category.title}

@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 
 import PaginationList from "./PaginationList";
 
-import filterEvents from "@/components/Custom/filterPopularEvents";
+// import filterEvents from "@/components/Custom/filterPopularEvents";
+import filterEvents from "@/components/Custom/filterPopularEvents2";
 import { EventObject } from "@/types/PaginationInterface";
 import useGeolocation from "@/hooks/useGeolocation";
 
@@ -15,13 +16,14 @@ const PopularEvents = () => {
   } = useGeolocation();
   const [events, setEvents] = useState<EventObject[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("All");
-
+  console.log(events);
   const filteredEvents = filterEvents(events, currentFilter);
 
   useEffect(() => {
     fetch("http://localhost:8080/events")
       .then((res) => res.json())
       .then((data) => {
+        // console.log(data);
         setEvents(data);
       });
   }, []);

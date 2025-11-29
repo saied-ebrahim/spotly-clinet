@@ -66,6 +66,8 @@ import { EventObject } from "@/types/PaginationInterface";
 // ---------------------------------------------------
 // ---------------------------------------------------
 const filterEvents = (events: EventObject[], filterType: string) => {
+  // console.log(events);
+  console.log(new Date(events[0]?.date).getMonth()); // date string
   // 1. Helper: Map month abbreviations to numbers (0-11)
   const monthMap: Record<string, number> = {
     JAN: 0,

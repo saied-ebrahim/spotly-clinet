@@ -105,6 +105,20 @@ const EventCard = ({ event }: { event: EventObject }) => {
     console.log(`Added event ID ${event.id} to favorites!`);
   };
 
+  // Extract month and date from event.date (YYYY-MM-DD format)
+  const getMonthDay = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const month = date
+      .toLocaleString("default", { month: "short" })
+      .toUpperCase();
+    const day = date.getDate();
+    return { month, date: day };
+  };
+
+  const { month, date: dayDate } = getMonthDay(event.date);
+  const imageUrl = event.media?.[0]?.mediaUrl || "/events.json";
+  const interested = event.analytics?.likes || 0;
+
   return (
     <div className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 font-sans relative flex flex-col h-full w-full max-w-sm mx-auto">
       {/* 1. The anchor wraps the content, but NOT the button */}
@@ -117,16 +131,14 @@ const EventCard = ({ event }: { event: EventObject }) => {
         <div className="relative h-40 sm:h-48 w-full shrink-0 overflow-hidden bg-gray-100">
           {/* Replaced Next.js Image with standard img tag */}
           <Image
-            src={event.imageUrl}
+            src={imageUrl}
             alt={event.title}
             fill
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
 
-          <span
-            className={`absolute bottom-3 left-3 text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm ${event.categoryColor} text-white bg-opacity-90`}
-          >
-            {event.category}
+          <span className="absolute bottom-3 left-3 text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-blue-600 text-white bg-opacity-90">
+            {Array.isArray(event.category) ? event.category[0] : event.category}
           </span>
         </div>
 
@@ -135,10 +147,10 @@ const EventCard = ({ event }: { event: EventObject }) => {
           {/* Date Block (Left side) - Responsive Text */}
           <div className="flex flex-col items-center text-blue-700 shrink-0 min-w-12">
             <span className="text-xs sm:text-sm font-bold uppercase tracking-wide">
-              {event.month}
+              {month}
             </span>
             <span className="text-xl sm:text-2xl font-extrabold leading-none mt-1">
-              {event.date}
+              {dayDate}
             </span>
           </div>
 
@@ -159,7 +171,7 @@ const EventCard = ({ event }: { event: EventObject }) => {
               {/* Price Section */}
               <div
                 className={`flex items-center gap-1 text-xs sm:text-sm ${
-                  event.price === "Free" || event.price === "$0"
+                  event.price === 0
                     ? "text-green-600 font-bold"
                     : "text-gray-700"
                 }`}
@@ -167,25 +179,23 @@ const EventCard = ({ event }: { event: EventObject }) => {
                 <FiTag
                   size={14}
                   className={
-                    event.price === "Free" || event.price === "$0"
-                      ? "text-green-600"
-                      : "text-gray-400"
+                    event.price === 0 ? "text-green-600" : "text-gray-400"
                   }
                 />
                 <span className="truncate max-w-20 sm:max-w-none">
-                  {event.price}
+                  {event.price === 0 ? "Free" : event.price + " EGP"}
                 </span>
               </div>
 
               {/* Interest Section */}
-              {event.interested > 0 && (
+              {interested > 0 && (
                 <div className="flex items-center gap-1 text-[10px] sm:text-xs text-gray-500 font-semibold ml-2">
                   <FiStar
                     size={12}
                     className="text-blue-600 fill-blue-600 shrink-0 sm:w-3.5 sm:h-3.5"
                   />
                   <span className="whitespace-nowrap">
-                    {event.interested} interested
+                    {interested} interested
                   </span>
                 </div>
               )}

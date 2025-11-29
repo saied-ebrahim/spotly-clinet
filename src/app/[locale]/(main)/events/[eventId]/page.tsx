@@ -229,8 +229,8 @@ export default function EventDetailsPage() {
               <div className="prose prose-gray max-w-none text-gray-600 leading-relaxed">
                 <p>{eventData.description}</p>
                 <p className="mt-4 italic text-sm text-gray-500">
-                  "City Youth Movement invites you to the 4th edition of our
-                  annual Christmas festivities..."
+                  &quot;City Youth Movement invites you to the 4th edition of
+                  our annual Christmas festivities...&quot;
                 </p>
 
                 <h3 className="font-bold text-gray-900 mt-6 mb-2">
@@ -336,7 +336,7 @@ export default function EventDetailsPage() {
                       {event.title}
                     </h3>
                     <p className="text-sm text-gray-500 mt-1">
-                      {event.price === 0 ? "FREE" : `₹ ${event.price}`}
+                      {event.price === 0 ? "FREE" : `EGP ${event.price}`}
                     </p>
                   </div>
                 </div>
