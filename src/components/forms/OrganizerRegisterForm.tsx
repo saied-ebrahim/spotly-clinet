@@ -11,12 +11,54 @@ import { useRouter } from "@/i18n/navigation";
 import { FaMapLocationDot } from "react-icons/fa6";
 import { TiLocationOutline } from "react-icons/ti";
 import { RiUserLocationLine } from "react-icons/ri";
+import { authService } from "@/services/authService";
+import { toast } from "react-toastify";
+import { useState } from "react";
 
 export default function OrganizerRegisterForm() {
-  const onSubmit = (data: AttendeeFormData) => console.log(data);
   const t = useTranslations("");
   const router = useRouter();
   const locale = useLocale();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onSubmit = async (data: AttendeeFormData) => {
+    setIsLoading(true);
+    try {
+      const response = await authService.signup({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        password: data.password,
+        gender: data.gender.value,
+        address: {
+          city: data.city.label,
+          country: data.country.label,
+          state: data.state.label,
+        },
+      });
+
+      if (
+        response.status === "success" ||
+        response.message?.includes("success")
+      ) {
+        toast.success(
+          t("auth.registerSuccess") || "Registration successful! Please login."
+        );
+        router.push("/auth/login");
+      } else {
+        toast.error(
+          response.message || t("auth.registerFailed") || "Registration failed"
+        );
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      toast.error(
+        t("auth.registerError") || "An error occurred during registration"
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const {
     control,
     handleSubmit,
@@ -29,6 +71,7 @@ export default function OrganizerRegisterForm() {
       lastName: "",
       phone: "",
       email: "",
+      gender: null as unknown as { label: string; value: string },
       country: null as unknown as { label: string; value: string },
       state: null as unknown as { label: string; value: string },
       city: null as unknown as { label: string; value: string },
@@ -127,6 +170,27 @@ export default function OrganizerRegisterForm() {
             icon={<FaPhone />}
             label={messages.phone}
             error={errors.phone?.message}
+            value={value}
+            onChange={onChange}
+          />
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="gender"
+        render={({ field: { value, onChange } }) => (
+          <CustomInput
+            type="select"
+            options={[
+              { label: "Male", value: "male" },
+              { label: "Female", value: "female" },
+            ]}
+            placeholder={t("auth.selectGender")}
+            id="gender"
+            icon={<FaUser />}
+            label={t("auth.gender")}
+            error={errors.gender?.message}
             value={value}
             onChange={onChange}
           />
@@ -257,9 +321,12 @@ export default function OrganizerRegisterForm() {
 
           <button
             type="submit"
+            disabled={isLoading}
             className="bg-[#2B293D] w-full py-3 text-white text-lg font-bold rounded-md transition-all duration-200 hover:bg-[#4A4763] hover:scale-[1.02] active:scale-[0.98] disabled:bg-[#2B293D]/60 disabled:cursor-not-allowed"
           >
-            {messages.register}
+            {isLoading
+              ? t("auth.registering") || "Registering..."
+              : messages.register}
           </button>
         </div>
       </div>

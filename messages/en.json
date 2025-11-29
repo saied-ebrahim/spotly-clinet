@@ -144,7 +144,11 @@
     "displayNameEn": "Display Name (English)",
     "displayNameAr": "Display Name (Arabic)",
     "displayNameRequired": "Display name is required",
-    "displayNameMinLength": "Display name must be at least 2 characters"
+    "displayNameMinLength": "Display name must be at least 2 characters",
+    "registering": "Registering...",
+    "registerError": "Registration Error",
+    "registerFailed": "Registration failed. Please try again.",
+    "registerSuccess": "Registration successful!"
   },
   "form": {
     "personalInformation": "Personal Information",

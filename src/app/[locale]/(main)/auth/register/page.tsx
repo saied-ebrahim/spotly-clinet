@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FaBuilding, FaUser, FaUserShield } from "react-icons/fa";
+import { FaBuilding, FaUser } from "react-icons/fa";
 import { register } from "@/svg/register";
 import TypewriterText from "@/components/auth/TypewriterText";
 
@@ -17,13 +17,6 @@ export default function RegisterIndexPage() {
       icon: <FaBuilding className="text-2xl text-white" />,
       title: "Register as Organizer",
       description: "Create and manage your events",
-      isPrimary: true,
-    },
-    {
-      href: "/auth/register/admin",
-      icon: <FaUserShield className="text-2xl text-white" />,
-      title: "Register as Admin",
-      description: "Manage the platform with admin privileges",
       isPrimary: true,
     },
   ];

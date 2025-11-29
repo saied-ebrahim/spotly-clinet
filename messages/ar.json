@@ -137,7 +137,11 @@
     "displayNameEn": "اسم العرض (إنجليزي)",
     "displayNameAr": "اسم العرض (عربي)",
     "displayNameRequired": "اسم العرض مطلوب",
-    "displayNameMinLength": "يجب أن يكون اسم العرض على الأقل حرفين"
+    "displayNameMinLength": "يجب أن يكون اسم العرض على الأقل حرفين",
+    "registering": "جاري التسجيل...",
+    "registerError": "خطأ في التسجيل",
+    "registerFailed": "فشل التسجيل. يرجى المحاولة مرة أخرى.",
+    "registerSuccess": "تم التسجيل بنجاح!"
   },
   "form": {
     "personalInformation": "Personal Information",

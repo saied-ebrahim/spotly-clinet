@@ -1,8 +1,7 @@
 import { useTranslations } from "next-intl";
 import AttendeeRegisterForm from "@/components/forms/AttendeeRegisterForm";
 import OrganizerRegisterForm from "@/components/forms/OrganizerRegisterForm";
-import AdminRegisterForm from "@/components/forms/AdminRegisterForm";
-import { FaBuilding, FaUser, FaUserShield } from "react-icons/fa";
+import { FaBuilding, FaUser } from "react-icons/fa";
 import { actor } from "@/svg/actor";
 import { redirect } from "next/navigation";
 import TypewriterText from "@/components/auth/TypewriterText";
@@ -11,7 +10,7 @@ export default async function RegisterPage({
   params,
 }: {
   params: Promise<{
-    type: "attendee" | "organizer" | "admin";
+    type: "attendee" | "organizer";
     locale: string;
   }>;
 }) {
@@ -23,12 +22,12 @@ export default async function RegisterPage({
 const RegisterFormComponent = ({
   type,
 }: {
-  type: "attendee" | "organizer" | "admin";
+  type: "attendee" | "organizer";
 }) => {
   const t = useTranslations("");
 
   // Handle invalid type
-  if (!["attendee", "organizer", "admin"].includes(type)) {
+  if (!["attendee", "organizer"].includes(type)) {
     redirect("/auth/register");
   }
 
@@ -39,8 +38,6 @@ const RegisterFormComponent = ({
         return <FaUser className="text-3xl text-white" />;
       case "organizer":
         return <FaBuilding className="text-3xl text-white" />;
-      case "admin":
-        return <FaUserShield className="text-3xl text-white" />;
       default:
         return <FaUser className="text-3xl text-white" />;
     }
@@ -53,8 +50,6 @@ const RegisterFormComponent = ({
         return "Join as Attendee";
       case "organizer":
         return "Become an Organizer";
-      case "admin":
-        return "Admin Access";
       default:
         return "";
     }
@@ -67,8 +62,6 @@ const RegisterFormComponent = ({
         return "Discover and book amazing events";
       case "organizer":
         return "Create and manage your events";
-      case "admin":
-        return "Manage platform operations";
       default:
         return "";
     }
@@ -97,8 +90,6 @@ const RegisterFormComponent = ({
             <AttendeeRegisterForm />
           ) : type === "organizer" ? (
             <OrganizerRegisterForm />
-          ) : type === "admin" ? (
-            <AdminRegisterForm />
           ) : null}
         </div>
       </div>
