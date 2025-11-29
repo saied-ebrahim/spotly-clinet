@@ -21,7 +21,6 @@ export default function AccountInfo() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
-    // Add your save logic here
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -154,13 +153,7 @@ export default function AccountInfo() {
   );
 }
 
-interface InputFieldProps {
-  label: string;
-  placeholder: string;
-  value: string;
-  onChange: (value: string) => void;
-  fullWidth?: boolean;
-}
+import { InputFieldProps } from "../../types/Profileinterfaces";
 
 function InputField({
   label,

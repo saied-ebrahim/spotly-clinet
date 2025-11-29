@@ -1,4 +1,3 @@
-
 import type { Metadata } from "next";
 
 import "./globals.css";
@@ -27,19 +26,19 @@ export default async function RootLayout({
   return (
     <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
       <body suppressHydrationWarning>
-      <ProgressBar />
-      <ToastContainer
-        position={locale === "ar" ? "top-left" : "top-right"}
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={locale === "ar"}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
+        <ProgressBar />
+        <ToastContainer
+          position={locale === "ar" ? "top-left" : "top-right"}
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={locale === "ar"}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+        />
         <NextIntlClientProvider>
           <RenderInProvider>{children}</RenderInProvider>
         </NextIntlClientProvider>

@@ -1,11 +1,5 @@
+import { redirect } from "next/navigation";
 
-
-function page() {
-  return (
-    <div>
-      
-    </div>
-  )
+export default function EventsDashboard() {
+  redirect("/dashboardHome/Admin");
 }
-
-export default page

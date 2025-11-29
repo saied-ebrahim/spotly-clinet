@@ -1,37 +1,41 @@
-import { FiBell, FiChevronDown, FiMenu, FiSearch, FiSettings } from "react-icons/fi";
+import { FiBell, FiChevronDown, FiMenu, FiPlus } from "react-icons/fi";
+import LinkTo from "../Global/LinkTo";
+import SpotlyLogo from "../Layout/SpotlyLogo";
 
 export function DashboardHeader() {
   return (
-    <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/90 px-4 py-4 backdrop-blur sm:px-8">
-      <div className="flex flex-wrap items-center gap-4">
-        <button className="rounded-2xl border border-slate-200 bg-white p-3 text-slate-500 transition hover:text-primary lg:hidden">
-          <FiMenu />
-        </button>
-        <div className="relative flex-1">
-          <FiSearch className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
-          <input
-            placeholder="Search dashboards, teams, documents..."
-            className="w-full rounded-full border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-600 focus:border-primary/40 focus:bg-white focus:outline-none"
-          />
+    <header className="sticky top-0 z-10 border-b border-slate-200 bg-white px-4 py-3 sm:px-8">
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-4">
+          <button className="rounded-lg p-2 text-slate-500 hover:bg-slate-50 lg:hidden">
+            <FiMenu size={24} />
+          </button>
+          <LinkTo href="/" className="flex items-center gap-2">
+            <SpotlyLogo />
+          </LinkTo>
         </div>
-        <button className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600">
-          Monthly <FiChevronDown />
-        </button>
-        <div className="flex items-center gap-3">
-          <button className="rounded-2xl border border-slate-200 bg-white p-3 text-slate-500 transition hover:text-primary">
-            <FiBell />
+
+        <div className="flex items-center gap-4">
+          <button className="flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+            <FiPlus />
+            Create
           </button>
-          <button className="rounded-2xl border border-slate-200 bg-white p-3 text-slate-500 transition hover:text-primary">
-            <FiSettings />
+
+          <button className="p-2 text-slate-500 hover:text-slate-700">
+            <FiBell size={20} />
           </button>
-          <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-2">
-            <span className="h-6 w-6 rounded-full bg-linear-to-r from-red-500 to-blue-500" />
-            <span className="text-sm font-semibold">Mariam</span>
-            <span className="hidden text-xs text-slate-400 sm:inline">Experience Lead</span>
+
+          <div className="flex items-center gap-2 rounded-full hover:bg-slate-50 p-1 pr-3 cursor-pointer">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary text-xs font-medium text-white">
+              HA
+            </div>
+            <span className="text-sm font-semibold text-slate-700 hidden sm:block">
+              Hussien El Assy
+            </span>
+            <FiChevronDown className="text-slate-400" />
           </div>
         </div>
       </div>
     </header>
   );
 }
-
