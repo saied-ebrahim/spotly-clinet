@@ -21,7 +21,7 @@ export const axiosGet = async <T>(
   params?: Record<string, unknown>,
   close?: boolean
 ): Promise<ApiResponse<T>> => {
-  const authToken = Cookies.get("sub") ?? "";
+  const authToken = Cookies.get("token") ?? "";
   const tokenDecrypted = decryptData(authToken) as DecryptedToken;
 
   try {
@@ -64,7 +64,7 @@ export const axiosPost = async <T>(
   file?: boolean,
   close?: boolean
 ) => {
-  const authToken = Cookies.get("sub") ?? "";
+  const authToken = Cookies.get("token") ?? "";
   const tokenDecrypted = decryptData(authToken) as DecryptedToken;
   const HeaderImg = { "Content-Type": "multipart/form-data" };
 

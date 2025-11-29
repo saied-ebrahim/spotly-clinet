@@ -1,4 +1,4 @@
-import { FaArrowLeft, FaArrowRight,  } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 import { useLocale } from "next-intl";
 
@@ -25,9 +25,7 @@ export default function StepNavigation({
       <button
         type="button"
         onClick={onBack}
-        className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
-           "bg-white text-gray-700 hover:bg-gray-50 border border-gray-200/60"
-        }`}
+        className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${"bg-white text-gray-700 hover:bg-gray-50 border border-gray-200/60"}`}
       >
         <FaArrowLeft className={`${locale === "ar" ? "rotate-180" : ""}`} />
 
@@ -38,25 +36,17 @@ export default function StepNavigation({
         {Array.from({ length: totalSteps }).map((_, index) => (
           <div
             key={index}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              index + 1 === currentStep
-                ? "w-10 bg-linear-to-r from-primary to-secondary shadow-sm"
-                : index + 1 < currentStep
-                ? "w-4 bg-primary/70"
-                : "w-2 bg-gray-300"
+            className={`h-3 w-3 rounded-full ${
+              currentStep === index + 1 ? "bg-[#2B293D]" : "bg-[#2B293D]/40"
             }`}
-          />
+          ></div>
         ))}
       </div>
 
       <button
         type="submit"
         disabled={isNextDisabled}
-        className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
-          isNextDisabled
-            ? "opacity-50 cursor-not-allowed bg-gray-100 text-gray-400"
-            : "btn-gradient-primary shadow-md hover:shadow-lg"
-        }`}
+        className="bg-[#2B293D] px-6 py-3 text-white font-bold rounded-lg transition-all duration-200 hover:bg-[#4A4763] hover:scale-[1.02] active:scale-[0.98] disabled:bg-[#2B293D]/60 disabled:cursor-not-allowed flex items-center gap-2"
       >
         {nextLabel}
         <FaArrowRight className={`${locale === "ar" ? "rotate-180" : ""}`} />
