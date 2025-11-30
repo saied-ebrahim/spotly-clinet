@@ -213,7 +213,10 @@ export default function EventDetailsPage() {
 
               {/* --- MAP COMPONENT --- */}
               <div className="relative w-full h-64 bg-gray-100 rounded-xl overflow-hidden mt-4 border border-gray-200 shadow-sm z-0">
-                {/* map */}
+                <EventMap
+                  lat={myEvent.location.latitude}
+                  lng={myEvent.location.longitude}
+                />
 
                 {/* Optional 'Open in Google Maps' Floating Button */}
                 <div className="absolute bottom-3 right-3 z-400">
