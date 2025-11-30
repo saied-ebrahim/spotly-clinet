@@ -1,6 +1,9 @@
 export interface CategoryItemInterface {
-  imageUrl: string;
   title: string;
-  ringColor: string;
-  categoryColor: string;
+  media: MediaItem[];
+}
+
+export interface MediaItem {
+  mediaType: "image" | "video" | string;
+  mediaUrl: string;
 }

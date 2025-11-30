@@ -3,25 +3,27 @@ import { useEffect, useState } from "react";
 
 import PaginationList from "./PaginationList";
 
-import filterEvents from "@/components/Custom/filterPopularEvents";
+// import filterEvents from "@/components/Custom/filterPopularEvents";
+import filterEvents from "@/components/Custom/filterPopularEvents2";
 import { EventObject } from "@/types/PaginationInterface";
 import useGeolocation from "@/hooks/useGeolocation";
 
 // 3. The Main Container Component
 const PopularEvents = () => {
-  const filters = ["All", "Today", "Tomorrow", "This Weekend", "Free"];
+  const filters = ["All", "Today", "Tomorrow", "This Week", "Hybrid", "Free"];
   const {
     location: { city },
   } = useGeolocation();
   const [events, setEvents] = useState<EventObject[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("All");
-
+  console.log(events);
   const filteredEvents = filterEvents(events, currentFilter);
 
   useEffect(() => {
     fetch("http://localhost:8080/events")
       .then((res) => res.json())
       .then((data) => {
+        // console.log(data);
         setEvents(data);
       });
   }, []);

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import { useState } from "react";
 import { EventSearchSection } from "@/components/Dashboard/Events/EventSearchSection";
 import { EventFilters } from "@/components/Dashboard/Events/EventFilters";
 import { EventCard } from "@/components/Dashboard/Events/EventCard";
@@ -8,13 +8,13 @@ import dummyEvents from "@/data/eventsdata/dummyEvents.json";
 import { FiChevronDown } from "react-icons/fi";
 
 const EventsPage = () => {
-  const [searchQuery, setSearchQuery] = React.useState("");
-  const [location, setLocation] = React.useState("");
-  const [selectedFilters, setSelectedFilters] = React.useState<
+  const [searchQuery, setSearchQuery] = useState("");
+  const [location, setLocation] = useState("");
+  const [selectedFilters, setSelectedFilters] = useState<
     Record<string, string[]>
   >({});
-  const [isDateModalOpen, setIsDateModalOpen] = React.useState(false);
-  const [customDate, setCustomDate] = React.useState<string | null>(null);
+  const [isDateModalOpen, setIsDateModalOpen] = useState(false);
+  const [customDate, setCustomDate] = useState<string | null>(null);
 
   const handleFilterChange = (
     category: string,

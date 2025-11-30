@@ -105,6 +105,20 @@ const EventCard = ({ event }: { event: EventObject }) => {
     console.log(`Added event ID ${event.id} to favorites!`);
   };
 
+  // Extract month and date from event.date (YYYY-MM-DD format)
+  const getMonthDay = (dateStr: string) => {
+    const date = new Date(dateStr);
+    const month = date
+      .toLocaleString("default", { month: "short" })
+      .toUpperCase();
+    const day = date.getDate();
+    return { month, date: day };
+  };
+
+  const { month, date: dayDate } = getMonthDay(event.date);
+  const imageUrl = event.media?.[0]?.mediaUrl || "/events.json";
+  const interested = event.analytics?.likes || 0;
+
   return (
     <div className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 font-sans relative flex flex-col h-full w-full max-w-sm mx-auto">
       {/* 1. The anchor wraps the content, but NOT the button */}
@@ -117,17 +131,30 @@ const EventCard = ({ event }: { event: EventObject }) => {
         <div className="relative h-40 sm:h-48 w-full shrink-0 overflow-hidden bg-gray-100">
           {/* Replaced Next.js Image with standard img tag */}
           <Image
-            src={event.imageUrl}
+            src={imageUrl}
             alt={event.title}
             fill
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
-
-          <span
-            className={`absolute bottom-3 left-3 text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm ${event.categoryColor} text-white bg-opacity-90`}
-          >
-            {event.category}
-          </span>
+          <div className="w-[93%] flex justify-between absolute bottom-3 left-3 ">
+            {/* <span className="absolute bottom-3 left-3 text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-blue-600 text-white bg-opacity-90">
+              {Array.isArray(event.category)
+                ? event.category[0]
+                : event.category}
+            </span> */}
+            <span className=" text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-blue-600 text-white bg-opacity-90">
+              {Array.isArray(event.category)
+                ? event.category[0]
+                : event.category}
+            </span>
+            {event.type === "hybrid" ? (
+              <span className=" text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-fuchsia-800 text-white bg-opacity-90">
+                Hybrid
+              </span>
+            ) : (
+              <span className=""></span>
+            )}
+          </div>
         </div>
 
         {/* Content Section - Responsive Padding */}
@@ -135,31 +162,57 @@ const EventCard = ({ event }: { event: EventObject }) => {
           {/* Date Block (Left side) - Responsive Text */}
           <div className="flex flex-col items-center text-blue-700 shrink-0 min-w-12">
             <span className="text-xs sm:text-sm font-bold uppercase tracking-wide">
-              {event.month}
+              {month}
             </span>
             <span className="text-xl sm:text-2xl font-extrabold leading-none mt-1">
-              {event.date}
+              {dayDate}
             </span>
           </div>
 
           {/* Details Block (Right side) - Flex Grow to fill space */}
           <div className="flex flex-col gap-1 grow font-medium min-w-0">
             {/* Title - Responsive Text & Auto Height */}
-            <h3 className="text-base sm:text-lg leading-tight font-bold text-gray-900 line-clamp-2 min-h-10">
+            <h3 className="text-base sm:text-lg leading-tight font-bold text-gray-900 line-clamp-2 min-h-[45px]">
               {event.title}
             </h3>
 
-            <p className="text-xs text-gray-500 truncate w-full">
+            <p className="text-xs text-gray-500 truncate w-full mb-2">
               {event.organizer}
             </p>
-            <p className="text-xs text-gray-400 mb-3 truncate">{event.time}</p>
+            {/* <div className="flex justify-start items-center text-left flex-col-reverse xs:flex-row w-full">
+              <p className="text-xs text-gray-400 mb-3  w-full">{event.time}</p>
+              <p className="text-xs text-gray-400 mb-3  pr-4 w-full text-right ">
+                {`${event.location.city}/${event.location.district}`}
+              </p>
+            </div> */}
+            <div className="flex w-full flex-col-reverse items-start text-left min-[350px]:flex-row min-[350px]:items-center min-[350px]:justify-between">
+              {/* Time: Bottom on mobile, Left on desktop */}
+              <p className="text-xs text-gray-400 mt-3 min-[350px]:mt-0">
+                {event.time}
+              </p>
+
+              {/* Location: Top on mobile, Right on desktop */}
+              {event.type !== "online" ? (
+                <p className="text-xs text-gray-400 text-left min-[350px]:text-right pr-4">
+                  {`${event.location.city}/${event.location.district}`}
+                </p>
+              ) : (
+                <p
+                  className={`text-sm ${
+                    event.type === "online" ? "text-amber-400" : ""
+                  } text-left min-[350px]:text-right pr-4 fw-bolder`}
+                >
+                  {event.type}
+                </p>
+              )}
+            </div>
 
             {/* Price and Interest Footer - Pushed to bottom */}
             <div className="relative left-[-46px] flex items-center justify-between mt-auto pt-3 border-t border-dashed border-gray-100 w-[calc(100%+30px)]">
               {/* Price Section */}
               <div
                 className={`flex items-center gap-1 text-xs sm:text-sm ${
-                  event.price === "Free" || event.price === "$0"
+                  event.price === 0
                     ? "text-green-600 font-bold"
                     : "text-gray-700"
                 }`}
@@ -167,25 +220,23 @@ const EventCard = ({ event }: { event: EventObject }) => {
                 <FiTag
                   size={14}
                   className={
-                    event.price === "Free" || event.price === "$0"
-                      ? "text-green-600"
-                      : "text-gray-400"
+                    event.price === 0 ? "text-green-600" : "text-gray-400"
                   }
                 />
                 <span className="truncate max-w-20 sm:max-w-none">
-                  {event.price}
+                  {event.price === 0 ? "Free" : event.price + " EGP"}
                 </span>
               </div>
 
               {/* Interest Section */}
-              {event.interested > 0 && (
+              {interested > 0 && (
                 <div className="flex items-center gap-1 text-[10px] sm:text-xs text-gray-500 font-semibold ml-2">
                   <FiStar
                     size={12}
                     className="text-blue-600 fill-blue-600 shrink-0 sm:w-3.5 sm:h-3.5"
                   />
                   <span className="whitespace-nowrap">
-                    {event.interested} interested
+                    {interested} interested
                   </span>
                 </div>
               )}
@@ -200,7 +251,7 @@ const EventCard = ({ event }: { event: EventObject }) => {
         className="absolute top-3 right-3 bg-white/90 p-2 rounded-full shadow-sm hover:text-red-500 transition-colors z-20 cursor-pointer active:scale-95 text-gray-600"
         aria-label="Add to favorites"
       >
-        <FiHeart size={18} />
+        <FiStar size={18} />
       </button>
     </div>
   );
