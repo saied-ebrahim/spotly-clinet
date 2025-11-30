@@ -36,7 +36,7 @@ axiosInstance.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const deviceID = getDeviceID();
+        const deviceID = await getDeviceID();
         const cookie = Cookies.get("session_data");
         let token = "";
         if (cookie) {

@@ -31,6 +31,9 @@ export interface SignupRequest {
     country: string;
     state: string;
   };
+  devices: {
+    deviceFingerprint: string;
+  }[];
 }
 
 export interface SignupResponse {

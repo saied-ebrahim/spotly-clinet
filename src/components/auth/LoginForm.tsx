@@ -31,7 +31,7 @@ export default function LoginForm() {
   const onSubmit = async (data: LoginSchema) => {
     setIsLoading(true);
     try {
-      const deviceID = authService.getDeviceID();
+      const deviceID = await authService.getDeviceID();
       const response = await authService.login({
         email: data.email,
         password: data.password,

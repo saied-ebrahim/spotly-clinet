@@ -65,7 +65,8 @@ export default function Header() {
         ) {
           console.log("Token expired or expiring soon, refreshing...");
           try {
-            const deviceID = storedDeviceID || authService.getDeviceID();
+            const deviceID =
+              storedDeviceID || (await authService.getDeviceID());
             if (deviceID) {
               const response = await authService.refreshToken(deviceID);
               if (response.token) {
