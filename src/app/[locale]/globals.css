@@ -9,6 +9,11 @@
   --secondary: #0bb7b4;
   --accent: #94bc73;
   --text-primary: #114268;
+
+  /* Brand Colors */
+  --brand-primary: #0f5c3b;
+  --brand-secondary: #a3d74f;
+  --brand-orange: #ea580c;
 }
 
 button {
@@ -20,6 +25,11 @@ button {
   --color-secondary: var(--primary);
   --color-accent: var(--accent);
   --color-text-primary: var(--text-primary);
+
+  --color-brand-primary: var(--brand-primary);
+  --color-brand-secondary: var(--brand-secondary);
+  --color-brand-orange: var(--brand-orange);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -28,6 +38,81 @@ button {
   @apply px-[10px] lg:px-[30px] max-w-7xl mx-auto;
 }
 
+/*  ----- fade styling pagination \/  */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-slide-in {
+  animation: slideIn 0.4s ease-out forwards;
+}
+
+/* .xs\:flex-row {
+  @media (width >= 350px) {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: right;
+  }
+} */
+/*  ----- fade styling pagination /\  */
+/* ------------------------------------ */
+
+/* ------------------------------------ */
+/*  ----- scroll bar styling \/  */
+
+/* .scroll-list {
+  overflow-y: auto;
+} */
+::-webkit-scrollbar {
+  width: 8px;
+  /* scrollbar-gutter: stable; */
+}
+
+::-webkit-scrollbar-track {
+  background: #34495e;
+  /* border-radius: 4px; */
+  /* margin: 2px; */
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #7f8c8d;
+  border-radius: 8px;
+  /* border-radius: 4px; */
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #95a5a6;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+/*  ----- scroll bar styling /\  */
+
+.search-event {
+  position: relative;
+}
+.search-event::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 2px;
+  height: 100%;
+  border-left: 4px solid lightgrey;
+  border-radius: 1px; /* Match the input's border radius */
+  pointer-events: none; /* Allow clicks to pass through */
+}
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -39,6 +124,28 @@ button {
   }
 }
 
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 body {
   color: var(--text-primary);
   font-family: "JetBrains Mono", monospace, "Cairo", sans-serif;
@@ -46,6 +153,22 @@ body {
 
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-in-out;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.4s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+.hover\:scale-102:hover {
+  transform: scale(1.02);
 }
 
 /* App gradient background helper */
@@ -155,7 +278,6 @@ body {
 }
 
 .glass-effect {
-  /* From https://css.glass */
   background: rgba(255, 255, 255, 0.2);
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -168,29 +290,49 @@ body {
 }
 
 .phoneNumber {
-  @apply bg-primary/5 border border-primary/20 rounded-md ps-4 duration-200;
+  background-color: rgba(43, 41, 61, 0.05) !important;
+  border: 1px solid rgba(43, 41, 61, 0.2) !important;
+  border-radius: 0.375rem !important;
+  padding-inline-start: 1rem !important;
+  transition-duration: 200ms !important;
+  height: 48px !important;
+  display: flex !important;
+  align-items: center !important;
 }
 .phoneNumber input {
-  @apply py-3.5;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  background: transparent !important;
+  height: 100% !important;
 }
 .phoneNumber input:focus {
-  @apply outline-none;
+  outline: none !important;
 }
 
 .phoneNumber:has(input:focus) {
-  @apply border-primary focus:border-primary focus:ring-2 focus:ring-primary/20;
+  border-color: rgba(43, 41, 61, 1) !important;
+  box-shadow: 0 0 0 2px rgba(43, 41, 61, 0.2) !important;
 }
 .phoneNumber.error {
-  @apply !border-red-500 focus:border-red-500 focus:ring-red-200 bg-red-50;
+  border-color: #ef4444 !important;
+  background-color: #fef2f2 !important;
+}
+.phoneNumber.error:has(input:focus) {
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2) !important;
 }
 .PhoneInputCountry {
-  @apply !m-0 !me-1;
+  margin: 0 !important;
+  margin-inline-end: 0.25rem !important;
 }
 .PhoneInputCountryIcon {
-  @apply !bg-primary !shadow-none !m-0;
+  background-color: rgba(43, 41, 61, 0.1) !important;
+  box-shadow: none !important;
+  margin: 0 !important;
 }
 .PhoneInputCountrySelectArrow {
-  @apply !m-0 !ms-2 !border-primary;
+  margin: 0 !important;
+  margin-inline-start: 0.5rem !important;
+  border-color: rgba(43, 41, 61, 0.5) !important;
 }
 
 .rtl .PhoneInputInput,
@@ -205,35 +347,49 @@ input {
   unicode-bidi: plaintext;
 }
 .select__control {
-  @apply !bg-primary/5 border !border-primary/20 rounded-md ps-4 duration-200 ps-12 py-2;
+  background-color: rgba(43, 41, 61, 0.05) !important;
+  border: 1px solid rgba(43, 41, 61, 0.2) !important;
+  border-radius: 0.375rem !important;
+  padding-inline-start: 3rem !important;
+  padding-inline-end: 1rem !important;
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+  transition-duration: 200ms !important;
+  min-height: 48px !important;
 }
 
 .select__control--is-focused {
-  @apply !border-primary focus:!border-primary focus:ring-2 focus:ring-primary/20 !shadow-none;
+  border-color: rgba(43, 41, 61, 1) !important;
+  box-shadow: 0 0 0 2px rgba(43, 41, 61, 0.2) !important;
 }
 .small {
-  @apply !py-[0.2rem];
+  padding-top: 0.2rem !important;
+  padding-bottom: 0.2rem !important;
 }
 .select__menu {
-  @apply !z-50;
+  z-index: 50 !important;
 }
 .select__indicator svg {
-  @apply !text-primary;
+  color: rgba(43, 41, 61, 0.7) !important;
 }
 .select__indicator-separator {
-  @apply !bg-primary/20;
+  background-color: rgba(43, 41, 61, 0.2) !important;
 }
 .select__option {
-  @apply !cursor-pointer;
+  cursor: pointer !important;
 }
 .select__option--is-focused {
-  @apply !bg-primary/50;
+  background-color: rgba(43, 41, 61, 0.1) !important;
 }
 .select__option--is-selected {
-  @apply !bg-primary;
+  background-color: rgba(43, 41, 61, 1) !important;
 }
 .select__control.error {
-  @apply !border-red-500 focus:border-red-500 focus:ring-red-200 !bg-red-50;
+  border-color: #ef4444 !important;
+  background-color: #fef2f2 !important;
+}
+.select__control.error:focus {
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2) !important;
 }
 
 .react-datepicker-wrapper {

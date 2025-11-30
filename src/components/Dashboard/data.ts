@@ -1,16 +1,13 @@
 import type { IconType } from "react-icons";
 import {
-  FaAward,
-  FaBriefcase,
-  FaCalendar,
-  FaStar,
-  FaUserAlt,
-  FaUsers,
-  FaWifi,
-} from "react-icons/fa";
+  FiHome,
+  FiCalendar,
+  FiShoppingBag,
+  FiTrendingUp,
+  FiDollarSign,
+  FiSettings,
+} from "react-icons/fi";
 
-import { BiCategory } from "react-icons/bi";
-import { RiWifiOffLine } from "react-icons/ri";
 export type NavItem = {
   label: string;
   icon: IconType;
@@ -23,65 +20,49 @@ export type NavItem = {
 };
 
 export type NavSection = {
-  title: string;
+  title?: string;
   items: NavItem[];
 };
 
 export const navSections: NavSection[] = [
   {
-    title: "Profile",
     items: [
       {
-        label: "Personal",
-        icon: FaUserAlt,
-        key: "personalInformation",
-        link: "personal/information",
-        parentLink: "personal",
-        dependentParent: true,
+        label: "Home",
+        icon: FiHome,
+        key: "home",
+        link: "",
       },
       {
-        label: "Work Schedule",
-        icon: FaCalendar,
-        key: "workSchedule",
-        link: "work-schedule",
+        label: "Events",
+        icon: FiCalendar,
+        key: "events",
+        link: "events",
       },
       {
-        label: "Qualifications",
-        icon: FaAward,
-        key: "qualifications",
-        link: "qualifications",
+        label: "Orders",
+        icon: FiShoppingBag,
+        key: "orders",
+        link: "orders",
       },
       {
-        label: "Worked At",
-        icon: FaBriefcase,
-        key: "workedAt",
-        link: "worked-at",
-      },
-    ],
-  },
-  {
-    title: "Bookings",
-    items: [
-      { label: "All", icon: BiCategory, key: "all" },
-      {
-        label: "Online",
-        icon: FaWifi,
-        key: "onlineBookings",
-        link: "bookings/online",
+        label: "Marketing",
+        icon: FiTrendingUp,
+        key: "marketing",
+        link: "marketing",
       },
       {
-        label: "Offline",
-        icon: RiWifiOffLine,
-        key: "offlineBookings",
-        link: "bookings/offline",
+        label: "Finance",
+        icon: FiDollarSign,
+        key: "finance",
+        link: "finance",
       },
-    ],
-  },
-  {
-    title: "ًWork",
-    items: [
-      { label: "Clients", icon: FaUsers, key: "clients" },
-      { label: "Ratings", icon: FaStar, key: "ratings" },
+      {
+        label: "Settings",
+        icon: FiSettings,
+        key: "settings",
+        link: "settings",
+      },
     ],
   },
 ];

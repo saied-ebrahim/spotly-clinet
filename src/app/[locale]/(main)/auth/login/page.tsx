@@ -1,53 +1,28 @@
-import Card from "@/components/ui/Card";
+import LoginForm from "@/components/auth/LoginForm";
+import TypewriterText from "@/components/auth/TypewriterText";
 import { register } from "@/svg/register";
-import LoginForm from "@/components/LoginForm";
-export default function LoginIndexPage() {
 
-
+export default function LoginPage() {
   return (
-    <div className=" bg-gradient-app py-12 px-4 sm:px-6 lg:px-8 relative  flex items-center justify-center">
-      <div className="container flex items-center justify-center ">
-        <div className="rounded-md!   mt-10 min-h-[calc(100dvh-140px)] w-full flex items-center justify-center">
-          <div className="flex gap-10  w-full">
-            {/* Right: welcome + decorative illustration */}
-            <div className="relative w-full">
-              <div className="h-full w-full relative rounded-md!">
-                <div className="relative z-10 h-full flex flex-col items-center justify-center text-center">
-                  <div className="w-full ">
-                    <span dangerouslySetInnerHTML={{ __html: register }}></span>
-                  </div>
-                </div>
-
-                {/* glow accents */}
-                <span className="absolute -top-6 -left-6 h-40 w-40 rounded-full bg-primary/40 blur-3xl" />
-                <span className="absolute -bottom-6 -right-10 h-48 w-48 rounded-full bg-secondary/20 blur-3xl" />
-              </div>
-            </div>
-            {/* Left: selection card area */}
-            <div className="w-full">
-              <Card className="max-w-none!">
-                <div className="flex items-center gap-6 border-b border-gray-100 pb-6 mb-6">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <span className="text-primary font-bold text-lg">U</span>
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-semibold text-gray-900">
-                      Login
-                    </h2>
-                    <p className="text-sm text-gray-500">
-                      Welcome to our system
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <LoginForm />
-                </div>
-
-              
-              </Card>
-            </div>
+    <div className="min-h-screen w-full bg-gradient-to-br from-[#2B293D] via-[#3a3850] to-[#2B293D] flex items-center justify-center p-4">
+      <div className="w-full max-w-2xl">
+        {/* Logo/Brand Section */}
+        <div className="flex flex-col items-center mb-8">
+          <div className="w-32 h-32 mb-4">
+            <span dangerouslySetInnerHTML={{ __html: register }}></span>
           </div>
+          <h1 className="text-3xl md:text-4xl font-monster text-white font-bold text-center mb-2">
+            Welcome Back
+          </h1>
+          <TypewriterText />
+        </div>
+
+        {/* Login Form Card */}
+        <div className="bg-white rounded-2xl shadow-2xl p-8 md:p-10">
+          <h2 className="text-2xl md:text-3xl font-monster text-[#2B293D] font-bold mb-8 text-center">
+            Login
+          </h2>
+          <LoginForm />
         </div>
       </div>
     </div>
