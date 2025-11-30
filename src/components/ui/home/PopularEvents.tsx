@@ -17,7 +17,8 @@ const PopularEvents = () => {
   const [events, setEvents] = useState<EventObject[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("All");
   console.log(events);
-  const filteredEvents = filterEvents(events, currentFilter);
+  const filtered = filterEvents(events, currentFilter);
+  const filteredEvents = filtered.filter((e) => e.type !== "online");
 
   useEffect(() => {
     fetch("http://localhost:8080/events")

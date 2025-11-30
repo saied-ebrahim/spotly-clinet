@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { FiHeart, FiStar, FiTag } from "react-icons/fi";
+import { FiStar, FiTag } from "react-icons/fi";
 import { EventObject } from "@/types/PaginationInterface";
 import Link from "next/link";
 
