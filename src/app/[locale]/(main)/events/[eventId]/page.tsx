@@ -1,10 +1,6 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import dynamic from "next/dynamic"; // Required for Leaflet
-import { useParams } from "next/navigation";
+
 import {
   FaArrowLeft,
   FaRegStar,
@@ -14,98 +10,47 @@ import {
   FaMapMarkerAlt,
   FaTicketAlt,
   FaPlus,
-  FaChevronRight,
-  FaChevronLeft,
   FaExternalLinkAlt,
 } from "react-icons/fa";
 import { EventObject } from "@/types/PaginationInterface";
 
+import RelatedEvents from "@/components/ui/details/RelatedEvents";
+import EventMap from "@/components/ui/details/EventMap";
+import { formatDate, formatPrice } from "@/utils/details/formatting";
+
 // --- 1. Dynamic Import for Map (Disables SSR) ---
-const EventMap = dynamic(() => import("@/components/ui/details/Map"), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full h-64 bg-gray-100 animate-pulse flex items-center justify-center text-gray-400 rounded-xl">
-      Loading Map...
-    </div>
-  ),
-});
+// const EventMap = dynamic(() => import("@/components/ui/details/EventMap"), {
+//   ssr: false,
+//   loading: () => (
+//     <div className="w-full h-64 bg-gray-100 animate-pulse flex items-center justify-center text-gray-400 rounded-xl">
+//       Loading Map...
+//     </div>
+//   ),
+// });
+// async function getEvents() {
+//   const res = await fetch("http://localhost:8080/events");
 
-const relatedEvents = [
-  {
-    id: 1,
-    title: "Lakeside Camping at Pawna",
-    date: "Nov 25 - 26",
-    price: 1499,
-    image:
-      "https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&q=80&w=600",
-    category: "Travel & Adventure",
-  },
-  {
-    id: 2,
-    title: "Project Earth Exhibition",
-    date: "Dec 16",
-    price: 0,
-    image:
-      "https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&q=80&w=600",
-    category: "Cultural & Arts",
-  },
-  {
-    id: 3,
-    title: "Royal College of Art Meet",
-    date: "Dec 02",
-    price: 0,
-    image:
-      "https://images.unsplash.com/photo-1544928147-79a77456a1d3?auto=format&fit=crop&q=80&w=600",
-    category: "Educational",
-  },
-];
+//   if (!res.ok) {
+//     // This will activate the closest `error.js` Error Boundary
+//     throw new Error("Failed to fetch data");
+//   }
 
-export default function EventDetailsPage() {
-  const [isLiked, setIsLiked] = useState(false);
-  const { eventId } = useParams();
-  const [myEvent, setMyEvent] = useState<EventObject | null>(null);
-  const [loading, setLoading] = useState(true);
+//   return res.json();
+// }
+export default async function EventDetailsPage({
+  params,
+}: {
+  params: Promise<{ eventId: string }>;
+}) {
+  const { eventId } = await params;
 
-  useEffect(() => {
-    // Replace this with your actual API endpoint
-    fetch("http://localhost:8080/events")
-      .then((res) => res.json())
-      .then((data) => {
-        const myEvnt = data.find((e: EventObject) => String(e.id) === eventId);
+  console.log(eventId);
 
-        setMyEvent(myEvnt);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error fetching event:", err);
-        setLoading(false);
-      });
-  }, [eventId]);
+  const res = await fetch("http://localhost:8080/events");
+  const data = await res.json();
+  const myEvent = data.find((e: EventObject) => String(e.id) === eventId);
 
   // --- Helper Functions ---
-  const formatDate = (isoDate?: string) => {
-    if (!isoDate) return "";
-    const date = new Date(isoDate);
-    return date.toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  const formatPrice = (price?: number | string) => {
-    if (price === 0 || price === "0") return "FREE";
-    return `EGP ${price}`;
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-gray-500 bg-white">
-        Loading event details...
-      </div>
-    );
-  }
 
   if (!myEvent) {
     return (
@@ -157,12 +102,13 @@ export default function EventDetailsPage() {
           </h1>
           <div className="flex gap-3">
             <button
-              onClick={() => setIsLiked(!isLiked)}
+              // onClick={() => setIsLiked(!isLiked)}
               className="p-3 rounded-full hover:bg-gray-100 transition-all active:scale-95 border border-gray-200"
             >
               <FaRegStar
                 className={`w-5 h-5 ${
-                  isLiked ? "text-yellow-500 fill-yellow-500" : "text-gray-600"
+                  ""
+                  // isLiked ? "text-yellow-500 fill-yellow-500" : "text-gray-600"
                 }`}
               />
             </button>
@@ -277,7 +223,7 @@ export default function EventDetailsPage() {
               <h2 className="text-xl font-bold text-gray-900">Tags</h2>
               <div className="flex flex-wrap gap-2">
                 {myEvent.tags && myEvent.tags.length > 0 ? (
-                  myEvent.tags.map((tag) => (
+                  myEvent.tags.map((tag: string) => (
                     <span
                       key={tag}
                       className="px-4 py-2 bg-gray-100 text-gray-600 text-sm rounded-full font-medium hover:bg-gray-200 cursor-pointer transition-colors"
@@ -328,57 +274,7 @@ export default function EventDetailsPage() {
         <hr className="my-16 border-gray-200" />
 
         {/* --- Related Events (Mock Data) --- */}
-        <section>
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">
-              Other events you may like
-            </h2>
-            <div className="flex gap-2">
-              <button className="p-2 border rounded-full hover:bg-gray-50">
-                <FaChevronLeft className="w-3 h-3" />
-              </button>
-              <button className="p-2 border rounded-full hover:bg-gray-50">
-                <FaChevronRight className="w-3 h-3" />
-              </button>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {relatedEvents.map((event) => (
-              <div key={event.id} className="group cursor-pointer">
-                <div className="relative h-48 w-full rounded-xl overflow-hidden mb-3">
-                  <Image
-                    src={event.image}
-                    alt={event.title}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold uppercase tracking-wide">
-                    {event.category}
-                  </div>
-                </div>
-                <div className="flex gap-4">
-                  <div className="flex flex-col items-center justify-start pt-1 text-blue-600 font-bold leading-tight w-12 shrink-0">
-                    <span className="text-xs uppercase">
-                      {event.date.split(" ")[0]}
-                    </span>
-                    <span className="text-lg">
-                      {event.date.split(" ")[1] || "01"}
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
-                      {event.title}
-                    </h3>
-                    <p className="text-sm text-gray-500 mt-1">
-                      {event.price === 0 ? "FREE" : `EGP ${event.price}`}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
+        <RelatedEvents event={myEvent} />
       </main>
     </div>
   );
