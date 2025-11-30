@@ -11,6 +11,7 @@ const Categories = () => {
       .then((res) => res.json())
       .then((data) => {
         const arr = data.slice(0, 7);
+        console.log(arr);
         setEvents(arr);
       });
   }, []);
@@ -28,6 +29,7 @@ const Categories = () => {
     }
   };
 
+  console.log(events);
   return (
     <section className="md:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="w-full py-12 sm:pb-0">

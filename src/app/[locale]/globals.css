@@ -9,11 +9,11 @@
   --secondary: #0bb7b4;
   --accent: #94bc73;
   --text-primary: #114268;
-  
+
   /* Brand Colors */
-  --brand-primary: #0F5C3B;
-  --brand-secondary: #A3D74F;
-  --brand-orange: #EA580C;
+  --brand-primary: #0f5c3b;
+  --brand-secondary: #a3d74f;
+  --brand-orange: #ea580c;
 }
 
 button {
@@ -25,7 +25,7 @@ button {
   --color-secondary: var(--primary);
   --color-accent: var(--accent);
   --color-text-primary: var(--text-primary);
-  
+
   --color-brand-primary: var(--brand-primary);
   --color-brand-secondary: var(--brand-secondary);
   --color-brand-orange: var(--brand-orange);
@@ -52,6 +52,14 @@ button {
 .animate-slide-in {
   animation: slideIn 0.4s ease-out forwards;
 }
+
+/* .xs\:flex-row {
+  @media (width >= 350px) {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: right;
+  }
+} */
 /*  ----- fade styling pagination /\  */
 /* ------------------------------------ */
 

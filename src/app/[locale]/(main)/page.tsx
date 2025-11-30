@@ -15,7 +15,7 @@ import SearchEvent from "@/components/ui/home/SearchEvent";
 
 function Page() {
   return (
-    <div className="mt-20">
+    <div>
       <main>
         <div className="relative bg-gray-900 py-24 sm:py-32">
           <div

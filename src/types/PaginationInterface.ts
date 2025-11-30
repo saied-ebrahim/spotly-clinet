@@ -1,22 +1,40 @@
-export interface LocationObject {
-  area: string;
-  city: string;
-  country: string;
-}
 export interface EventObject {
-  id: number;
+  id: string;
   title: string;
-  organizer: string;
-  imageUrl: string;
-  category: string;
-  month: string;
-  location: LocationObject;
-  date: string;
+  description: string;
+  date: string; // ISO 8601 date string (e.g., "2024-01-15T10:30:00Z")
   time: string;
-  price: string;
-  interested: number;
-  categoryColor: string;
-  // Add any other fields your event objects have
+  location: Location;
+  media: MediaItem[];
+  analytics: Analytics;
+  tags: string[];
+  category: string[];
+  organizer: string;
+  type: "online" | "offline" | "hybrid";
+  price: number | string;
+}
+
+export interface Location {
+  country: string;
+  city: string;
+  district: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+}
+
+export interface MediaItem {
+  mediaType: "image" | "video" | string;
+  mediaUrl: string;
+}
+
+export interface Analytics {
+  ticketsSold: number;
+  ticketsAvailable: number;
+  totalRevenue: number;
+  waitingListCount: number;
+  likes: number;
+  dislikes: number;
 }
 
 // interface UserAddressProps extends UserProps {

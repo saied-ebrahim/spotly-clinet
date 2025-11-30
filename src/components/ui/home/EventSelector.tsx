@@ -8,7 +8,7 @@ const EventSelector = ({
   onSelectEvent,
 }: {
   locationQuery?: string | null;
-  onSelectEvent?: (eventId: number | null) => void;
+  onSelectEvent?: (eventId: string | null) => void;
 }) => {
   const [input, setInput] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -40,7 +40,7 @@ const EventSelector = ({
   const filteredEvents = events.filter((item) => {
     // 1. If a location is selected in the parent, the event MUST match that location
     const matchesLocation = locationQuery
-      ? item.location.area.toLowerCase() === locationQuery.toLowerCase()
+      ? item.location.district.toLowerCase() === locationQuery.toLowerCase()
       : true; // If no location selected, show all locations
 
     // 2. The event title must match what the user types in THIS input
@@ -96,9 +96,11 @@ const EventSelector = ({
                   {event.title}
                 </div>
                 <div className="text-xs text-gray-500 flex justify-between mt-1">
-                  <span>{event.location.area}</span>
+                  <span>{`${event.location.city}/${event.location.district}`}</span>
                   <span className="bg-gray-100 px-2 py-0.5 rounded text-gray-600 group-hover:bg-indigo-100 group-hover:text-indigo-600">
-                    {event.category}
+                    {Array.isArray(event.category)
+                      ? event.category[0]
+                      : event.category}
                   </span>
                 </div>
               </li>
