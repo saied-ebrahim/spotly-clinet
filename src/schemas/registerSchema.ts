@@ -236,7 +236,7 @@ export const attendeeRegisterSchema = (
       .min(2, t("auth.lastNameMinLength")),
     phone: yup
       .string()
-      .required(t("auth.phoneRequired"))
+      .optional()
       .test("is-possible-phone-number", t("auth.phoneInvalid"), (value) => {
         if (value) {
           return isPossiblePhoneNumber(value);
@@ -297,7 +297,7 @@ export const organizerStep1Schema = (
       .min(2, t("auth.lastNameMinLength")),
     phone: yup
       .string()
-      .required(t("auth.phoneRequired"))
+      .optional()
       .test("is-possible-phone-number", t("auth.phoneInvalid"), (value) => {
         if (value) {
           return isPossiblePhoneNumber(value);
