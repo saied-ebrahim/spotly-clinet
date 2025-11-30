@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import { decryptData } from "@/shared/encryption";
 
 const API_URL = "/auth/login";
+const SIGNUP_URL = "/auth/signup";
 
 export interface LoginRequest {
   email: string;
@@ -19,6 +20,25 @@ export interface LoginResponse {
   message?: string;
 }
 
+export interface SignupRequest {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  gender?: string;
+  address: {
+    city: string;
+    country: string;
+    state: string;
+  };
+}
+
+export interface SignupResponse {
+  status?: string;
+  message?: string;
+  data?: unknown;
+}
+
 export const authService = {
   login: async (data: LoginRequest): Promise<LoginResponse> => {
     try {
@@ -27,6 +47,21 @@ export const authService = {
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
         return error.response.data as LoginResponse;
+      }
+      throw error;
+    }
+  },
+
+  signup: async (data: SignupRequest): Promise<SignupResponse> => {
+    try {
+      const response = await axiosInstance.post<SignupResponse>(
+        SIGNUP_URL,
+        data
+      );
+      return response.data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response) {
+        return error.response.data as SignupResponse;
       }
       throw error;
     }

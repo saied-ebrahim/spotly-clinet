@@ -247,6 +247,14 @@ export const attendeeRegisterSchema = (
       .string()
       .required(t("auth.emailRequired"))
       .email(t("auth.emailInvalid")),
+    gender: yup
+      .object()
+      .shape({
+        label: yup.string().required(t("auth.genderRequired")),
+        value: yup.string().required(t("auth.genderRequired")),
+      })
+      .required(t("auth.genderRequired"))
+      .typeError(t("auth.genderInvalid")),
     country: yup
       .object()
       .shape({

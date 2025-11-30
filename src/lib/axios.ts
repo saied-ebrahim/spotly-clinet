@@ -4,7 +4,7 @@ import { decryptData, encryptData } from "@/shared/encryption";
 import { getDeviceID } from "@/shared/device";
 
 const axiosInstance = axios.create({
-  baseURL: "/api/v1",
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "/api/v1",
   headers: {
     "Content-Type": "application/json",
   },

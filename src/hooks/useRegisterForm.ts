@@ -71,6 +71,7 @@ export interface AttendeeFormData {
   lastName: string;
   email: string;
   phone: string;
+  gender: { label: string; value: string };
   country: { label: string; value: string };
   state: { label: string; value: string };
   city: { label: string; value: string };
