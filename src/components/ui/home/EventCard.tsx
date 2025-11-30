@@ -2,6 +2,7 @@ import Image from "next/image";
 import { FiStar, FiTag } from "react-icons/fi";
 import { EventObject } from "@/types/PaginationInterface";
 import Link from "next/link";
+import { getMonthDay } from "@/utils/details/formatting";
 
 // const EventCard = ({ event }: { event: EventObject }) => {
 //   const handleAddFavorites = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -98,22 +99,22 @@ import Link from "next/link";
 const EventCard = ({ event }: { event: EventObject }) => {
   const handleAddFavorites = (e: React.MouseEvent<HTMLButtonElement>) => {
     // 1. Prevent the default button behavior
-    e.preventDefault();
-    // 2. STOP the event from bubbling up to the parent anchor tag
-    e.stopPropagation();
+    // e.preventDefault();
+    // // 2. STOP the event from bubbling up to the parent anchor tag
+    // e.stopPropagation();
 
     console.log(`Added event ID ${event.id} to favorites!`);
   };
 
   // Extract month and date from event.date (YYYY-MM-DD format)
-  const getMonthDay = (dateStr: string) => {
-    const date = new Date(dateStr);
-    const month = date
-      .toLocaleString("default", { month: "short" })
-      .toUpperCase();
-    const day = date.getDate();
-    return { month, date: day };
-  };
+  // const getMonthDay = (dateStr: string) => {
+  //   const date = new Date(dateStr);
+  //   const month = date
+  //     .toLocaleString("default", { month: "short" })
+  //     .toUpperCase();
+  //   const day = date.getDate();
+  //   return { month, date: day };
+  // };
 
   const { month, date: dayDate } = getMonthDay(event.date);
   const imageUrl = event.media?.[0]?.mediaUrl || "/events.json";

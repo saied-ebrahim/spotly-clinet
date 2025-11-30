@@ -8,15 +8,15 @@ import {
   FaRegCalendarAlt,
   FaRegClock,
   FaMapMarkerAlt,
-  FaTicketAlt,
   FaPlus,
   FaExternalLinkAlt,
 } from "react-icons/fa";
 import { EventObject } from "@/types/PaginationInterface";
 
-import RelatedEvents from "@/components/ui/details/RelatedEvents";
 import EventMap from "@/components/ui/details/EventMap";
-import { formatDate, formatPrice } from "@/utils/details/formatting";
+import { formatDate } from "@/utils/details/formatting";
+import TicketSidebar from "@/components/ui/details/TicketSidebar";
+import RecommendationList from "@/components/ui/details/RecommendationList";
 
 // --- 1. Dynamic Import for Map (Disables SSR) ---
 // const EventMap = dynamic(() => import("@/components/ui/details/EventMap"), {
@@ -49,6 +49,7 @@ export default async function EventDetailsPage({
   const res = await fetch("http://localhost:8080/events");
   const data = await res.json();
   const myEvent = data.find((e: EventObject) => String(e.id) === eventId);
+  console.log(myEvent);
 
   // --- Helper Functions ---
 
@@ -182,8 +183,8 @@ export default async function EventDetailsPage({
             {/* Host Info */}
             <section className="space-y-4">
               <h2 className="text-xl font-bold text-gray-900">Hosted by</h2>
-              <div className="p-4 bg-gray-50 rounded-xl border border-gray-100 flex items-center justify-between hover:shadow-md transition-shadow duration-300">
-                <div className="flex items-center gap-4">
+              <div className="p-4 gap-2  bg-gray-50 rounded-xl border border-gray-100 flex flex-wrap items-center justify-between hover:shadow-md transition-shadow duration-300">
+                <div className="flex items-center gap-4 flex-grow sm:flex-nowrap mb-5 sm:mb-0">
                   <div className="relative w-12 h-12 rounded-full overflow-hidden border border-gray-200 bg-gray-200">
                     {/* Placeholder Avatar */}
                     <Image
@@ -197,14 +198,14 @@ export default async function EventDetailsPage({
                     {myEvent.organizer}
                   </span>
                 </div>
-                <div className="flex gap-2">
-                  <button className="px-4 py-1.5 text-sm font-medium border border-gray-300 rounded-lg hover:bg-white transition-colors">
-                    Contact
-                  </button>
-                  <button className="px-4 py-1.5 text-sm font-medium bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors">
-                    + Follow
-                  </button>
-                </div>
+                {/* <div className="flex gap-2 w-full"> */}
+                <button className="w-full sm:w-auto shrink-0 px-4 grow py-1.5 text-sm font-medium border border-gray-300 rounded-lg hover:bg-white transition-colors sm:max-w-[100px]">
+                  Contact
+                </button>
+                <button className="w-full sm:w-auto shrink-0 px-4 grow py-1.5 text-sm font-medium bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors sm:max-w-[100px]">
+                  + Follow
+                </button>
+                {/* </div> */}
               </div>
             </section>
 
@@ -239,7 +240,7 @@ export default async function EventDetailsPage({
           </div>
 
           {/* Right Column (Ticket Sidebar) */}
-          <div className="lg:col-span-1">
+          {/* <div className="lg:col-span-1">
             <div className="sticky top-8 space-y-6">
               <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
                 <div className="mb-6">
@@ -267,14 +268,15 @@ export default async function EventDetailsPage({
                 </button>
               </div>
             </div>
-          </div>
+          </div> */}
+          <TicketSidebar event={myEvent} />
         </div>
 
         {/* --- Divider --- */}
         <hr className="my-16 border-gray-200" />
 
         {/* --- Related Events (Mock Data) --- */}
-        <RelatedEvents event={myEvent} />
+        <RecommendationList event={myEvent} />
       </main>
     </div>
   );
