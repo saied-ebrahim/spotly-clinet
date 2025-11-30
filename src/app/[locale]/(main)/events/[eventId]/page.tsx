@@ -320,6 +320,62 @@ export default function EventDetailsPage() {
             </div>
           </div>
         </div>
+
+        {/* --- Divider --- */}
+        <hr className="my-16 border-gray-200" />
+
+        {/* --- Related Events (Mock Data) --- */}
+        <section>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">
+              Other events you may like
+            </h2>
+            <div className="flex gap-2">
+              <button className="p-2 border rounded-full hover:bg-gray-50">
+                <FaChevronLeft className="w-3 h-3" />
+              </button>
+              <button className="p-2 border rounded-full hover:bg-gray-50">
+                <FaChevronRight className="w-3 h-3" />
+              </button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {relatedEvents.map((event) => (
+              <div key={event.id} className="group cursor-pointer">
+                <div className="relative h-48 w-full rounded-xl overflow-hidden mb-3">
+                  <Image
+                    src={event.image}
+                    alt={event.title}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded text-xs font-bold uppercase tracking-wide">
+                    {event.category}
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex flex-col items-center justify-start pt-1 text-blue-600 font-bold leading-tight w-12 shrink-0">
+                    <span className="text-xs uppercase">
+                      {event.date.split(" ")[0]}
+                    </span>
+                    <span className="text-lg">
+                      {event.date.split(" ")[1] || "01"}
+                    </span>
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                      {event.title}
+                    </h3>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {event.price === 0 ? "FREE" : `EGP ${event.price}`}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       </main>
     </div>
   );
