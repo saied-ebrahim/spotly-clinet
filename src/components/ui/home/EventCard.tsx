@@ -199,7 +199,7 @@ const EventCard = ({ event }: { event: EventObject }) => {
                 </p>
               ) : (
                 <p
-                  className={`text-sm ${
+                  className={`text-xs ${
                     event.type === "online" ? "text-amber-400" : ""
                   } text-left min-[350px]:text-right pr-4 fw-bolder`}
                 >

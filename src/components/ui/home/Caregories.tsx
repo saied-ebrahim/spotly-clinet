@@ -4,7 +4,6 @@ import { CategoryItem } from "./CategoryItem";
 
 // Main Slider Component
 const Categories = () => {
-  const sliderRef = useRef<HTMLDivElement>(null);
   const [events, setEvents] = useState([]);
   useEffect(() => {
     fetch("http://localhost:8080/events")
@@ -15,6 +14,7 @@ const Categories = () => {
         setEvents(arr);
       });
   }, []);
+  const sliderRef = useRef<HTMLDivElement>(null);
   const scrollLeft = () => {
     if (sliderRef.current) {
       // Scroll by roughly one screen width

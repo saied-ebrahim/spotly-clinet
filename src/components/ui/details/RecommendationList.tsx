@@ -1,87 +1,173 @@
 "use client";
-import useFilter from "@/hooks/useFilter";
-import { EventObject } from "@/types/PaginationInterface";
-import { getMonthDay } from "@/utils/details/formatting";
-
-import Image from "next/image";
-import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import EventCard from "../home/EventCard";
-// const relatedEvents = [
-//   {
-//     id: 1,
-//     title: "Lakeside Camping at Pawna",
-//     date: "Nov 25 - 26",
-//     price: 1499,
-//     image:
-//       "https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&q=80&w=600",
-//     category: "Travel & Adventure",
-//   },
-//   {
-//     id: 2,
-//     title: "Project Earth Exhibition",
-//     date: "Dec 16",
-//     price: 0,
-//     image:
-//       "https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&q=80&w=600",
-//     category: "Cultural & Arts",
-//   },
-//   {
-//     id: 3,
-//     title: "Royal College of Art Meet",
-//     date: "Dec 02",
-//     price: 0,
-//     image:
-//       "https://images.unsplash.com/photo-1544928147-79a77456a1d3?auto=format&fit=crop&q=80&w=600",
-//     category: "Educational",
-//   },
-// ];
-export default function RecommendationList({ event }: { event: EventObject }) {
-  const { month, date: dayDate } = getMonthDay(event.date);
+import { EventObject } from "@/types/PaginationInterface";
+import useFilter from "@/hooks/useFilter";
 
-  const [recommends] = useFilter(
+const RecommendationList = ({ event }: { event: EventObject }) => {
+  const [events, setEvents] = useState<EventObject[]>([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  // Default to 3, will be updated by useEffect on mount
+  const [eventsPerPage, setEventsPerPage] = useState(3);
+  const [items] = useFilter(
     "http://localhost:8080/events",
     (e: EventObject) => e.organizer === event.organizer
   );
-  // const [recommends, setRecommends] = useState<EventObject[]>([]);
-  // const { eventId } = useParams();
-
+  // 1. Fetch Data
   // useEffect(() => {
-  //   // Replace this with your actual API endpoint
   //   fetch("http://localhost:8080/events")
   //     .then((res) => res.json())
   //     .then((data) => {
-  //       const recoms = data.filter(
-  //         (e: EventObject) => e.organizer === event.organizer
-  //       );
-  //       setRecommends(recoms);
-  //     })
-  //     .catch((err) => {
-  //       console.error("Error fetching event:", err);
+  //       setEvents(data);
   //     });
-  // }, [eventId, event.organizer]);
-  return (
-    <section>
-      <div className=" flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">
-          Other events you may like
-        </h2>
-        <div className="flex gap-2">
-          <button className="p-2 border rounded-full hover:bg-gray-50">
-            <FaChevronLeft className="w-3 h-3" />
-          </button>
-          <button className="p-2 border rounded-full hover:bg-gray-50">
-            <FaChevronRight className="w-3 h-3" />
-          </button>
-        </div>
-      </div>
+  // }, []);
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {recommends.map((event) => (
-          <EventCard key={event.id} event={event} />
-        ))}
+  // 2. Handle Screen Resize logic
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+
+      // If Tablet (between 640px and 1024px), show 2 items
+      if (width >= 640 && width < 1024) {
+        setEventsPerPage(2);
+      }
+      // Otherwise (Mobile < 640px OR Desktop >= 1024px), show 3 items
+      else {
+        setEventsPerPage(3);
+      }
+    };
+
+    // Set initial value
+    handleResize();
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // 3. Reset page if we resize and the current page is out of bounds
+  // We only want to reset the page if eventsPerPage changes, so we add it to the dependency array
+  // This will prevent the endless loop issue
+  // useEffect(() => {
+  //   if (eventsPerPage !== 0) {
+  //     setCurrentPage(0);
+  //   }
+  // }, [eventsPerPage]);
+
+  const totalPages = Math.ceil(items.length / eventsPerPage);
+
+  const scrollLeft = () => {
+    if (currentPage > 0) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  const scrollRight = () => {
+    if (currentPage < totalPages - 1) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const currentEvents = items.slice(
+    currentPage * eventsPerPage,
+    (currentPage + 1) * eventsPerPage
+  );
+  console.log(items);
+  return (
+    <section className="md:py-16 max-w-7xl mx-auto  sm:px-6 lg:px-8">
+      <div className="w-full py-12 pt-0 sm:pb-0">
+        <div className="max-w-7xl mx-auto p-0 md:p-3">
+          <div className="flex flex-wrap justify-between items-center mb-8">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-5 sm:mb-0">
+              Other events you may like
+            </h2>
+
+            {/* Navigation Buttons - Visible on all screens now so mobile can use them */}
+            <div className="flex gap-2 w-full sm:w-[100px] sm:justify-start justify-end">
+              <button
+                onClick={scrollLeft}
+                disabled={currentPage === 0}
+                className={`p-2 rounded-full border shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
+                  ${
+                    currentPage === 0
+                      ? "bg-gray-100 text-gray-300 border-gray-100 cursor-not-allowed"
+                      : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300"
+                  }`}
+                aria-label="Previous page"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-5 h-5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.75 19.5L8.25 12l7.5-7.5"
+                  />
+                </svg>
+              </button>
+              <button
+                onClick={scrollRight}
+                disabled={currentPage >= totalPages - 1}
+                className={`p-2 rounded-full border shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500
+                  ${
+                    currentPage >= totalPages - 1
+                      ? "bg-gray-100 text-gray-300 border-gray-100 cursor-not-allowed"
+                      : "bg-white border-gray-200 text-gray-600 hover:bg-gray-50 hover:border-gray-300"
+                  }`}
+                aria-label="Next page"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-5 h-5"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M8.25 4.5l7.5 7.5-7.5 7.5"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          {/* Grid Container */}
+          <div className="relative group">
+            <div
+              key={currentPage} // Keeps your slide animation working
+              className="
+                grid 
+                gap-5 md:gap-6 xl:gap-[25px] 
+                
+                animate-slide-in
+                
+                /* Mobile: 1 Column (Column Shape) */
+                grid-cols-1 
+                
+                /* Tablet (<1024px): 2 Columns */
+                sm:grid-cols-2 
+                
+                /* Desktop (>=1024px): 3 Columns */
+                lg:grid-cols-3
+              "
+            >
+              {currentEvents.map((event, index) => (
+                // Use a stable key (like event.id) if possible, index is a fallback
+                <EventCard key={event.id || index} event={event} />
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
-}
+};
+
+export default RecommendationList;

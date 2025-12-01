@@ -53,13 +53,6 @@ button {
   animation: slideIn 0.4s ease-out forwards;
 }
 
-/* .xs\:flex-row {
-  @media (width >= 350px) {
-    flex-direction: row;
-    justify-content: space-between;
-    text-align: right;
-  }
-} */
 /*  ----- fade styling pagination /\  */
 /* ------------------------------------ */
 
