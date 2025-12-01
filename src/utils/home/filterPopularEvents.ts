@@ -96,6 +96,7 @@ const filterEvents = (events: EventObject[], filterType: string) => {
         }
         default:
           return true;
+        // return event.type!==;
       }
     });
 };

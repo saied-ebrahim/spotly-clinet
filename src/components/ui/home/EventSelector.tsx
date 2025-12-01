@@ -6,10 +6,10 @@ import { FiSearch } from "react-icons/fi";
 
 const EventSelector = ({
   locationQuery,
-  onSelectEvent,
+  onSelect,
 }: {
   locationQuery?: string | null;
-  onSelectEvent?: (eventId: string | null) => void;
+  onSelect?: (eventId: string | null) => void;
 }) => {
   const [input, setInput] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -63,7 +63,7 @@ const EventSelector = ({
             setInput(e.target.value);
             setIsOpen(true);
             // Reset selection if user types (forces them to re-select from list)
-            if (onSelectEvent) onSelectEvent(null);
+            if (onSelect) onSelect(null);
           }}
           onFocus={() => setIsOpen(true)}
           placeholder="Search events..."
@@ -86,7 +86,11 @@ const EventSelector = ({
                 onClick={() => {
                   setInput(event.title);
                   setIsOpen(false);
+<<<<<<< HEAD
+                  if (onSelect) onSelect(event.id);
+=======
                   if (onSelectEvent) onSelectEvent(event._id);
+>>>>>>> 5b6fb1f6a9aa360ab13ebfc1e06af26c2079bfbe
                 }}
                 className="cursor-pointer select-none px-4 py-3 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors group"
               >

@@ -5,7 +5,7 @@ import axiosInstance from "@/lib/axios";
 import PaginationList from "./PaginationList";
 
 // import filterEvents from "@/components/Custom/filterPopularEvents";
-import filterEvents from "@/components/Custom/filterPopularEvents2";
+import filterEvents from "@/utils/home/filterPopularEvents";
 import { EventObject } from "@/types/PaginationInterface";
 // import { Category } from "@/types/CategoryInterface";
 import useGeolocation from "@/hooks/useGeolocation";
@@ -19,7 +19,12 @@ const PopularEvents = () => {
   const [events, setEvents] = useState<EventObject[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("All");
   console.log(events);
+<<<<<<< HEAD
+  const filtered = filterEvents(events, currentFilter);
+  const filteredEvents = filtered.filter((e) => e.type !== "online");
+=======
   // const filteredEvents = filterEvents(events, currentFilter);
+>>>>>>> 5b6fb1f6a9aa360ab13ebfc1e06af26c2079bfbe
 
   useEffect(() => {
     axiosInstance
