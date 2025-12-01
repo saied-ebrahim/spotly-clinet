@@ -18,7 +18,12 @@ export default function SearchEvent() {
   };
   return (
     <div className="flex flex-col sm:flex-row flex-wrap bg-white p-2 rounded-xl shadow-2xl space-y-3 sm:space-y-0 sm:space-x-2 gap-2">
-      <EventSelector locationQuery={query} onSelectEvent={setSelectedEventId} />
+      <EventSelector
+        locationQuery={query}
+        onSelect={(eventId) =>
+          setSelectedEventId(eventId ? Number(eventId) : null)
+        }
+      />
       <LocationSelector query={query} setQuery={setQuery} />
       <button
         onClick={handleSearch}

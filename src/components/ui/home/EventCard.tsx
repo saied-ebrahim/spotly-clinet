@@ -2,6 +2,7 @@ import Image from "next/image";
 import { FiStar, FiTag } from "react-icons/fi";
 import { EventObject } from "@/types/PaginationInterface";
 import Link from "next/link";
+import { getMonthDay } from "@/utils/details/formatting";
 
 // const EventCard = ({ event }: { event: EventObject }) => {
 //   const handleAddFavorites = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -98,22 +99,22 @@ import Link from "next/link";
 const EventCard = ({ event }: { event: EventObject }) => {
   const handleAddFavorites = (e: React.MouseEvent<HTMLButtonElement>) => {
     // 1. Prevent the default button behavior
-    e.preventDefault();
-    // 2. STOP the event from bubbling up to the parent anchor tag
-    e.stopPropagation();
+    // e.preventDefault();
+    // // 2. STOP the event from bubbling up to the parent anchor tag
+    // e.stopPropagation();
 
     console.log(`Added event ID ${event._id} to favorites!`);
   };
 
   // Extract month and date from event.date (YYYY-MM-DD format)
-  const getMonthDay = (dateStr: string) => {
-    const date = new Date(dateStr);
-    const month = date
-      .toLocaleString("default", { month: "short" })
-      .toUpperCase();
-    const day = date.getDate();
-    return { month, date: day };
-  };
+  // const getMonthDay = (dateStr: string) => {
+  //   const date = new Date(dateStr);
+  //   const month = date
+  //     .toLocaleString("default", { month: "short" })
+  //     .toUpperCase();
+  //   const day = date.getDate();
+  //   return { month, date: day };
+  // };
 
   const getImageUrl = (url?: string) => {
     if (!url) return "/events.json";
@@ -140,7 +141,7 @@ const EventCard = ({ event }: { event: EventObject }) => {
             src={imageUrl}
             alt={event.title}
             fill
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
           />
           <div className="w-[93%] flex justify-between absolute bottom-3 left-3 ">
             {/* <span className="absolute bottom-3 left-3 text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-blue-600 text-white bg-opacity-90">
@@ -204,7 +205,7 @@ const EventCard = ({ event }: { event: EventObject }) => {
                 </p>
               ) : (
                 <p
-                  className={`text-sm ${
+                  className={`text-xs ${
                     event.type === "online" ? "text-amber-400" : ""
                   } text-left min-[350px]:text-right pr-4 fw-bolder`}
                 >
