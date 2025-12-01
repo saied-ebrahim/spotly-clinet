@@ -125,8 +125,8 @@ export const CategoryItem = ({
 }: {
   category: CategoryItemInterface;
 }) => {
-  // console.log(category);
-  console.log(category.media[0].mediaUrl);
+  console.log(category);
+  // console.log(category.media[0].mediaUrl);
   // const [imgSrc, setImgSrc] = useState(category.imageUrl);
 
   return (

@@ -7,8 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "server": "json-server public/events.json --port 8080",
-    "server2": "json-server public/events2.json --port 8080"
+    "server": "json-server public/events.json --port 8080"
   },
   "dependencies": {
     "@ag-grid-community/locale": "^34.3.1",
