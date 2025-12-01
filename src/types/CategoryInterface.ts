@@ -2,8 +2,7 @@ export interface Category {
   _id: string;
   name: string;
   description?: string;
-  events?: any[]; // Using any[] for now to avoid circular deps or complex imports, can be refined later
-  [key: string]: any;
+  events?: string[];
 }
 
 export interface CategoryItemInterface {

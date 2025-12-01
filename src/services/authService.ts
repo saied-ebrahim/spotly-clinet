@@ -78,6 +78,10 @@ export const authService = {
     try {
       await axiosInstance.post("/auth/logout", { deviceID });
     } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
+        // Token expired or invalid, just ignore
+        return;
+      }
       console.error("Logout failed", error);
     }
   },

@@ -90,7 +90,7 @@ const Categories = () => {
               // Gap logic:
               // - gap-4 (16px) on mobile
               // - gap-6 (24px) on md+
-              className="flex overflow-x-auto pb-8 gap-5 md:gap-6 xl:gap-[25px] snap-x snap-mandatory scroll-smooth no-scrollbar p-3"
+              className="flex overflow-x-auto pb-5 gap-5 md:gap-6 xl:gap-[25px] snap-x snap-mandatory scroll-smooth no-scrollbar p-3"
             >
               {categories.map((category, index) => (
                 <CategoryItem key={index} category={category} />

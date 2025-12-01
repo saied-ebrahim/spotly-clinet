@@ -131,7 +131,7 @@ export function CreateEventModal({
       setFormData((prev) => ({
         ...prev,
         [parent]: {
-          ...(prev[parent as keyof typeof prev] as any),
+          ...(prev[parent as keyof typeof prev] as object),
           [child]: type === "number" ? Number(value) : value,
         },
       }));

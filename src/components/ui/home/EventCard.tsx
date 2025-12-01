@@ -143,11 +143,11 @@ const EventCard = ({ event }: { event: EventObject }) => {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
           <div className="w-[93%] flex justify-between absolute bottom-3 left-3 ">
-            <span className="absolute bottom-3 left-3 text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-blue-600 text-white bg-opacity-90">
+            {/* <span className="absolute bottom-3 left-3 text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-blue-600 text-white bg-opacity-90">
               {Array.isArray(event.category)
                 ? event.category[0]
                 : event.category}
-            </span>
+            </span> */}
             <span className=" text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-blue-600 text-white bg-opacity-90">
               {Array.isArray(event.category)
                 ? event.category[0]

@@ -1,5 +1,5 @@
 import { EgyptTopEventInterace } from "@/types/EgyptTopEventInterface";
-import { Category } from "@/types/CategoryInterface";
+// import { Category } from "@/types/CategoryInterface";
 import { useEffect, useState } from "react";
 import TopEventCard from "./EgyptTopEventCard";
 import axiosInstance from "@/lib/axios";

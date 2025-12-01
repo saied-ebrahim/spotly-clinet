@@ -196,14 +196,14 @@ export default function Header() {
               {dropdownOpen && (
                 <div className="absolute right-0 mt-3 w-48 bg-white text-[#181828] rounded-xl shadow-2xl py-2 animate-fadeIn border border-gray-100 overflow-hidden">
                   <Link
-                    href="/dashboard"
+                    href="/dashboardHome/Organizer"
                     className="block px-4 py-2.5 hover:bg-gray-50 transition-colors font-medium"
                     onClick={() => setDropdownOpen(false)}
                   >
                     Dashboard
                   </Link>
                   <Link
-                    href="/profile"
+                    href="/auth/Profile"
                     className="block px-4 py-2.5 hover:bg-gray-50 transition-colors font-medium"
                     onClick={() => setDropdownOpen(false)}
                   >
