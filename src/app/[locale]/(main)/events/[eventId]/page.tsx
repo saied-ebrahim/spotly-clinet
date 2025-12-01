@@ -8,7 +8,6 @@ import {
   FaRegCalendarAlt,
   FaRegClock,
   FaMapMarkerAlt,
-  FaPlus,
   FaExternalLinkAlt,
 } from "react-icons/fa";
 import { EventObject } from "@/types/PaginationInterface";
