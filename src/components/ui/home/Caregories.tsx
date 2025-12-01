@@ -1,18 +1,23 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { CategoryItem } from "./CategoryItem";
+import axios from "axios";
+import axiosInstance from "@/lib/axios";
 
 // Main Slider Component
 const Categories = () => {
+<<<<<<< HEAD
   const [events, setEvents] = useState([]);
+=======
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const [categories, setCategories] = useState([]);
+>>>>>>> 5b6fb1f6a9aa360ab13ebfc1e06af26c2079bfbe
   useEffect(() => {
-    fetch("http://localhost:8080/events")
-      .then((res) => res.json())
-      .then((data) => {
-        const arr = data.slice(0, 7);
-        console.log(arr);
-        setEvents(arr);
-      });
+    axiosInstance.get("/categories").then((data) => {
+      // const arr = data.data.categories.slice(0, 7);
+      console.log(data.data.data.categories);
+      setCategories(data.data.data.categories);
+    });
   }, []);
   const sliderRef = useRef<HTMLDivElement>(null);
   const scrollLeft = () => {
@@ -29,7 +34,7 @@ const Categories = () => {
     }
   };
 
-  console.log(events);
+  // console.log(categories);
   return (
     <section className="md:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="w-full py-12 sm:pb-0">
@@ -90,14 +95,11 @@ const Categories = () => {
               // Gap logic:
               // - gap-4 (16px) on mobile
               // - gap-6 (24px) on md+
-              className="flex overflow-x-auto pb-8 gap-5 md:gap-6 xl:gap-[25px] snap-x snap-mandatory scroll-smooth no-scrollbar p-3"
+              className="flex overflow-x-auto pb-5 gap-5 md:gap-6 xl:gap-[25px] snap-x snap-mandatory scroll-smooth no-scrollbar p-3"
             >
-              {events.map((category, index) => (
+              {categories.map((category, index) => (
                 <CategoryItem key={index} category={category} />
               ))}
-              {/* {categories.map((category, index) => (
-              <CategoryItem key={index} category={category} />
-            ))} */}
             </div>
           </div>
         </div>

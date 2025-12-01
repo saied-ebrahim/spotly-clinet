@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import axiosInstance from "@/lib/axios";
 
 import PaginationList from "./PaginationList";
 
@@ -9,14 +10,16 @@ const OnlineEvents = () => {
   const [events, setEvents] = useState<EventObject[]>([]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/events")
-      .then((res) => res.json())
-      .then((data) => {
-        const onlineEvents = data.filter(
+    axiosInstance
+      .get("/events")
+      .then((res) => {
+        const events = res.data.data.events;
+        const onlineEvents = events.filter(
           (e: EventObject) => e.type === "online"
         );
         setEvents(onlineEvents);
-      });
+      })
+      .catch((err) => console.error(err));
   }, []);
   return (
     <section className="py-16 pt-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

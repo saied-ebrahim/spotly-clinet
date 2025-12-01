@@ -1,5 +1,6 @@
 export interface EventObject {
-  id: string;
+  _id: string;
+  id?: string;
   title: string;
   description: string;
   date: string; // ISO 8601 date string (e.g., "2024-01-15T10:30:00Z")

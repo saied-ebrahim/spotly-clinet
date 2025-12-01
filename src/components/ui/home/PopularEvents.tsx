@@ -1,11 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
+import axiosInstance from "@/lib/axios";
 
 import PaginationList from "./PaginationList";
 
 // import filterEvents from "@/components/Custom/filterPopularEvents";
 import filterEvents from "@/utils/home/filterPopularEvents";
 import { EventObject } from "@/types/PaginationInterface";
+// import { Category } from "@/types/CategoryInterface";
 import useGeolocation from "@/hooks/useGeolocation";
 
 // 3. The Main Container Component
@@ -17,16 +19,20 @@ const PopularEvents = () => {
   const [events, setEvents] = useState<EventObject[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("All");
   console.log(events);
+<<<<<<< HEAD
   const filtered = filterEvents(events, currentFilter);
   const filteredEvents = filtered.filter((e) => e.type !== "online");
+=======
+  // const filteredEvents = filterEvents(events, currentFilter);
+>>>>>>> 5b6fb1f6a9aa360ab13ebfc1e06af26c2079bfbe
 
   useEffect(() => {
-    fetch("http://localhost:8080/events")
-      .then((res) => res.json())
-      .then((data) => {
-        // console.log(data);
-        setEvents(data);
-      });
+    axiosInstance
+      .get("/events")
+      .then((res) => {
+        setEvents(res.data.data.events);
+      })
+      .catch((err) => console.error(err));
   }, []);
   return (
     <section className="py-16 pb-0 pt-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -58,8 +64,8 @@ const PopularEvents = () => {
             Browse through our latest events and workshops.
           </p>
         </div>
-        {filteredEvents.length > 0 ? (
-          <PaginationList itemsPerPage={6} allEvents={filteredEvents} /> // this is a COMMON COMPONENT for pagination
+        {events.length > 0 ? (
+          <PaginationList itemsPerPage={6} allEvents={events} /> // this is a COMMON COMPONENT for pagination
         ) : (
           <h1 className="text-center w-full text-xl">No Events Found</h1>
         )}

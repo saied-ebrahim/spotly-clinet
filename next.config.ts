@@ -18,7 +18,14 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+<<<<<<< HEAD
         hostname: "ui-avatars.com",
+=======
+        hostname: "example.com",
+      },
+      {
+        hostname: "pub-c00f3c4174b8458d8db60aeff42f8480.r2.dev",
+>>>>>>> 5b6fb1f6a9aa360ab13ebfc1e06af26c2079bfbe
       },
     ],
   },
@@ -26,16 +33,3 @@ const nextConfig: NextConfig = {
 
 const withNextIntl = createNextIntlPlugin();
 export default withNextIntl(nextConfig);
-// ----------
-// /** @type {import('next').NextConfig} */
-// const nextConfig = {
-//   images: {
-//     remotePatterns: [
-//       {
-//         protocol: "https",
-//         hostname: "dummyjson.com",
-//       },
-//     ],
-//   },
-// };
-// export default nextConfig;

@@ -218,3 +218,181 @@ export const specialistStep3Schema = (
   });
 
 // Combined specialist schema for final validation
+
+// Event Management Registration Schemas
+
+// Attendee registration schema
+export const attendeeRegisterSchema = (
+  t: ReturnType<typeof useTranslations<"">>
+) =>
+  yup.object().shape({
+    firstName: yup
+      .string()
+      .required(t("auth.firstNameRequired"))
+      .min(2, t("auth.firstNameMinLength")),
+    lastName: yup
+      .string()
+      .required(t("auth.lastNameRequired"))
+      .min(2, t("auth.lastNameMinLength")),
+    phone: yup
+      .string()
+      .optional()
+      .test("is-possible-phone-number", t("auth.phoneInvalid"), (value) => {
+        if (value) {
+          return isPossiblePhoneNumber(value);
+        }
+        return true;
+      }),
+    email: yup
+      .string()
+      .required(t("auth.emailRequired"))
+      .email(t("auth.emailInvalid")),
+    gender: yup
+      .object()
+      .shape({
+        label: yup.string().required(t("auth.genderRequired")),
+        value: yup.string().required(t("auth.genderRequired")),
+      })
+      .required(t("auth.genderRequired"))
+      .typeError(t("auth.genderInvalid")),
+    country: yup
+      .object()
+      .shape({
+        label: yup.string().required(t("auth.countryRequired")),
+        value: yup.string().required(t("auth.countryRequired")),
+      })
+      .required(t("auth.countryRequired"))
+      .typeError(t("auth.countryInvalid")),
+    state: yup
+      .object()
+      .shape({
+        label: yup.string().required(t("auth.stateRequired")),
+        value: yup.string().required(t("auth.stateRequired")),
+      })
+      .required(t("auth.stateRequired"))
+      .typeError(t("auth.stateInvalid")),
+    city: yup
+      .object()
+      .shape({
+        label: yup.string().required(t("auth.cityRequired")),
+        value: yup.string().required(t("auth.cityRequired")),
+      })
+      .required(t("auth.cityRequired"))
+      .typeError(t("auth.cityInvalid")),
+    password: yup
+      .string()
+      .required(t("auth.passwordRequired"))
+      .min(8, t("auth.passwordMinLength"))
+      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, t("auth.passwordInvalid")),
+    confirmPassword: yup
+      .string()
+      .required(t("auth.confirmPasswordRequired"))
+      .oneOf([yup.ref("password")], t("auth.confirmPasswordInvalid")),
+  });
+
+// Organizer registration schemas
+export const organizerStep1Schema = (
+  t: ReturnType<typeof useTranslations<"">>
+) =>
+  yup.object().shape({
+    firstName: yup
+      .string()
+      .required(t("auth.firstNameRequired"))
+      .min(2, t("auth.firstNameMinLength")),
+    lastName: yup
+      .string()
+      .required(t("auth.lastNameRequired"))
+      .min(2, t("auth.lastNameMinLength")),
+    phone: yup
+      .string()
+      .optional()
+      .test("is-possible-phone-number", t("auth.phoneInvalid"), (value) => {
+        if (value) {
+          return isPossiblePhoneNumber(value);
+        }
+        return true;
+      }),
+    email: yup
+      .string()
+      .required(t("auth.emailRequired"))
+      .email(t("auth.emailInvalid")),
+    gender: yup
+      .object()
+      .shape({
+        label: yup.string().required(t("auth.genderRequired")),
+        value: yup.string().required(t("auth.genderRequired")),
+      })
+      .required(t("auth.genderRequired"))
+      .typeError(t("auth.genderInvalid")),
+    country: yup
+      .object()
+      .shape({
+        label: yup.string().required(t("auth.countryRequired")),
+        value: yup.string().required(t("auth.countryRequired")),
+      })
+      .required(t("auth.countryRequired"))
+      .typeError(t("auth.countryInvalid")),
+    state: yup
+      .object()
+      .shape({
+        label: yup.string().required(t("auth.stateRequired")),
+        value: yup.string().required(t("auth.stateRequired")),
+      })
+      .required(t("auth.stateRequired"))
+      .typeError(t("auth.stateInvalid")),
+    city: yup
+      .object()
+      .shape({
+        label: yup.string().required(t("auth.cityRequired")),
+        value: yup.string().required(t("auth.cityRequired")),
+      })
+      .required(t("auth.cityRequired"))
+      .typeError(t("auth.cityInvalid")),
+    birthDate: yup
+      .date()
+      .required(t("auth.birthDateRequired"))
+      .max(
+        new Date(new Date().setFullYear(new Date().getFullYear() - 1)),
+        t("auth.birthDateInvalid")
+      )
+      .typeError(t("auth.birthDateInvalid")),
+    password: yup
+      .string()
+      .required(t("auth.passwordRequired"))
+      .min(8, t("auth.passwordMinLength"))
+      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/, t("auth.passwordInvalid")),
+    confirmPassword: yup
+      .string()
+      .required(t("auth.confirmPasswordRequired"))
+      .oneOf([yup.ref("password")], t("auth.confirmPasswordInvalid")),
+  });
+
+export const organizerStep2Schema = (
+  t: ReturnType<typeof useTranslations<"">>
+) =>
+  yup.object().shape({
+    organizationName: yup
+      .string()
+      .required(t("auth.organizationNameRequired"))
+      .min(2, t("auth.organizationNameMinLength")),
+    organizationType: yup
+      .object()
+      .shape({
+        label: yup.string().required(t("auth.organizationTypeRequired")),
+        value: yup.string().required(t("auth.organizationTypeRequired")),
+      })
+      .required(t("auth.organizationTypeRequired"))
+      .typeError(t("auth.organizationTypeInvalid")),
+    organizationDescription: yup
+      .string()
+      .required(t("auth.organizationDescriptionRequired"))
+      .min(10, t("auth.organizationDescriptionMinLength")),
+    organizationWebsite: yup
+      .string()
+      .url(t("auth.organizationWebsiteInvalid"))
+      .optional(),
+    organizationLogo: yup
+      .array()
+      .of(yup.mixed())
+      .min(1, t("auth.organizationLogoRequired")),
+  });
