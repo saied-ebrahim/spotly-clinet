@@ -19,12 +19,9 @@ const PopularEvents = () => {
   const [events, setEvents] = useState<EventObject[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("All");
   console.log(events);
-<<<<<<< HEAD
-  const filtered = filterEvents(events, currentFilter);
-  const filteredEvents = filtered.filter((e) => e.type !== "online");
-=======
+  // const filtered = filterEvents(events, currentFilter);
+  // const filteredEvents = filtered.filter((e) => e.type !== "online");
   // const filteredEvents = filterEvents(events, currentFilter);
->>>>>>> 5b6fb1f6a9aa360ab13ebfc1e06af26c2079bfbe
 
   useEffect(() => {
     axiosInstance
