@@ -8,13 +8,24 @@ import { FiChevronDown } from "react-icons/fi";
 import axiosInstance from "@/lib/axios";
 import { EventObject } from "@/types/PaginationInterface";
 import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 const EventsPage = () => {
+  const searchParams = useSearchParams();
+  const categoryFromUrl = searchParams.get("category");
+
   const [searchQuery, setSearchQuery] = useState("");
   const [location, setLocation] = useState("");
   const [selectedFilters, setSelectedFilters] = useState<
     Record<string, string[]>
-  >({});
+  >(() => {
+    // Initialize with category from URL
+    const initialFilters: Record<string, string[]> = {};
+    if (categoryFromUrl) {
+      initialFilters.Category = [categoryFromUrl];
+    }
+    return initialFilters;
+  });
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [customDate, setCustomDate] = useState<string | null>(null);
   const [events, setEvents] = useState<EventObject[]>([]);
@@ -207,7 +218,10 @@ const EventsPage = () => {
 
       <div className="flex flex-col lg:flex-row mt-12 gap-8">
         {/* Sidebar Filters */}
-        <EventFilters onFilterChange={handleFilterChange} />
+        <EventFilters
+          onFilterChange={handleFilterChange}
+          selectedFilters={selectedFilters}
+        />
 
         {/* Main Content */}
         <div className="flex-1">
