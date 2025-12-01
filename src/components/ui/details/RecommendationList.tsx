@@ -1,28 +1,22 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import EventCard from "../home/EventCard";
 import { EventObject } from "@/types/PaginationInterface";
 import useFilter from "@/hooks/useFilter";
 
 const RecommendationList = ({ event }: { event: EventObject }) => {
-  const [events, setEvents] = useState<EventObject[]>([]);
+  // const [events, setEvents] = useState<EventObject[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   // Default to 3, will be updated by useEffect on mount
   const [eventsPerPage, setEventsPerPage] = useState(3);
-  const [items] = useFilter(
-    "http://localhost:8080/events",
-    (e: EventObject) => e.organizer === event.organizer
+  const filterEvents = useCallback(
+    (e: EventObject) => {
+      return e.organizer === event.organizer;
+    },
+    [event.organizer] // Only recreate this function if the organizer changes
   );
-  // 1. Fetch Data
-  // useEffect(() => {
-  //   fetch("http://localhost:8080/events")
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       setEvents(data);
-  //     });
-  // }, []);
+  const [items] = useFilter("http://localhost:8080/events", filterEvents);
 
-  // 2. Handle Screen Resize logic
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
@@ -43,15 +37,6 @@ const RecommendationList = ({ event }: { event: EventObject }) => {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  // 3. Reset page if we resize and the current page is out of bounds
-  // We only want to reset the page if eventsPerPage changes, so we add it to the dependency array
-  // This will prevent the endless loop issue
-  // useEffect(() => {
-  //   if (eventsPerPage !== 0) {
-  //     setCurrentPage(0);
-  //   }
-  // }, [eventsPerPage]);
 
   const totalPages = Math.ceil(items.length / eventsPerPage);
 
