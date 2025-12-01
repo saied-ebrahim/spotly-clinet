@@ -1,6 +1,8 @@
 import { EgyptTopEventInterace } from "@/types/EgyptTopEventInterface";
+// import { Category } from "@/types/CategoryInterface";
 import { useEffect, useState } from "react";
 import TopEventCard from "./EgyptTopEventCard";
+import axiosInstance from "@/lib/axios";
 
 // export ctopEvents: EgyptTopEventInterace[] = [
 //   {
@@ -155,11 +157,12 @@ export default function EgyptTopEvents() {
   const [topEvents, setTopEvents] = useState([] as EgyptTopEventInterace[]);
 
   useEffect(() => {
-    fetch("http://localhost:8080/events")
-      .then((res) => res.json())
-      .then((data) => {
-        setTopEvents(data);
-      });
+    axiosInstance
+      .get("/events")
+      .then((res) => {
+        setTopEvents(res.data.data.events);
+      })
+      .catch((err) => console.error(err));
   }, []);
 
   // 1. Filter for Online Events in Egypt
@@ -232,7 +235,7 @@ export default function EgyptTopEvents() {
         {/* 1. Always Render the First 3 Events */}
         <div>
           {initialEvents.map((event) => (
-            <TopEventCard key={event.id} event={event} />
+            <TopEventCard key={event._id} event={event} />
           ))}
         </div>
 
@@ -245,7 +248,7 @@ export default function EgyptTopEvents() {
         >
           <div className="overflow-hidden">
             {hiddenEvents.map((event) => (
-              <TopEventCard key={event.id} event={event} />
+              <TopEventCard key={event._id} event={event} />
             ))}
           </div>
         </div>

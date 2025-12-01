@@ -1,6 +1,13 @@
+export interface Category {
+  _id: string;
+  name: string;
+  description?: string;
+  events?: string[];
+}
+
 export interface CategoryItemInterface {
-  title: string;
-  media: MediaItem[];
+  name: string;
+  image: string;
 }
 
 export interface MediaItem {

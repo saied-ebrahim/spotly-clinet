@@ -3,7 +3,7 @@ import Image from "next/image";
 
 interface EventCardProps {
   event: {
-    id: number;
+    id: number | string;
     title: string;
     date: string;
     venue: string;
@@ -52,7 +52,9 @@ export function EventCard({ event }: EventCardProps) {
 
           <div className="space-y-1 mb-3">
             <div className="flex items-center text-sm text-slate-600">
-              <span className="font-medium mr-1">{event.date} | {event.venue}</span>
+              <span className="font-medium mr-1">
+                {event.date} | {event.venue}
+              </span>
             </div>
             <div className="text-sm text-slate-500">{event.time}</div>
           </div>

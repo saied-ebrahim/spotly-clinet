@@ -1,6 +1,17 @@
+"use client";
+
+import { useState } from "react";
 import { FiCalendar, FiList, FiSearch, FiChevronDown } from "react-icons/fi";
+import { CreateEventModal } from "@/components/Dashboard/Events/CreateEventModal";
 
 export default function EventsDashboard() {
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+  const handleCreateSuccess = () => {
+    // Refresh logic here if needed, e.g., refetch events
+    console.log("Event created successfully");
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
@@ -52,12 +63,15 @@ export default function EventsDashboard() {
               <FiChevronDown className="h-5 w-5" />
               All events
             </button>
-            <button className="inline-flex items-center justify-center rounded-md bg-brand-orange px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange">
+            <button
+              onClick={() => setIsCreateModalOpen(true)}
+              className="inline-flex items-center justify-center rounded-md bg-brand-orange px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
+            >
               Create Event
             </button>
           </div>
         </div>
-   
+
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <div className="relative mb-4 h-40 w-40 rounded-full bg-slate-50 flex items-center justify-center">
             <FiCalendar className="h-16 w-16 text-slate-300" />
@@ -70,6 +84,12 @@ export default function EventsDashboard() {
           </p>
         </div>
       </div>
+
+      <CreateEventModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSuccess={handleCreateSuccess}
+      />
     </div>
   );
 }

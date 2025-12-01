@@ -1,5 +1,6 @@
 "use client";
 import { EventObject } from "@/types/PaginationInterface";
+import axiosInstance from "@/lib/axios";
 import { useState, useEffect, useRef } from "react";
 import { FiSearch } from "react-icons/fi";
 
@@ -17,11 +18,11 @@ const EventSelector = ({
 
   // Close dropdown if clicking outside
   useEffect(() => {
-    fetch("http://localhost:8080/events")
-      .then((res) => res.json())
-      .then((data) => {
-        setEvents(data);
-      });
+    axiosInstance
+      .get("/events")
+      .then((res) => {
+        setEvents(res.data.data.events);
+      })
   }, []);
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -78,14 +79,14 @@ const EventSelector = ({
       {/* Dropdown */}
       {isOpen && (
         <ul className="absolute z-50 mt-2 w-full origin-top-right rounded-sm bg-white shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none max-h-60 overflow-auto border border-gray-100">
-          {filteredEvents.length > 0 ? (
-            filteredEvents.map((event) => (
+          {events.length > 0 ? (
+            events.map((event) => (
               <li
-                key={event.id}
+                key={event._id}
                 onClick={() => {
                   setInput(event.title);
                   setIsOpen(false);
-                  if (onSelectEvent) onSelectEvent(event.id);
+                  if (onSelectEvent) onSelectEvent(event._id);
                 }}
                 className="cursor-pointer select-none px-4 py-3 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors group"
               >

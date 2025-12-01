@@ -12,7 +12,7 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const cookie = Cookies.get("session_data");
+    const cookie = Cookies.get("token");
     if (cookie) {
       const decrypted = decryptData(cookie) as {
         token?: string;
@@ -32,12 +32,17 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      !originalRequest.url?.includes("/auth/login") &&
+      !originalRequest.url?.includes("/auth/logout")
+    ) {
       originalRequest._retry = true;
 
       try {
         const deviceID = await getDeviceID();
-        const cookie = Cookies.get("session_data");
+        const cookie = Cookies.get("token");
         let token = "";
         if (cookie) {
           const decrypted = cookie
@@ -59,12 +64,12 @@ axiosInstance.interceptors.response.use(
         );
 
         if (response.data?.token) {
-          const cookie = Cookies.get("session_data");
+          const cookie = Cookies.get("token");
           const decrypted = cookie
             ? (decryptData(cookie) as {
                 token?: string;
                 deviceID?: string;
-                user?: any;
+                user?: unknown;
               })
             : {};
 
@@ -73,14 +78,14 @@ axiosInstance.interceptors.response.use(
             token: response.data.token,
           });
 
-          Cookies.set("session_data", newEncryptedData, { path: "/" });
+          Cookies.set("token", newEncryptedData, { path: "/" });
 
           originalRequest.headers.Authorization = `Bearer ${response.data.token}`;
           return axiosInstance(originalRequest);
         }
       } catch (refreshError) {
-        Cookies.remove("session_data");
-        window.location.href = "/auth/login";
+        Cookies.remove("token");
+        // window.location.href = "/auth/login";
         return Promise.reject(refreshError);
       }
     }

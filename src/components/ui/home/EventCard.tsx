@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { FiHeart, FiStar, FiTag } from "react-icons/fi";
+import { FiStar, FiTag } from "react-icons/fi";
 import { EventObject } from "@/types/PaginationInterface";
 import Link from "next/link";
 
@@ -102,7 +102,7 @@ const EventCard = ({ event }: { event: EventObject }) => {
     // 2. STOP the event from bubbling up to the parent anchor tag
     e.stopPropagation();
 
-    console.log(`Added event ID ${event.id} to favorites!`);
+    console.log(`Added event ID ${event._id} to favorites!`);
   };
 
   // Extract month and date from event.date (YYYY-MM-DD format)
@@ -115,8 +115,14 @@ const EventCard = ({ event }: { event: EventObject }) => {
     return { month, date: day };
   };
 
+  const getImageUrl = (url?: string) => {
+    if (!url) return "/events.json";
+    if (url.startsWith("http") || url.startsWith("/")) return url;
+    return `https://${url}`;
+  };
+
   const { month, date: dayDate } = getMonthDay(event.date);
-  const imageUrl = event.media?.[0]?.mediaUrl || "/events.json";
+  const imageUrl = getImageUrl(event.media?.[0]?.mediaUrl);
   const interested = event.analytics?.likes || 0;
 
   return (
@@ -124,7 +130,7 @@ const EventCard = ({ event }: { event: EventObject }) => {
       {/* 1. The anchor wraps the content, but NOT the button */}
       {/* Replaced Next.js Link with standard anchor tag for preview compatibility */}
       <Link
-        href={`/events/${event.id}`}
+        href={`/events/${event._id}`}
         className="flex flex-col h-full text-inherit no-underline"
       >
         {/* Image Header Section - Responsive Height */}

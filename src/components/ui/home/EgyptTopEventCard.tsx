@@ -24,8 +24,13 @@ export default function EgyptTopEventCard({
     image?: string;
     registeredCount?: string;
   };
-  const imageUrl =
-    event.media?.[0]?.mediaUrl || legacy.image || "/placeholder-event.jpg";
+  const getImageUrl = (url?: string) => {
+    if (!url) return "/placeholder-event.jpg";
+    if (url.startsWith("http") || url.startsWith("/")) return url;
+    return `https://${url}`;
+  };
+
+  const imageUrl = getImageUrl(event.media?.[0]?.mediaUrl || legacy.image);
   // local formatter to match EgyptTopEvents formatting (e.g. 1200 -> 1.2k+)
   const formatCountLocal = (value?: number | string) => {
     if (value == null) return "0";
