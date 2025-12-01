@@ -1,11 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaCamera, FaSave } from "react-icons/fa";
 import { useTranslations } from "next-intl";
+import axiosInstance from "@/lib/axios";
+
+interface UserData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  gender: string;
+  address: {
+    city: string;
+    country: string;
+    state: string;
+  };
+}
+
+interface ApiResponse {
+  status: string;
+  data: {
+    user: UserData;
+  };
+}
 
 export default function AccountInfo() {
   const t = useTranslations("profile");
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -15,8 +36,36 @@ export default function AccountInfo() {
     address: "",
     city: "",
     country: "",
-    pincode: "",
+    state: "",
+    email: "",
+    gender: "",
   });
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await axiosInstance.get<ApiResponse>("/auth/me");
+        const user = response.data.data.user;
+
+        setFormData((prev) => ({
+          ...prev,
+          firstName: user.firstName || "",
+          lastName: user.lastName || "",
+          email: user.email || "",
+          city: user.address?.city || "",
+          country: user.address?.country || "",
+          state: user.address?.state || "",
+          gender: user.gender || "",
+        }));
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,20 +123,6 @@ export default function AccountInfo() {
               value={formData.lastName}
               onChange={(value) => handleInputChange("lastName", value)}
             />
-            <InputField
-              label={t("website")}
-              placeholder={t("enterWebsite")}
-              value={formData.website}
-              onChange={(value) => handleInputChange("website", value)}
-              fullWidth
-            />
-            <InputField
-              label={t("company")}
-              placeholder={t("enterCompanyName")}
-              value={formData.company}
-              onChange={(value) => handleInputChange("company", value)}
-              fullWidth
-            />
           </div>
         </div>
 
@@ -100,17 +135,15 @@ export default function AccountInfo() {
             {t("contactDetailsDescription")}
           </p>
           <div className="grid grid-cols-1 gap-6">
-            <InputField
-              label={t("phoneNumber")}
-              placeholder={t("enterPhoneNumber")}
-              value={formData.phoneNumber}
-              onChange={(value) => handleInputChange("phoneNumber", value)}
-            />
-            <InputField
-              label={t("address")}
-              placeholder={t("enterAddress")}
-              value={formData.address}
-              onChange={(value) => handleInputChange("address", value)}
+            <SelectField
+              label="Gender"
+              value={formData.gender}
+              onChange={(value) => handleInputChange("gender", value)}
+              options={[
+                { label: "Select Gender", value: "" },
+                { label: "Male", value: "male" },
+                { label: "Female", value: "female" },
+              ]}
             />
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               <InputField
@@ -126,10 +159,10 @@ export default function AccountInfo() {
                 onChange={(value) => handleInputChange("country", value)}
               />
               <InputField
-                label={t("pincode")}
-                placeholder={t("enterPincode")}
-                value={formData.pincode}
-                onChange={(value) => handleInputChange("pincode", value)}
+                label="State"
+                placeholder="Enter your state"
+                value={formData.state}
+                onChange={(value) => handleInputChange("state", value)}
               />
             </div>
           </div>
@@ -194,5 +227,57 @@ function User({ className }: { className?: string }) {
         d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
       />
     </svg>
+  );
+}
+
+interface SelectFieldProps {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  options: { label: string; value: string }[];
+  fullWidth?: boolean;
+}
+
+function SelectField({
+  label,
+  value,
+  onChange,
+  options,
+  fullWidth,
+}: SelectFieldProps) {
+  return (
+    <div className={fullWidth ? "sm:col-span-2" : ""}>
+      <label className="block text-sm font-semibold text-gray-700 mb-2">
+        {label}
+      </label>
+      <div className="relative">
+        <select
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all duration-300 bg-white/50 backdrop-blur-sm hover:bg-white appearance-none cursor-pointer"
+        >
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-gray-500">
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
   );
 }
