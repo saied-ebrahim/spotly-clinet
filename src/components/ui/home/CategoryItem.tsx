@@ -126,7 +126,7 @@ export const CategoryItem = ({
   category: CategoryItemInterface;
 }) => {
   // console.log(category);
-  console.log(category.media[0].mediaUrl);
+  console.log(category.image);
   // const [imgSrc, setImgSrc] = useState(category.imageUrl);
 
   return (
@@ -145,8 +145,8 @@ export const CategoryItem = ({
         className={`relative w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] lg:w-[140px] lg:h-[140px] rounded-full overflow-hidden shadow-lg border-4 border-white transition-all duration-300 transform hover:scale-110  ring-2 ring-transparent`}
       >
         <Image
-          src={category.media[0].mediaUrl}
-          alt={category.title}
+          src={category.image}
+          alt={category.name}
           fill
           // onError={(e) => {
           //   const target = e.target as HTMLImageElement;
@@ -162,7 +162,7 @@ export const CategoryItem = ({
         className={`mt-4 text-sm sm:text-base font-bold text-gray-700 transition-colors duration-300 text-center px-1 truncate w-full rounded-xl`}
       >
         {/* {category.name} */}
-        {category.title}
+        {category.name}
       </span>
     </div>
   );

@@ -16,8 +16,12 @@ export interface LoginRequest {
 export interface LoginResponse {
   status?: string;
   token?: string;
-  data?: unknown;
+  data?: {
+    token?: string;
+    accessToken?: string;
+  };
   message?: string;
+  accessToken?: string;
 }
 
 export interface SignupRequest {
@@ -70,9 +74,17 @@ export const authService = {
     }
   },
 
+  logout: async (deviceID: string) => {
+    try {
+      await axiosInstance.post("/auth/logout", { deviceID });
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
+  },
+
   refreshToken: async (deviceID: string) => {
     // Use direct axios to avoid interceptor loop/redirects
-    const cookie = Cookies.get("session_data");
+    const cookie = Cookies.get("token");
     let token = "";
     if (cookie) {
       try {

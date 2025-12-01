@@ -113,7 +113,7 @@ export default function EventDetailsPage() {
             priority
           />
           {/* Overlay Gradient */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
+          <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent opacity-60"></div>
 
           <div className="absolute bottom-6 left-6 text-white md:hidden">
             <h1 className="text-2xl font-bold">{eventData.title}</h1>

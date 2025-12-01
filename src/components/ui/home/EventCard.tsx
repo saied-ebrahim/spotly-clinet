@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { FiHeart, FiStar, FiTag } from "react-icons/fi";
+import { FiStar, FiTag } from "react-icons/fi";
 import { EventObject } from "@/types/PaginationInterface";
 import Link from "next/link";
 
@@ -102,7 +102,7 @@ const EventCard = ({ event }: { event: EventObject }) => {
     // 2. STOP the event from bubbling up to the parent anchor tag
     e.stopPropagation();
 
-    console.log(`Added event ID ${event.id} to favorites!`);
+    console.log(`Added event ID ${event._id} to favorites!`);
   };
 
   // Extract month and date from event.date (YYYY-MM-DD format)
@@ -115,8 +115,14 @@ const EventCard = ({ event }: { event: EventObject }) => {
     return { month, date: day };
   };
 
+  const getImageUrl = (url?: string) => {
+    if (!url) return "/events.json";
+    if (url.startsWith("http") || url.startsWith("/")) return url;
+    return `https://${url}`;
+  };
+
   const { month, date: dayDate } = getMonthDay(event.date);
-  const imageUrl = event.media?.[0]?.mediaUrl || "/events.json";
+  const imageUrl = getImageUrl(event.media?.[0]?.mediaUrl);
   const interested = event.analytics?.likes || 0;
 
   return (
@@ -124,7 +130,7 @@ const EventCard = ({ event }: { event: EventObject }) => {
       {/* 1. The anchor wraps the content, but NOT the button */}
       {/* Replaced Next.js Link with standard anchor tag for preview compatibility */}
       <Link
-        href={`/events/${event.id}`}
+        href={`/events/${event._id}`}
         className="flex flex-col h-full text-inherit no-underline"
       >
         {/* Image Header Section - Responsive Height */}
@@ -137,11 +143,11 @@ const EventCard = ({ event }: { event: EventObject }) => {
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
           <div className="w-[93%] flex justify-between absolute bottom-3 left-3 ">
-            {/* <span className="absolute bottom-3 left-3 text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-blue-600 text-white bg-opacity-90">
+            <span className="absolute bottom-3 left-3 text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-blue-600 text-white bg-opacity-90">
               {Array.isArray(event.category)
                 ? event.category[0]
                 : event.category}
-            </span> */}
+            </span>
             <span className=" text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-blue-600 text-white bg-opacity-90">
               {Array.isArray(event.category)
                 ? event.category[0]

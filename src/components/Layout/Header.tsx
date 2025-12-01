@@ -20,7 +20,7 @@ export default function Header() {
 
   useEffect(() => {
     const checkSession = async () => {
-      const cookie = Cookies.get("session_data");
+      const cookie = Cookies.get("token");
       let userData = null;
       let token = null;
       let storedDeviceID = "";
@@ -82,7 +82,7 @@ export default function Header() {
                   token: response.token,
                   deviceID,
                 });
-                Cookies.set("session_data", encryptedData, { path: "/" });
+                Cookies.set("token", encryptedData, { path: "/" });
                 setUser(newUser);
                 console.log("Token refreshed successfully");
                 return;
@@ -100,10 +100,29 @@ export default function Header() {
     const interval = setInterval(checkSession, 60 * 60 * 1000); // Check every 1 hour
     return () => clearInterval(interval);
   }, [pathname]);
-  const handleLogout = () => {
-    Cookies.remove("session_data");
-    setUser(null);
-    window.location.href = "/";
+  const handleLogout = async () => {
+    try {
+      let deviceID = "";
+      const cookie = Cookies.get("token");
+      if (cookie) {
+        const decrypted = decryptData(cookie) as { deviceID?: string };
+        deviceID = decrypted.deviceID || "";
+      }
+      if (!deviceID) {
+        deviceID = await authService.getDeviceID();
+      }
+
+      if (deviceID) {
+        await authService.logout(deviceID);
+      }
+    } catch (error) {
+      console.error("Logout error", error);
+    } finally {
+      Cookies.remove("token");
+      localStorage.removeItem("deviceID");
+      setUser(null);
+      window.location.href = "/";
+    }
   };
 
   const nav = [

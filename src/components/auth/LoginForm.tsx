@@ -17,7 +17,7 @@ import { parseJwt } from "@/shared/jwt";
 
 export default function LoginForm() {
   const t = useTranslations();
-  // const router = useRouter();
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -38,17 +38,22 @@ export default function LoginForm() {
         deviceID,
       });
 
-      if (response.token) {
-        const decodedToken = parseJwt(response.token);
-        console.log("Decoded Token Payload:", decodedToken);
+      // Try to find token in various places
+      const token =
+        response.token ||
+        response.data?.token ||
+        response.data?.accessToken ||
+        response.accessToken;
+
+      if (token) {
+        const decodedToken = parseJwt(token);
         const encryptedData = encryptData({
-          token: response.token,
+          token: token,
           deviceID,
         });
-        console.log("Login: Encrypted data length:", encryptedData.length);
 
         // Store in a separate cookie that is NOT HttpOnly so client can read it
-        Cookies.set("session_data", encryptedData, {
+        Cookies.set("token", encryptedData, {
           path: "/",
           expires: 1,
           secure: false,
@@ -119,7 +124,6 @@ export default function LoginForm() {
       >
         {isLoading ? "Signing In..." : "Sign In"}
       </button>
-
       <div className="flex items-center justify-center gap-2 mt-2">
         <span className="text-base text-gray-600">
           Don&apos;t have an account?
