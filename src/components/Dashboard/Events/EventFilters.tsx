@@ -1,6 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
+import axiosInstance from "@/lib/axios";
 
 const FilterSection = ({
   title,
@@ -61,6 +62,24 @@ interface EventFiltersProps {
 }
 
 export function EventFilters({ onFilterChange }: EventFiltersProps) {
+  const [categories, setCategories] = useState<string[]>([]);
+
+  useEffect(() => {
+    axiosInstance
+      .get("/categories")
+      .then((data) => {
+        const categoryNames = data.data.data.categories.map(
+          (cat: { name: string }) => cat.name
+        );
+        setCategories(categoryNames);
+      })
+      .catch((err) => {
+        console.error("Error fetching categories:", err);
+        // Fallback to empty array if API fails
+        setCategories([]);
+      });
+  }, []);
+
   return (
     <div className="w-64 shrink-0 pr-8 hidden lg:block">
       <div className="flex items-center justify-between mb-6">
@@ -85,13 +104,7 @@ export function EventFilters({ onFilterChange }: EventFiltersProps) {
       />
       <FilterSection
         title="Category"
-        options={[
-          "Adventure Travel",
-          "Art Exhibitions",
-          "Auctions & Fundraisers",
-          "Beer Festivals",
-          "Benefit Concerts",
-        ]}
+        options={categories}
         onChange={onFilterChange}
       />
       <FilterSection
