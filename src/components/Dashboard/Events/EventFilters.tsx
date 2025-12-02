@@ -8,11 +8,13 @@ const FilterSection = ({
   options,
   defaultOpen = true,
   onChange,
+  selectedFilters = {},
 }: {
   title: string;
   options: string[];
   defaultOpen?: boolean;
   onChange: (category: string, value: string, isChecked: boolean) => void;
+  selectedFilters?: Record<string, string[]>;
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
@@ -39,6 +41,7 @@ const FilterSection = ({
                 type="checkbox"
                 className="h-4 w-4 rounded border-slate-300 text-brand-primary focus:ring-brand-primary"
                 onChange={(e) => onChange(title, option, e.target.checked)}
+                checked={selectedFilters[title]?.includes(option) || false}
               />
               <label
                 htmlFor={`filter-${title}-${option}`}
@@ -59,9 +62,10 @@ const FilterSection = ({
 
 interface EventFiltersProps {
   onFilterChange: (category: string, value: string, isChecked: boolean) => void;
+  selectedFilters?: Record<string, string[]>;
 }
 
-export function EventFilters({ onFilterChange }: EventFiltersProps) {
+export function EventFilters({ onFilterChange, selectedFilters = {} }: EventFiltersProps) {
   const [categories, setCategories] = useState<string[]>([]);
 
   useEffect(() => {
@@ -90,6 +94,7 @@ export function EventFilters({ onFilterChange }: EventFiltersProps) {
         title="Price"
         options={["Free", "Paid"]}
         onChange={onFilterChange}
+        selectedFilters={selectedFilters}
       />
       <FilterSection
         title="Date"
@@ -101,11 +106,13 @@ export function EventFilters({ onFilterChange }: EventFiltersProps) {
           "Pick a Date",
         ]}
         onChange={onFilterChange}
+        selectedFilters={selectedFilters}
       />
       <FilterSection
         title="Category"
         options={categories}
         onChange={onFilterChange}
+        selectedFilters={selectedFilters}
       />
       <FilterSection
         title="Format"
@@ -117,6 +124,7 @@ export function EventFilters({ onFilterChange }: EventFiltersProps) {
           "Festivals & Fairs",
         ]}
         onChange={onFilterChange}
+        selectedFilters={selectedFilters}
       />
     </div>
   );
