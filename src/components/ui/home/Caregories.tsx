@@ -8,10 +8,10 @@ import axiosInstance from "@/lib/axios";
 const Categories = () => {
   const [categories, setCategories] = useState([]);
   useEffect(() => {
-    axiosInstance.get("/categories").then((data) => {
+    axiosInstance.get("/categories").then((res) => {
       // const arr = data.data.categories.slice(0, 7);
-      console.log(data.data.data.categories);
-      setCategories(data.data.data.categories);
+      console.log(res.data.data.categories);
+      setCategories(res.data.data.categories);
     });
   }, []);
   const sliderRef = useRef<HTMLDivElement>(null);

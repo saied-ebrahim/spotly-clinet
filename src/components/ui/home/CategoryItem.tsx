@@ -130,7 +130,6 @@ export const CategoryItem = ({
   const router = useRouter();
   const locale = useLocale();
   // console.log(category);
-  console.log(category.image);
   // const [imgSrc, setImgSrc] = useState(category.imageUrl);
 
   const handleClick = () => {
