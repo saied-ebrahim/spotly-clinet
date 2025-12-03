@@ -6,7 +6,7 @@ export interface EventDocument {
   time: string;
   type: string;
   location: location;
-  media: MediaItem[];
+  media: MediaItem;
   tags: tags[];
   category: category[];
   organizer: organizer;

@@ -7,15 +7,15 @@ interface EventCardProps {
 }
 
 export function EventCard({ event }: EventCardProps) {
-console.log(event.media?.[0]?.mediaUrl);
+console.log(event.media?.mediaUrl);
 
   return (
     <div className="flex flex-col sm:flex-row bg-white rounded-xl overflow-hidden border border-slate-200 hover:shadow-md transition-shadow">
       {/* Image Section */}
       <div className="relative w-full sm:w-48 h-48 bg-slate-200 shrink-0">
-        {event.media?.[0]?.mediaUrl ? (
+        {event.media?.mediaUrl ? (
           <Image
-            src=""
+            src={event.media?.mediaUrl}
             alt={event.title}
             fill
             className="object-cover"
