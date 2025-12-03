@@ -1,58 +1,52 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import DataTable from "@/components/Custom/DataTable";
 import { ColDef } from "ag-grid-community";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import { EditEventModal } from "./EditEventModal";
 import ConfirmationModal from "@/components/Custom/ConfirmationModal";
-
-interface Event {
-  id: number;
-  title: string;
-  date: string;
-  venue: string;
-  time: string;
-  price: string;
-  category: string;
-  image: string;
-}
+import { EventDocument } from "@/types/eventInterface";
+import axiosInstance from "@/lib/axios";
 
 interface AdminEventsTableProps {
-  initialData: Event[];
+  initialData: EventDocument[];
 }
 
 export function AdminEventsTable({ initialData }: AdminEventsTableProps) {
-  const [rowData, setRowData] = useState<Event[]>(initialData);
+  const [rowData, setRowData] = useState<EventDocument[]>(initialData);
   const [searchTerm, setSearchTerm] = useState("");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<EventDocument | null>(
+    null
+  );
+
+  useEffect(() => {
+    setRowData(initialData);
+  }, [initialData]);
 
   const filteredData = useMemo(() => {
     if (!searchTerm) return rowData;
     const lowerTerm = searchTerm.toLowerCase();
-    return rowData.filter(
-      (event) =>
-        event.title.toLowerCase().includes(lowerTerm) ||
-        event.category.toLowerCase().includes(lowerTerm) ||
-        event.venue.toLowerCase().includes(lowerTerm)
+    return rowData.filter((event) =>
+      event.title.toLowerCase().includes(lowerTerm)
     );
   }, [rowData, searchTerm]);
 
-  const handleEditClick = (event: Event) => {
+  const handleEditClick = (event: EventDocument) => {
     setSelectedEvent(event);
     setIsEditModalOpen(true);
   };
 
-  const handleDeleteClick = (event: Event) => {
+  const handleDeleteClick = (event: EventDocument) => {
     setSelectedEvent(event);
     setIsDeleteModalOpen(true);
   };
 
-  const handleSaveEvent = (updatedEvent: Event) => {
+  const handleSaveEvent = (updatedEvent: EventDocument): void => {
     setRowData((prev) =>
-      prev.map((item) => (item.id === updatedEvent.id ? updatedEvent : item))
+      prev.map((item) => (item._id === updatedEvent._id ? updatedEvent : item))
     );
     setIsEditModalOpen(false);
     setSelectedEvent(null);
@@ -60,15 +54,16 @@ export function AdminEventsTable({ initialData }: AdminEventsTableProps) {
 
   const handleConfirmDelete = () => {
     if (selectedEvent) {
-      setRowData((prev) => prev.filter((item) => item.id !== selectedEvent.id));
+      setRowData((prev) => prev.filter((item) => item._id !== selectedEvent._id));
+      axiosInstance.delete(`/events/${selectedEvent._id}`);
       setIsDeleteModalOpen(false);
       setSelectedEvent(null);
     }
   };
 
-  const columnDefs: ColDef<Event>[] = useMemo(
+  const columnDefs: ColDef<EventDocument>[] = useMemo(
     () => [
-      { field: "id", headerName: "ID", width: 70, sortable: true },
+      { field: "_id", headerName: "ID", width: 70, sortable: true, hide: true },
       {
         field: "title",
         headerName: "Title",
@@ -78,11 +73,15 @@ export function AdminEventsTable({ initialData }: AdminEventsTableProps) {
         filter: true,
       },
       {
-        field: "category",
         headerName: "Category",
+        field: "category",
+        valueGetter: (params: { data: EventDocument | undefined }) => {
+          return params.data?.category?.map((cat) => cat.name).join(", ") || "";
+        },
         flex: 1,
         minWidth: 150,
         sortable: true,
+        filter: true,
       },
       {
         field: "date",
@@ -92,18 +91,18 @@ export function AdminEventsTable({ initialData }: AdminEventsTableProps) {
         sortable: true,
       },
       {
-        field: "venue",
-        headerName: "Venue",
+        field: "location.city",
+        headerName: "Location",
         flex: 1,
         minWidth: 150,
         sortable: true,
       },
-      { field: "price", headerName: "Price", width: 100, sortable: true },
+      { field: "ticketType.price", headerName: "Price", width: 100, sortable: true },
       {
         headerName: "Actions",
         width: 120,
         pinned: "right",
-        cellRenderer: (params: { data: Event }) => {
+        cellRenderer: (params: { data: EventDocument }) => {
           return (
             <div className="flex items-center gap-2 h-full">
               <button
