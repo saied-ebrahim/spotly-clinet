@@ -124,7 +124,7 @@ const EventCard = ({ event }: { event: EventDocument }) => {
   };
 
   const { month, date: dayDate } = getMonthDay(event.date);
-  const imageUrl = getImageUrl(event.media?.[0]?.mediaUrl);
+  const imageUrl = getImageUrl(event.media?.mediaUrl);
   const interested = event.analytics?.likes || 0;
 
   return (
