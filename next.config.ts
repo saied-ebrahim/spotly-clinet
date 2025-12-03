@@ -20,10 +20,15 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "ui-avatars.com",
       },
+       {
+        protocol: "https",
+        hostname: "example.com",
+      },
       {
         hostname: "pub-c00f3c4174b8458d8db60aeff42f8480.r2.dev",
 
       },
+      
     ],
   },
 };
