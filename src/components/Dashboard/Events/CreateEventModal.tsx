@@ -112,7 +112,10 @@ export function CreateEventModal({
     category: [] as string[],
     organizer: "",
     isonline: false,
-    price: 0,
+    ticketType: {
+      price: 0 as number,
+      quantity: 0 as number,
+    },
   });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -125,6 +128,7 @@ export function CreateEventModal({
     >
   ) => {
     const { name, value, type } = e.target;
+    // console.log(name, value, type);
 
     if (name.includes(".")) {
       const [parent, child] = name.split(".");
@@ -133,6 +137,14 @@ export function CreateEventModal({
         [parent]: {
           ...(prev[parent as keyof typeof prev] as object),
           [child]: type === "number" ? Number(value) : value,
+        },
+      }));
+    } else if (name === "price" || name === "quantity") {
+      setFormData((prev) => ({
+        ...prev,
+        ticketType: {
+          ...prev.ticketType,
+          [name]: type === "number" ? Number(value) : value,
         },
       }));
     } else {
@@ -361,7 +373,21 @@ export function CreateEventModal({
                     required
                     type="number"
                     name="price"
-                    value={formData.price}
+                    value={formData.ticketType.price}
+                    onChange={handleChange}
+                    min="0"
+                    className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    quantity
+                  </label>
+                  <input
+                    required
+                    type="number"
+                    name="quantity"
+                    value={formData.ticketType.quantity}
                     onChange={handleChange}
                     min="0"
                     className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none"

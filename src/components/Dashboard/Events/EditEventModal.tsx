@@ -113,7 +113,7 @@ export function EditEventModal({
               <input
                 type="text"
                 name="price"
-                value={formData.price}
+                value={formData.ticketType.price}
                 onChange={handleChange}
                 className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all"
               />
@@ -125,7 +125,7 @@ export function EditEventModal({
               <input
                 type="text"
                 name="category"
-                value={formData.category.name}
+                value={formData.category[0].name}
                 onChange={handleChange}
                 className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all"
               />

@@ -73,11 +73,15 @@ export function AdminEventsTable({ initialData }: AdminEventsTableProps) {
         filter: true,
       },
       {
-        field: "category.name",
         headerName: "Category",
+        field: "category",
+        valueGetter: (params: { data: EventDocument | undefined }) => {
+          return params.data?.category?.map((cat) => cat.name).join(", ") || "";
+        },
         flex: 1,
         minWidth: 150,
         sortable: true,
+        filter: true,
       },
       {
         field: "date",
@@ -93,7 +97,7 @@ export function AdminEventsTable({ initialData }: AdminEventsTableProps) {
         minWidth: 150,
         sortable: true,
       },
-      { field: "price", headerName: "Price", width: 100, sortable: true },
+      { field: "ticketType.price", headerName: "Price", width: 100, sortable: true },
       {
         headerName: "Actions",
         width: 120,

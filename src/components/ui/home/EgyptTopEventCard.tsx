@@ -1,4 +1,5 @@
 import { EgyptTopEventInterace } from "@/types/EgyptTopEventInterface";
+import { EventDocument } from "@/types/eventInterface";
 import Image from "next/image";
 import Link from "next/link";
 const COLORS = [
@@ -12,8 +13,8 @@ const COLORS = [
 export default function EgyptTopEventCard({
   event,
 }: {
-  // event: EgyptTopEventInterace;
   event: EgyptTopEventInterace;
+  // event: EventDocument;
 }) {
   // derive display values that are compatible with older mock data and the EventObject shape
   const categoryText = Array.isArray(event.category)
@@ -59,7 +60,7 @@ export default function EgyptTopEventCard({
   const colorClass = event.colorSchemeDark
     ? event.colorSchemeDark
     : (() => {
-        const idStr = String(event.id ?? "");
+        const idStr = String(event._id ?? "");
         let hash = 0;
         for (let i = 0; i < idStr.length; i++)
           hash = (hash * 31 + idStr.charCodeAt(i)) | 0;
@@ -68,7 +69,7 @@ export default function EgyptTopEventCard({
       })();
 
   return (
-    <Link href={`/events/${event.id}`}>
+    <Link href={`/events/${event._id}`}>
       <div
         className={`mb-10 bg-linear-to-r ${colorClass} p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-8`}
       >
@@ -85,7 +86,7 @@ export default function EgyptTopEventCard({
         {/* Content Section */}
         <div className="lg:w-2/3 text-white">
           <span className="inline-block bg-white/10 text-white text-xs font-bold px-3 py-1 rounded-full mb-2 uppercase">
-            {categoryText}
+            {/* {event.category} */}
           </span>
 
           <h3 className="text-3xl font-extrabold mb-3">{event.title}</h3>

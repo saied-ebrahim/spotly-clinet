@@ -24,19 +24,18 @@ export default function AttendeeRegisterForm() {
   const onSubmit = async (data: AttendeeFormData) => {
     setIsLoading(true);
     try {
-      const deviceID = await authService.getDeviceID();
       const response = await authService.signup({
         firstName: data.firstName,
         lastName: data.lastName,
         email: data.email,
         password: data.password,
         gender: data.gender.value,
+        phone:data.phone,
         address: {
           city: data.city.label,
           country: data.country.label,
           state: data.state.label,
         },
-        devices: [{ deviceFingerprint: deviceID }],
       });
 
       if (
@@ -71,7 +70,7 @@ export default function AttendeeRegisterForm() {
     defaultValues: {
       firstName: "",
       lastName: "",
-      phone: "",
+      phone: 0 ,
       email: "",
       gender: null as unknown as { label: string; value: string },
       country: null as unknown as { label: string; value: string },

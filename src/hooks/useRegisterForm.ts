@@ -70,7 +70,7 @@ export interface AttendeeFormData {
   firstName: string;
   lastName: string;
   email: string;
-  phone: string;
+  phone: number;
   gender: { label: string; value: string };
   country: { label: string; value: string };
   state: { label: string; value: string };

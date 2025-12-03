@@ -9,6 +9,7 @@ import axiosInstance from "@/lib/axios";
 import { EventObject } from "@/types/PaginationInterface";
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { EventDocument } from "@/types/eventInterface";
 
 const EventsPage = () => {
   const searchParams = useSearchParams();
@@ -28,7 +29,7 @@ const EventsPage = () => {
   });
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [customDate, setCustomDate] = useState<string | null>(null);
-  const [events, setEvents] = useState<EventObject[]>([]);
+  const [events, setEvents] = useState<EventDocument[]>([]);
 
   useEffect(() => {
     axiosInstance
@@ -152,11 +153,11 @@ const EventsPage = () => {
     });
   };
 
-  const getImageUrl = (url?: string) => {
-    if (!url) return "";
-    if (url.startsWith("http") || url.startsWith("/")) return url;
-    return `https://${url}`;
-  };
+  // const getImageUrl = (url?: string) => {
+  //   if (!url) return "";
+  //   if (url.startsWith("http") || url.startsWith("/")) return url;
+  //   return `https://${url}`;
+  // };
 
   const filteredEvents = events.filter((event) => {
     // Search Filter
@@ -169,13 +170,11 @@ const EventsPage = () => {
     const matchesLocation =
       location === "" ||
       (event.location?.city &&
-        event.location.city.toLowerCase().includes(location.toLowerCase())) ||
-      (event.location?.address &&
-        event.location.address.toLowerCase().includes(location.toLowerCase()));
+        event.location.city.toLowerCase().includes(location.toLowerCase()))
 
     // Price Filter
     const matchesPrice = checkPriceFilter(
-      String(event.price),
+      String(event.ticketType.price),
       selectedFilters["Price"]
     );
 
@@ -240,19 +239,7 @@ const EventsPage = () => {
               filteredEvents.map((event) => (
                 <EventCard
                   key={event._id}
-                  event={{
-                    id: event._id,
-                    title: event.title,
-                    date: event.date,
-                    venue:
-                      event.location?.city || event.location?.address || "",
-                    time: event.time,
-                    price: String(event.price),
-                    category: Array.isArray(event.category)
-                      ? event.category[0]
-                      : event.category,
-                    image: getImageUrl(event.media?.[0]?.mediaUrl),
-                  }}
+                  event={event}
                 />
               ))
             ) : (

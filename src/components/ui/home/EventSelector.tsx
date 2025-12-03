@@ -3,6 +3,7 @@ import { EventObject } from "@/types/PaginationInterface";
 import axiosInstance from "@/lib/axios";
 import { useState, useEffect, useRef } from "react";
 import { FiSearch } from "react-icons/fi";
+import { EventDocument } from "@/types/eventInterface";
 
 const EventSelector = ({
   locationQuery,
@@ -13,7 +14,7 @@ const EventSelector = ({
 }) => {
   const [input, setInput] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [events, setEvents] = useState<EventObject[]>([]);
+  const [events, setEvents] = useState<EventDocument[]>([]);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown if clicking outside
@@ -22,6 +23,8 @@ const EventSelector = ({
       .get("/events")
       .then((res) => {
         setEvents(res.data.data.events);
+        console.log(res.data.data.events[0].category[0].name);
+        
       })
   }, []);
   useEffect(() => {
@@ -41,7 +44,7 @@ const EventSelector = ({
   const filteredEvents = events.filter((item) => {
     // 1. If a location is selected in the parent, the event MUST match that location
     const matchesLocation = locationQuery
-      ? item.location.district.toLowerCase() === locationQuery.toLowerCase()
+      ? item.location.district?.toLowerCase() === locationQuery.toLowerCase()
       : true; // If no location selected, show all locations
 
     // 2. The event title must match what the user types in THIS input
@@ -50,6 +53,8 @@ const EventSelector = ({
     return matchesLocation && matchesInput;
   });
 
+  
+  
   return (
     <div
       ref={wrapperRef}
@@ -86,7 +91,7 @@ const EventSelector = ({
                 onClick={() => {
                   setInput(event.title);
                   setIsOpen(false);
-                  if (onSelect) onSelect(event.id || null);
+                  if (onSelect) onSelect(event._id || null);
                 }}
                 className="cursor-pointer select-none px-4 py-3 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors group"
               >
@@ -99,9 +104,7 @@ const EventSelector = ({
                 <div className="text-xs text-gray-500 flex justify-between mt-1">
                   <span>{`${event.location.city}/${event.location.district}`}</span>
                   <span className="bg-gray-100 px-2 py-0.5 rounded text-gray-600 group-hover:bg-indigo-100 group-hover:text-indigo-600">
-                    {Array.isArray(event.category)
-                      ? event.category[0]
-                      : event.category}
+                    {/* {event.category[0].name} */}
                   </span>
                 </div>
               </li>
