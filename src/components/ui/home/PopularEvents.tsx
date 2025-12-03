@@ -9,6 +9,7 @@ import filterEvents from "@/utils/home/filterPopularEvents";
 import { EventObject } from "@/types/PaginationInterface";
 // import { Category } from "@/types/CategoryInterface";
 import useGeolocation from "@/hooks/useGeolocation";
+import { EventDocument } from "@/types/eventInterface";
 
 // 3. The Main Container Component
 const PopularEvents = () => {
@@ -16,7 +17,7 @@ const PopularEvents = () => {
   const {
     location: { city },
   } = useGeolocation();
-  const [events, setEvents] = useState<EventObject[]>([]);
+  const [events, setEvents] = useState<EventDocument[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("All");
   console.log(events);
   // const filtered = filterEvents(events, currentFilter);

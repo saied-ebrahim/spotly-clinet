@@ -1,3 +1,5 @@
+import { EventDocument } from "./eventInterface";
+
 export interface EventObject {
   _id: string;
   id?: string;
@@ -47,7 +49,7 @@ export interface Analytics {
 
 export interface PaginationEventsProps {
   itemsPerPage: number;
-  allEvents: EventObject[];
+  allEvents: EventDocument[];
   // Add any other fields your event objects have
 }
 

@@ -40,10 +40,10 @@ import EventCard from "../home/EventCard";
 export default function RecommendationList({ event }: { event: EventObject }) {
   const { month, date: dayDate } = getMonthDay(event.date);
 
-  const [recommends] = useFilter(
-    "http://localhost:8080/events",
-    (e: EventObject) => e.organizer === event.organizer
-  );
+  // const [recommends] = useFilter(
+  //   "http://localhost:8080/events",
+  //   (e: EventObject) => e.organizer === event.organizer
+  // );
   // const [recommends, setRecommends] = useState<EventObject[]>([]);
   // const { eventId } = useParams();
 
@@ -78,9 +78,9 @@ export default function RecommendationList({ event }: { event: EventObject }) {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {recommends.map((event) => (
+        {/* {recommends.map((event) => (
           <EventCard key={event.id} event={event} />
-        ))}
+        ))} */}
       </div>
     </section>
   );
