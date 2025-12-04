@@ -1,5 +1,5 @@
 "use client";
-import { LatLngExpression } from "leaflet";
+import { LatLng, LatLngExpression, Map, Marker } from "leaflet";
 import { useState, useEffect, useRef } from "react";
 
 // --- Inline Icon Components (Replacing lucide-react) ---
@@ -89,13 +89,13 @@ const IconLoader = ({ className }: { className: string }) => (
  * Uses raw Leaflet logic inside React hooks.
  */
 export default function LocationSelector() {
-  const mapContainerRef = useRef(null);
-  const mapInstanceRef = useRef(null);
-  const markerRef = useRef(null);
+  const mapContainerRef = useRef<HTMLDivElement | null>(null);
+  const mapInstanceRef = useRef<Map | null>(null);
+  const markerRef = useRef<Marker | null>(null);
   const confirmedRef = useRef(false); // Ref to track confirmation inside event listeners
 
   const [isLeafletLoaded, setIsLeafletLoaded] = useState(false);
-  const [selectedPosition, setSelectedPosition] = useState(null);
+  const [selectedPosition, setSelectedPosition] = useState<LatLng | null>(null);
   const [confirmed, setConfirmed] = useState(false);
   const [notification, setNotification] = useState("");
 
@@ -158,7 +158,7 @@ export default function LocationSelector() {
     // Default is fine, let's keep it standard.
     // map.addControl(L.control.zoom({ position: 'topright' }));
 
-    mapInstanceRef.current = map;
+    mapInstanceRef.current = map as Map;
 
     // Add Tile Layer
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
