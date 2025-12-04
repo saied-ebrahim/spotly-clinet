@@ -6,24 +6,13 @@ import axiosInstance from "@/lib/axios";
 
 // Main Slider Component
 const Categories = () => {
-  // const sliderRef = useRef<HTMLDivElement>(null);
   const [categories, setCategories] = useState([]);
-  // useEffect(() => {
-  //   axiosInstance.get("/categories").then((data) => {
-  //     // const arr = data.data.categories.slice(0, 7);
-  //     console.log(data.data.data.categories);
-  //     setCategories(data.data.data.categories);
-  //   });
-  // }, []);
   useEffect(() => {
-    fetch("http://localhost:8080/events")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        const arr = data.slice(0, 7);
-
-        setCategories(arr);
-      });
+    axiosInstance.get("/categories").then((res) => {
+      // const arr = data.data.categories.slice(0, 7);
+      console.log(res.data.data.categories);
+      setCategories(res.data.data.categories);
+    });
   }, []);
   const sliderRef = useRef<HTMLDivElement>(null);
   const scrollLeft = () => {

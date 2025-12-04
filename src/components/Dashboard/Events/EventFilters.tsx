@@ -1,17 +1,20 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
+import axiosInstance from "@/lib/axios";
 
 const FilterSection = ({
   title,
   options,
   defaultOpen = true,
   onChange,
+  selectedFilters = {},
 }: {
   title: string;
   options: string[];
   defaultOpen?: boolean;
   onChange: (category: string, value: string, isChecked: boolean) => void;
+  selectedFilters?: Record<string, string[]>;
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
@@ -38,6 +41,7 @@ const FilterSection = ({
                 type="checkbox"
                 className="h-4 w-4 rounded border-slate-300 text-brand-primary focus:ring-brand-primary"
                 onChange={(e) => onChange(title, option, e.target.checked)}
+                checked={selectedFilters[title]?.includes(option) || false}
               />
               <label
                 htmlFor={`filter-${title}-${option}`}
@@ -58,9 +62,28 @@ const FilterSection = ({
 
 interface EventFiltersProps {
   onFilterChange: (category: string, value: string, isChecked: boolean) => void;
+  selectedFilters?: Record<string, string[]>;
 }
 
-export function EventFilters({ onFilterChange }: EventFiltersProps) {
+export function EventFilters({ onFilterChange, selectedFilters = {} }: EventFiltersProps) {
+  const [categories, setCategories] = useState<string[]>([]);
+
+  useEffect(() => {
+    axiosInstance
+      .get("/categories")
+      .then((data) => {
+        const categoryNames = data.data.data.categories.map(
+          (cat: { name: string }) => cat.name
+        );
+        setCategories(categoryNames);
+      })
+      .catch((err) => {
+        console.error("Error fetching categories:", err);
+        // Fallback to empty array if API fails
+        setCategories([]);
+      });
+  }, []);
+
   return (
     <div className="w-64 shrink-0 pr-8 hidden lg:block">
       <div className="flex items-center justify-between mb-6">
@@ -71,6 +94,7 @@ export function EventFilters({ onFilterChange }: EventFiltersProps) {
         title="Price"
         options={["Free", "Paid"]}
         onChange={onFilterChange}
+        selectedFilters={selectedFilters}
       />
       <FilterSection
         title="Date"
@@ -82,17 +106,13 @@ export function EventFilters({ onFilterChange }: EventFiltersProps) {
           "Pick a Date",
         ]}
         onChange={onFilterChange}
+        selectedFilters={selectedFilters}
       />
       <FilterSection
         title="Category"
-        options={[
-          "Adventure Travel",
-          "Art Exhibitions",
-          "Auctions & Fundraisers",
-          "Beer Festivals",
-          "Benefit Concerts",
-        ]}
+        options={categories}
         onChange={onFilterChange}
+        selectedFilters={selectedFilters}
       />
       <FilterSection
         title="Format"
@@ -104,6 +124,7 @@ export function EventFilters({ onFilterChange }: EventFiltersProps) {
           "Festivals & Fairs",
         ]}
         onChange={onFilterChange}
+        selectedFilters={selectedFilters}
       />
     </div>
   );

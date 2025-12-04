@@ -111,6 +111,8 @@
 "use client";
 import { CategoryItemInterface } from "@/types/CategoryInterface";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
 
 // interface Category {
 //   imageUrl: string;
@@ -125,9 +127,14 @@ export const CategoryItem = ({
 }: {
   category: CategoryItemInterface;
 }) => {
-  console.log(category);
-  // console.log(category.media[0].mediaUrl);
+  const router = useRouter();
+  const locale = useLocale();
+  // console.log(category);
   // const [imgSrc, setImgSrc] = useState(category.imageUrl);
+
+  const handleClick = () => {
+    router.push(`/${locale}/events?category=${encodeURIComponent(category.name)}`);
+  };
 
   return (
     // Updated Width Classes:
@@ -135,6 +142,7 @@ export const CategoryItem = ({
     // Tablet (md): w-[calc(25%-18px)] -> Fits 4 items with gap-6 (3*24px/4 = 18px)
     // Widescreen (xl): w-[calc(14.28%-21px)] -> Fits 7 items with gap-6 (6*24px/7 = ~20.5px)
     <div
+      onClick={handleClick}
       className="group flex flex-col items-center cursor-pointer snap-start shrink-0 
                     w-[calc(50%-8px)] 
                     md:w-[calc(25%-18px)] 
@@ -145,8 +153,8 @@ export const CategoryItem = ({
         className={`relative w-[100px] h-[100px] sm:w-[120px] sm:h-[120px] lg:w-[140px] lg:h-[140px] rounded-full overflow-hidden shadow-lg border-4 border-white transition-all duration-300 transform hover:scale-110  ring-2 ring-transparent`}
       >
         <Image
-          src={category.media[0].mediaUrl}
-          alt={category.title}
+          src={category.image}
+          alt={category.name}
           fill
           // onError={(e) => {
           //   const target = e.target as HTMLImageElement;
@@ -162,7 +170,7 @@ export const CategoryItem = ({
         className={`mt-4 text-sm sm:text-base font-bold text-gray-700 transition-colors duration-300 text-center px-1 truncate w-full rounded-xl`}
       >
         {/* {category.name} */}
-        {category.title}
+        {category.name}
       </span>
     </div>
   );

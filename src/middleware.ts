@@ -10,7 +10,7 @@ interface DecryptedToken {
 export default function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
 
-  const token = request.cookies.get("sub");
+  const token = request.cookies.get("token");
   const tokenDecrypted = decryptData(token?.value ?? "") as DecryptedToken;
 
   console.log(tokenDecrypted);

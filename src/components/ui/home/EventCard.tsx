@@ -1,7 +1,9 @@
 import Image from "next/image";
-import { FiHeart, FiStar, FiTag } from "react-icons/fi";
+import { FiStar, FiTag } from "react-icons/fi";
 import { EventObject } from "@/types/PaginationInterface";
 import Link from "next/link";
+import { getMonthDay } from "@/utils/details/formatting";
+import { EventDocument } from "@/types/eventInterface";
 
 // const EventCard = ({ event }: { event: EventObject }) => {
 //   const handleAddFavorites = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -95,28 +97,34 @@ import Link from "next/link";
 //     </div>
 //   );
 // };
-const EventCard = ({ event }: { event: EventObject }) => {
+const EventCard = ({ event }: { event: EventDocument }) => {
   const handleAddFavorites = (e: React.MouseEvent<HTMLButtonElement>) => {
     // 1. Prevent the default button behavior
-    e.preventDefault();
-    // 2. STOP the event from bubbling up to the parent anchor tag
-    e.stopPropagation();
+    // e.preventDefault();
+    // // 2. STOP the event from bubbling up to the parent anchor tag
+    // e.stopPropagation();
 
-    console.log(`Added event ID ${event.id} to favorites!`);
+    console.log(`Added event ID ${event._id} to favorites!`);
   };
 
   // Extract month and date from event.date (YYYY-MM-DD format)
-  const getMonthDay = (dateStr: string) => {
-    const date = new Date(dateStr);
-    const month = date
-      .toLocaleString("default", { month: "short" })
-      .toUpperCase();
-    const day = date.getDate();
-    return { month, date: day };
+  // const getMonthDay = (dateStr: string) => {
+  //   const date = new Date(dateStr);
+  //   const month = date
+  //     .toLocaleString("default", { month: "short" })
+  //     .toUpperCase();
+  //   const day = date.getDate();
+  //   return { month, date: day };
+  // };
+
+  const getImageUrl = (url?: string) => {
+    if (!url) return "/events.json";
+    if (url.startsWith("http") || url.startsWith("/")) return url;
+    return `https://${url}`;
   };
 
   const { month, date: dayDate } = getMonthDay(event.date);
-  const imageUrl = event.media?.[0]?.mediaUrl || "/events.json";
+  const imageUrl = getImageUrl(event.media?.mediaUrl);
   const interested = event.analytics?.likes || 0;
 
   return (
@@ -124,7 +132,7 @@ const EventCard = ({ event }: { event: EventObject }) => {
       {/* 1. The anchor wraps the content, but NOT the button */}
       {/* Replaced Next.js Link with standard anchor tag for preview compatibility */}
       <Link
-        href={`/events/${event.id}`}
+        href={`/events/${event._id}`}
         className="flex flex-col h-full text-inherit no-underline"
       >
         {/* Image Header Section - Responsive Height */}
@@ -134,7 +142,7 @@ const EventCard = ({ event }: { event: EventObject }) => {
             src={imageUrl}
             alt={event.title}
             fill
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
           />
           <div className="w-[93%] flex justify-between absolute bottom-3 left-3 ">
             {/* <span className="absolute bottom-3 left-3 text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-blue-600 text-white bg-opacity-90">
@@ -142,11 +150,11 @@ const EventCard = ({ event }: { event: EventObject }) => {
                 ? event.category[0]
                 : event.category}
             </span> */}
-            <span className=" text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-blue-600 text-white bg-opacity-90">
+            {/* <span className=" text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-blue-600 text-white bg-opacity-90">
               {Array.isArray(event.category)
                 ? event.category[0]
                 : event.category}
-            </span>
+            </span> */}
             {event.type === "hybrid" ? (
               <span className=" text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-fuchsia-800 text-white bg-opacity-90">
                 Hybrid
@@ -177,7 +185,7 @@ const EventCard = ({ event }: { event: EventObject }) => {
             </h3>
 
             <p className="text-xs text-gray-500 truncate w-full mb-2">
-              {event.organizer}
+              {event.organizer.firstName}
             </p>
             {/* <div className="flex justify-start items-center text-left flex-col-reverse xs:flex-row w-full">
               <p className="text-xs text-gray-400 mb-3  w-full">{event.time}</p>
@@ -194,11 +202,11 @@ const EventCard = ({ event }: { event: EventObject }) => {
               {/* Location: Top on mobile, Right on desktop */}
               {event.type !== "online" ? (
                 <p className="text-xs text-gray-400 text-left min-[350px]:text-right pr-4">
-                  {`${event.location.city}/${event.location.district}`}
+                  {`${event.location.city}`}
                 </p>
               ) : (
                 <p
-                  className={`text-sm ${
+                  className={`text-xs ${
                     event.type === "online" ? "text-amber-400" : ""
                   } text-left min-[350px]:text-right pr-4 fw-bolder`}
                 >
@@ -212,7 +220,7 @@ const EventCard = ({ event }: { event: EventObject }) => {
               {/* Price Section */}
               <div
                 className={`flex items-center gap-1 text-xs sm:text-sm ${
-                  event.price === 0
+                  event.ticketType.price === 0
                     ? "text-green-600 font-bold"
                     : "text-gray-700"
                 }`}
@@ -220,11 +228,11 @@ const EventCard = ({ event }: { event: EventObject }) => {
                 <FiTag
                   size={14}
                   className={
-                    event.price === 0 ? "text-green-600" : "text-gray-400"
+                    event.ticketType.price === 0 ? "text-green-600" : "text-gray-400"
                   }
                 />
                 <span className="truncate max-w-20 sm:max-w-none">
-                  {event.price === 0 ? "Free" : event.price + " EGP"}
+                  {event.ticketType.price === 0 ? "Free" : event.ticketType.price + " EGP"}
                 </span>
               </div>
 

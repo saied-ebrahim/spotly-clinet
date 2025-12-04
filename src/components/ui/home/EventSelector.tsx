@@ -1,27 +1,31 @@
 "use client";
 import { EventObject } from "@/types/PaginationInterface";
+import axiosInstance from "@/lib/axios";
 import { useState, useEffect, useRef } from "react";
 import { FiSearch } from "react-icons/fi";
+import { EventDocument } from "@/types/eventInterface";
 
 const EventSelector = ({
   locationQuery,
-  onSelectEvent,
+  onSelect,
 }: {
   locationQuery?: string | null;
-  onSelectEvent?: (eventId: string | null) => void;
+  onSelect?: (eventId: string | null) => void;
 }) => {
   const [input, setInput] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [events, setEvents] = useState<EventObject[]>([]);
+  const [events, setEvents] = useState<EventDocument[]>([]);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown if clicking outside
   useEffect(() => {
-    fetch("http://localhost:8080/events")
-      .then((res) => res.json())
-      .then((data) => {
-        setEvents(data);
-      });
+    axiosInstance
+      .get("/events")
+      .then((res) => {
+        setEvents(res.data.data.events);
+        console.log(res.data.data.events[0].category[0].name);
+        
+      })
   }, []);
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -40,7 +44,7 @@ const EventSelector = ({
   const filteredEvents = events.filter((item) => {
     // 1. If a location is selected in the parent, the event MUST match that location
     const matchesLocation = locationQuery
-      ? item.location.district.toLowerCase() === locationQuery.toLowerCase()
+      ? item.location.district?.toLowerCase() === locationQuery.toLowerCase()
       : true; // If no location selected, show all locations
 
     // 2. The event title must match what the user types in THIS input
@@ -49,6 +53,8 @@ const EventSelector = ({
     return matchesLocation && matchesInput;
   });
 
+  
+  
   return (
     <div
       ref={wrapperRef}
@@ -62,7 +68,7 @@ const EventSelector = ({
             setInput(e.target.value);
             setIsOpen(true);
             // Reset selection if user types (forces them to re-select from list)
-            if (onSelectEvent) onSelectEvent(null);
+            if (onSelect) onSelect(null);
           }}
           onFocus={() => setIsOpen(true)}
           placeholder="Search events..."
@@ -78,14 +84,14 @@ const EventSelector = ({
       {/* Dropdown */}
       {isOpen && (
         <ul className="absolute z-50 mt-2 w-full origin-top-right rounded-sm bg-white shadow-xl ring-1 ring-black ring-opacity-5 focus:outline-none max-h-60 overflow-auto border border-gray-100">
-          {filteredEvents.length > 0 ? (
-            filteredEvents.map((event) => (
+          {events.length > 0 ? (
+            events.map((event) => (
               <li
-                key={event.id}
+                key={event._id}
                 onClick={() => {
                   setInput(event.title);
                   setIsOpen(false);
-                  if (onSelectEvent) onSelectEvent(event.id);
+                  if (onSelect) onSelect(event._id || null);
                 }}
                 className="cursor-pointer select-none px-4 py-3 text-sm text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors group"
               >
@@ -98,9 +104,7 @@ const EventSelector = ({
                 <div className="text-xs text-gray-500 flex justify-between mt-1">
                   <span>{`${event.location.city}/${event.location.district}`}</span>
                   <span className="bg-gray-100 px-2 py-0.5 rounded text-gray-600 group-hover:bg-indigo-100 group-hover:text-indigo-600">
-                    {Array.isArray(event.category)
-                      ? event.category[0]
-                      : event.category}
+                    {/* {event.category[0].name} */}
                   </span>
                 </div>
               </li>

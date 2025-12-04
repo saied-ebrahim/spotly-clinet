@@ -1,39 +1,78 @@
 "use client";
 import { Controller, Resolver, useForm, useWatch } from "react-hook-form";
 import CustomInput from "@/components/Custom/CustomInput";
-import { ParentFormData } from "@/hooks/useRegisterForm";
-import {
-  FaUser,
-  FaPhone,
-  FaEnvelope,
-  FaArrowLeft,
-} from "react-icons/fa";
+import { AttendeeFormData } from "@/hooks/useRegisterForm";
+import { FaUser, FaPhone, FaEnvelope, FaArrowLeft } from "react-icons/fa";
 import { TbLockPassword } from "react-icons/tb";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { parentRegisterSchema } from "@/schemas/registerSchema";
+import { attendeeRegisterSchema } from "@/schemas/registerSchema";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { FaMapLocationDot } from "react-icons/fa6";
 import { TiLocationOutline } from "react-icons/ti";
 import { RiUserLocationLine } from "react-icons/ri";
+import { authService } from "@/services/authService";
+import { toast } from "react-toastify";
+import { useState } from "react";
 
-export default function ParentRegisterForm() {
-  const onSubmit = (data: ParentFormData) => console.log(data);
+export default function OrganizerRegisterForm() {
   const t = useTranslations("");
   const router = useRouter();
   const locale = useLocale();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const onSubmit = async (data: AttendeeFormData) => {
+    setIsLoading(true);
+    try {
+      const response = await authService.signup({
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        password: data.password,
+        gender: data.gender.value,
+        phone: data.phone,
+        address: {
+          city: data.city.label,
+          country: data.country.label,
+          state: data.state.label,
+        },
+      });
+
+      if (
+        response.status === "success" ||
+        response.message?.includes("success")
+      ) {
+        toast.success(
+          t("auth.registerSuccess") || "Registration successful! Please login."
+        );
+        router.push("/auth/login");
+      } else {
+        toast.error(
+          response.message || t("auth.registerFailed") || "Registration failed"
+        );
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      toast.error(
+        t("auth.registerError") || "An error occurred during registration"
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
   const {
     control,
     handleSubmit,
     setValue,
     trigger,
     formState: { errors },
-  } = useForm<ParentFormData>({
+  } = useForm<AttendeeFormData>({
     defaultValues: {
       firstName: "",
       lastName: "",
-      phone: "",
+      phone: 0,
       email: "",
+      gender: null as unknown as { label: string; value: string },
       country: null as unknown as { label: string; value: string },
       state: null as unknown as { label: string; value: string },
       city: null as unknown as { label: string; value: string },
@@ -41,8 +80,8 @@ export default function ParentRegisterForm() {
       confirmPassword: "",
     },
     resolver: yupResolver(
-      parentRegisterSchema(t)
-    ) as unknown as Resolver<ParentFormData>,
+      attendeeRegisterSchema(t)
+    ) as unknown as Resolver<AttendeeFormData>,
     mode: "onChange",
   });
 
@@ -106,6 +145,23 @@ export default function ParentRegisterForm() {
 
       <Controller
         control={control}
+        name="email"
+        render={({ field: { value, onChange } }) => (
+          <CustomInput
+            type="email"
+            placeholder={messages.email}
+            id="email"
+            icon={<FaEnvelope />}
+            label={messages.email}
+            error={errors.email?.message}
+            value={value}
+            onChange={onChange}
+          />
+        )}
+      />
+
+      <Controller
+        control={control}
         name="phone"
         render={({ field: { value, onChange } }) => (
           <CustomInput
@@ -123,15 +179,19 @@ export default function ParentRegisterForm() {
 
       <Controller
         control={control}
-        name="email"
+        name="gender"
         render={({ field: { value, onChange } }) => (
           <CustomInput
-            type="email"
-            placeholder={messages.email}
-            id="email"
-            icon={<FaEnvelope />}
-            label={messages.email}
-            error={errors.email?.message}
+            type="select"
+            options={[
+              { label: "Male", value: "male" },
+              { label: "Female", value: "female" },
+            ]}
+            placeholder={t("auth.selectGender")}
+            id="gender"
+            icon={<FaUser />}
+            label={t("auth.gender")}
+            error={errors.gender?.message}
             value={value}
             onChange={onChange}
           />
@@ -247,7 +307,7 @@ export default function ParentRegisterForm() {
         )}
       />
 
-      <div className="flex  ">
+      <div className="flex">
         <div className="flex w-full items-center justify-between mt-8 pt-6 border-t border-gray-200">
           <button
             type="button"
@@ -262,9 +322,12 @@ export default function ParentRegisterForm() {
 
           <button
             type="submit"
-            className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${"btn-gradient-primary shadow-md hover:shadow-lg"}`}
+            disabled={isLoading}
+            className="bg-[#2B293D] w-full py-3 text-white text-lg font-bold rounded-md transition-all duration-200 hover:bg-[#4A4763] hover:scale-[1.02] active:scale-[0.98] disabled:bg-[#2B293D]/60 disabled:cursor-not-allowed"
           >
-            {messages.register}
+            {isLoading
+              ? t("auth.registering") || "Registering..."
+              : messages.register}
           </button>
         </div>
       </div>

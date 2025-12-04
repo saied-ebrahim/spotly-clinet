@@ -1,9 +1,13 @@
+import { EventDocument } from "./eventInterface";
+
 export interface EventObject {
-  id: string;
+  _id: string;
+  id?: string;
   title: string;
   description: string;
   date: string; // ISO 8601 date string (e.g., "2024-01-15T10:30:00Z")
   time: string;
+  month: string;
   location: Location;
   media: MediaItem[];
   analytics: Analytics;
@@ -45,7 +49,7 @@ export interface Analytics {
 
 export interface PaginationEventsProps {
   itemsPerPage: number;
-  allEvents: EventObject[];
+  allEvents: EventDocument[];
   // Add any other fields your event objects have
 }
 

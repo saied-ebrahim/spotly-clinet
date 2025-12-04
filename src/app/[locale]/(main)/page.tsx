@@ -2,11 +2,8 @@
 // import Home from "@/components/homePage/home";
 // import HeroSection from "@/components/homePageComponent/HeroSection";
 import Categories from "@/components/ui/home/Caregories";
-
 import OnlineEvents from "@/components/ui/home/OnlineEvents";
-
 import PopularEvents from "@/components/ui/home/PopularEvents";
-
 import EgyptTopEvents from "@/components/ui/home/EgyptTopEvents";
 import Link from "next/link";
 

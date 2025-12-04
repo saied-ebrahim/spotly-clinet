@@ -3,8 +3,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { parentRegisterSchema } from "@/schemas/registerSchema";
 import { useTranslations } from "use-intl";
 
-export type RegisterType = "parent" | "specialist";
+export type RegisterType = "parent" | "specialist" | "attendee" | "organizer";
 
+// Old types - kept for backward compatibility during migration
 export interface ParentFormData {
   firstName: string;
   lastName: string;
@@ -63,6 +64,44 @@ export interface SpecialistFormDataStep3 {
 export type SpecialistFormData = SpecialistFormDataStep1 &
   SpecialistFormDataStep2 &
   SpecialistFormDataStep3;
+
+// New types for event management
+export interface AttendeeFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: number;
+  gender: { label: string; value: string };
+  country: { label: string; value: string };
+  state: { label: string; value: string };
+  city: { label: string; value: string };
+  password: string;
+  confirmPassword: string;
+}
+
+export interface OrganizerFormDataStep1 {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  country: { label: string; value: string };
+  state: { label: string; value: string };
+  city: { label: string; value: string };
+  gender: { label: string; value: string };
+  birthDate: Date;
+  password: string;
+  confirmPassword: string;
+}
+
+export interface OrganizerFormDataStep2 {
+  organizationName: string;
+  organizationType: { label: string; value: string };
+  organizationDescription: string;
+  organizationWebsite: string;
+  organizationLogo: File[];
+}
+
+export type OrganizerFormData = OrganizerFormDataStep1 & OrganizerFormDataStep2;
 
 export function useParentRegisterForm(
   t: ReturnType<typeof useTranslations<"">>
