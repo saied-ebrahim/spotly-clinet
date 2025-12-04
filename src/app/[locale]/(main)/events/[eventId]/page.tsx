@@ -17,6 +17,8 @@ import { formatDate } from "@/utils/details/formatting";
 import TicketSidebar from "@/components/ui/details/TicketSidebar";
 import RecommendationList from "@/components/ui/details/RecommendationList";
 import AddToCalendarButton from "@/components/ui/details/AddToCallender";
+import axiosInstance from "@/lib/axios";
+import { EventDocument } from "@/types/eventInterface";
 
 // --- 1. Dynamic Import for Map (Disables SSR) ---
 // const EventMap = dynamic(() => import("@/components/ui/details/EventMap"), {
@@ -43,12 +45,22 @@ export default async function EventDetailsPage({
   params: Promise<{ eventId: string }>;
 }) {
   const { eventId } = await params;
-
+  const getImageUrl = (url?: string) => {
+    console.log(url);
+    if (!url) return "/no-image.jpg";
+    if (url.startsWith("http") || url.startsWith("/")) return url;
+    return `https://${url}`;
+  };
   console.log(eventId);
 
-  const res = await fetch("http://localhost:8080/events");
-  const data = await res.json();
-  const myEvent = data.find((e: EventObject) => String(e.id) === eventId);
+  // const res = await fetch("http://localhost:8080/events");
+  const data = await axiosInstance
+    .get("/events")
+    .then((res) => res.data.data.events)
+    .catch((err) => console.error(err));
+  // const data = await res.json();
+  const myEvent = data.find((e: EventDocument) => String(e._id) === eventId);
+  const imageUrl = getImageUrl(myEvent.media?.mediaUrl);
   console.log(myEvent);
 
   // --- Helper Functions ---
@@ -80,11 +92,7 @@ export default async function EventDetailsPage({
         {/* --- Hero Image --- */}
         <div className="relative w-full h-48 md:h-[400px] rounded-2xl overflow-hidden shadow-sm group">
           <Image
-            src={
-              myEvent.media && myEvent.media.length > 0
-                ? myEvent.media[0].mediaUrl
-                : "https://via.placeholder.com/1200x400?text=No+Image"
-            }
+            src={imageUrl}
             alt={myEvent.title}
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-105"
@@ -196,7 +204,7 @@ export default async function EventDetailsPage({
                     />
                   </div>
                   <span className="font-bold text-gray-900">
-                    {myEvent.organizer}
+                    {`${myEvent.organizer.firstName} ${myEvent.organizer.lastName}`}
                   </span>
                 </div>
                 {/* <div className="flex gap-2 w-full"> */}
@@ -225,12 +233,12 @@ export default async function EventDetailsPage({
               <h2 className="text-xl font-bold text-gray-900">Tags</h2>
               <div className="flex flex-wrap gap-2">
                 {myEvent.tags && myEvent.tags.length > 0 ? (
-                  myEvent.tags.map((tag: string) => (
+                  myEvent.tags.map((tag: { name: string }) => (
                     <span
-                      key={tag}
+                      key={tag.name}
                       className="px-4 py-2 bg-gray-100 text-gray-600 text-sm rounded-full font-medium hover:bg-gray-200 cursor-pointer transition-colors"
                     >
-                      {tag}
+                      {tag.name}
                     </span>
                   ))
                 ) : (
