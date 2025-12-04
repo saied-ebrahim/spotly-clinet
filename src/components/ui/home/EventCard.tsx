@@ -202,7 +202,7 @@ const EventCard = ({ event }: { event: EventDocument }) => {
               {/* Location: Top on mobile, Right on desktop */}
               {event.type !== "online" ? (
                 <p className="text-xs text-gray-400 text-left min-[350px]:text-right pr-4">
-                  {`${event.location.city}`}
+                  {`${event.location.city}/${event.location.district}`}
                 </p>
               ) : (
                 <p
@@ -228,11 +228,15 @@ const EventCard = ({ event }: { event: EventDocument }) => {
                 <FiTag
                   size={14}
                   className={
-                    event.ticketType.price === 0 ? "text-green-600" : "text-gray-400"
+                    event.ticketType.price === 0
+                      ? "text-green-600"
+                      : "text-gray-400"
                   }
                 />
                 <span className="truncate max-w-20 sm:max-w-none">
-                  {event.ticketType.price === 0 ? "Free" : event.ticketType.price + " EGP"}
+                  {event.ticketType.price === 0
+                    ? "Free"
+                    : event.ticketType.price + " EGP"}
                 </span>
               </div>
 

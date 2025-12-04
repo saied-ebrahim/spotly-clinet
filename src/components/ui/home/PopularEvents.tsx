@@ -25,6 +25,12 @@ const PopularEvents = () => {
   // const filteredEvents = filterEvents(events, currentFilter);
 
   useEffect(() => {
+    // axiosInstance
+    //   .get("/events/")
+    //   .then((res) => {
+    //     setEvents(res.data.data.events);
+    //   })
+    //   .catch((err) => console.error(err));
     axiosInstance
       .get("/events")
       .then((res) => {
