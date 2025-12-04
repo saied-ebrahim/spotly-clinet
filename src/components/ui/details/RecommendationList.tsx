@@ -1,21 +1,36 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
-import EventCard from "../home/EventCard";
-import { EventObject } from "@/types/PaginationInterface";
-import useFilter from "@/hooks/useFilter";
+import { useEffect, useState } from "react";
 
-const RecommendationList = ({ event }: { event: EventObject }) => {
+import axiosInstance from "@/lib/axios";
+import { EventDocument } from "@/types/eventInterface";
+import EventCard from "@/components/ui/home/EventCard";
+
+const RecommendationList = ({ event }: { event: EventDocument }) => {
   // const [events, setEvents] = useState<EventObject[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   // Default to 3, will be updated by useEffect on mount
   const [eventsPerPage, setEventsPerPage] = useState(3);
-  const filterEvents = useCallback(
-    (e: EventObject) => {
-      return e.organizer === event.organizer;
-    },
-    [event.organizer] // Only recreate this function if the organizer changes
-  );
-  const [items] = useFilter("http://localhost:8080/events", filterEvents);
+  // const filterEvents = useCallback(
+  //   (e: EventObject) => {
+  //     return e.organizer === event.organizer;
+  //   },
+  //   [event.organizer] // Only recreate this function if the organizer changes
+  // );
+  // const [items] = useFilter("http://localhost:8080/events", filterEvents);
+  const [recs, setRecs] = useState<EventDocument[]>([]);
+  useEffect(() => {
+    axiosInstance.get("/events").then((res) => {
+      console.log(res);
+      const myRecs = res.data.data.events.filter((e: EventDocument) => {
+        return (
+          e.organizer.firstName === event.organizer.firstName &&
+          e.organizer.lastName === event.organizer.lastName
+        );
+      });
+      console.log(myRecs);
+      setRecs(myRecs);
+    });
+  }, [event.organizer.firstName, event.organizer.lastName]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -38,7 +53,7 @@ const RecommendationList = ({ event }: { event: EventObject }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const totalPages = Math.ceil(items.length / eventsPerPage);
+  const totalPages = Math.ceil(recs.length / eventsPerPage);
 
   const scrollLeft = () => {
     if (currentPage > 0) {
@@ -52,11 +67,11 @@ const RecommendationList = ({ event }: { event: EventObject }) => {
     }
   };
 
-  const currentEvents = items.slice(
+  const currentEvents = recs.slice(
     currentPage * eventsPerPage,
     (currentPage + 1) * eventsPerPage
   );
-  console.log(items);
+  console.log(recs);
   return (
     <section className="md:py-16 max-w-7xl mx-auto  sm:px-6 lg:px-8">
       <div className="w-full py-12 pt-0 sm:pb-0">
@@ -143,10 +158,10 @@ const RecommendationList = ({ event }: { event: EventObject }) => {
                 lg:grid-cols-3
               "
             >
-              {/* {currentEvents.map((event, index) => (
+              {currentEvents.map((event, index) => (
                 // Use a stable key (like event.id) if possible, index is a fallback
-                <EventCard key={event.id || index} event={event} />
-              ))} */}
+                <EventCard key={event._id || index} event={event} />
+              ))}
             </div>
           </div>
         </div>

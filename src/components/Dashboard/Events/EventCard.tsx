@@ -1,13 +1,14 @@
 import { FiCalendar, FiTag, FiHeart } from "react-icons/fi";
 import Image from "next/image";
 import { EventDocument } from "@/types/eventInterface";
+import { formatDate } from "@/utils/details/formatting";
 
 interface EventCardProps {
-  event: EventDocument
+  event: EventDocument;
 }
 
 export function EventCard({ event }: EventCardProps) {
-console.log(event.media?.mediaUrl);
+  // console.log(event.media?.mediaUrl);
 
   return (
     <div className="flex flex-col sm:flex-row bg-white rounded-xl overflow-hidden border border-slate-200 hover:shadow-md transition-shadow">
@@ -47,7 +48,7 @@ console.log(event.media?.mediaUrl);
           <div className="space-y-1 mb-3">
             <div className="flex items-center text-sm text-slate-600">
               <span className="font-medium mr-1">
-                {event.date} | {event.location.city}
+                {formatDate(event.date)} | {event.location.city}
               </span>
             </div>
             <div className="text-sm text-slate-500">{event.time}</div>
