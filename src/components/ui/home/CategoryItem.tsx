@@ -111,6 +111,8 @@
 "use client";
 import { CategoryItemInterface } from "@/types/CategoryInterface";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useLocale } from "next-intl";
 
 // interface Category {
 //   imageUrl: string;
@@ -125,9 +127,14 @@ export const CategoryItem = ({
 }: {
   category: CategoryItemInterface;
 }) => {
+  const router = useRouter();
+  const locale = useLocale();
   // console.log(category);
-  console.log(category.image);
   // const [imgSrc, setImgSrc] = useState(category.imageUrl);
+
+  const handleClick = () => {
+    router.push(`/${locale}/events?category=${encodeURIComponent(category.name)}`);
+  };
 
   return (
     // Updated Width Classes:
@@ -135,6 +142,7 @@ export const CategoryItem = ({
     // Tablet (md): w-[calc(25%-18px)] -> Fits 4 items with gap-6 (3*24px/4 = 18px)
     // Widescreen (xl): w-[calc(14.28%-21px)] -> Fits 7 items with gap-6 (6*24px/7 = ~20.5px)
     <div
+      onClick={handleClick}
       className="group flex flex-col items-center cursor-pointer snap-start shrink-0 
                     w-[calc(50%-8px)] 
                     md:w-[calc(25%-18px)] 

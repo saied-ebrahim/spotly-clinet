@@ -1,4 +1,4 @@
 import { register } from "./register";
-import { parent } from "./actor";
+import { actor } from "./actor";
 import { doctor } from "./doctor";
-export { register, parent, doctor };
+export { register, actor, doctor };

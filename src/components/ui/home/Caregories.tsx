@@ -6,17 +6,12 @@ import axiosInstance from "@/lib/axios";
 
 // Main Slider Component
 const Categories = () => {
-<<<<<<< HEAD
-  const [events, setEvents] = useState([]);
-=======
-  const sliderRef = useRef<HTMLDivElement>(null);
   const [categories, setCategories] = useState([]);
->>>>>>> 5b6fb1f6a9aa360ab13ebfc1e06af26c2079bfbe
   useEffect(() => {
-    axiosInstance.get("/categories").then((data) => {
+    axiosInstance.get("/categories").then((res) => {
       // const arr = data.data.categories.slice(0, 7);
-      console.log(data.data.data.categories);
-      setCategories(data.data.data.categories);
+      console.log(res.data.data.categories);
+      setCategories(res.data.data.categories);
     });
   }, []);
   const sliderRef = useRef<HTMLDivElement>(null);

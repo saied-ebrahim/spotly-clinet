@@ -1,27 +1,21 @@
 import { FiCalendar, FiTag, FiHeart } from "react-icons/fi";
 import Image from "next/image";
+import { EventDocument } from "@/types/eventInterface";
 
 interface EventCardProps {
-  event: {
-    id: number | string;
-    title: string;
-    date: string;
-    venue: string;
-    time: string;
-    price: string;
-    category: string;
-    image: string;
-  };
+  event: EventDocument
 }
 
 export function EventCard({ event }: EventCardProps) {
+console.log(event.media?.mediaUrl);
+
   return (
     <div className="flex flex-col sm:flex-row bg-white rounded-xl overflow-hidden border border-slate-200 hover:shadow-md transition-shadow">
       {/* Image Section */}
       <div className="relative w-full sm:w-48 h-48 bg-slate-200 shrink-0">
-        {event.image ? (
+        {event.media?.mediaUrl ? (
           <Image
-            src={event.image}
+            src={event.media?.mediaUrl}
             alt={event.title}
             fill
             className="object-cover"
@@ -34,7 +28,7 @@ export function EventCard({ event }: EventCardProps) {
 
         {/* Category Badge */}
         <div className="absolute bottom-2 left-2 bg-yellow-400 text-slate-900 text-xs font-bold px-2 py-1 rounded">
-          {event.category}
+          {event.category[0].name}
         </div>
 
         {/* Favorite Button */}
@@ -53,7 +47,7 @@ export function EventCard({ event }: EventCardProps) {
           <div className="space-y-1 mb-3">
             <div className="flex items-center text-sm text-slate-600">
               <span className="font-medium mr-1">
-                {event.date} | {event.venue}
+                {event.date} | {event.location.city}
               </span>
             </div>
             <div className="text-sm text-slate-500">{event.time}</div>
@@ -62,7 +56,7 @@ export function EventCard({ event }: EventCardProps) {
 
         <div className="flex items-center text-brand-primary font-bold text-sm">
           <FiTag className="mr-1.5" />
-          {event.price}
+          {event.ticketType.price}
         </div>
       </div>
     </div>

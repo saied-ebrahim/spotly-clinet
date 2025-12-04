@@ -1,5 +1,5 @@
-import { EventObject } from "./PaginationInterface";
+import { EventDocument } from "./eventInterface";
 
-export interface EgyptTopEventInterace extends EventObject {
+export interface EgyptTopEventInterace extends EventDocument {
   colorSchemeDark?: string;
 }

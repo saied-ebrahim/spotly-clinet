@@ -143,10 +143,10 @@ const RecommendationList = ({ event }: { event: EventObject }) => {
                 lg:grid-cols-3
               "
             >
-              {currentEvents.map((event, index) => (
+              {/* {currentEvents.map((event, index) => (
                 // Use a stable key (like event.id) if possible, index is a fallback
                 <EventCard key={event.id || index} event={event} />
-              ))}
+              ))} */}
             </div>
           </div>
         </div>

@@ -3,6 +3,7 @@ import { FiStar, FiTag } from "react-icons/fi";
 import { EventObject } from "@/types/PaginationInterface";
 import Link from "next/link";
 import { getMonthDay } from "@/utils/details/formatting";
+import { EventDocument } from "@/types/eventInterface";
 
 // const EventCard = ({ event }: { event: EventObject }) => {
 //   const handleAddFavorites = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -96,7 +97,7 @@ import { getMonthDay } from "@/utils/details/formatting";
 //     </div>
 //   );
 // };
-const EventCard = ({ event }: { event: EventObject }) => {
+const EventCard = ({ event }: { event: EventDocument }) => {
   const handleAddFavorites = (e: React.MouseEvent<HTMLButtonElement>) => {
     // 1. Prevent the default button behavior
     // e.preventDefault();
@@ -123,7 +124,7 @@ const EventCard = ({ event }: { event: EventObject }) => {
   };
 
   const { month, date: dayDate } = getMonthDay(event.date);
-  const imageUrl = getImageUrl(event.media?.[0]?.mediaUrl);
+  const imageUrl = getImageUrl(event.media?.mediaUrl);
   const interested = event.analytics?.likes || 0;
 
   return (
@@ -149,11 +150,11 @@ const EventCard = ({ event }: { event: EventObject }) => {
                 ? event.category[0]
                 : event.category}
             </span> */}
-            <span className=" text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-blue-600 text-white bg-opacity-90">
+            {/* <span className=" text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-blue-600 text-white bg-opacity-90">
               {Array.isArray(event.category)
                 ? event.category[0]
                 : event.category}
-            </span>
+            </span> */}
             {event.type === "hybrid" ? (
               <span className=" text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-fuchsia-800 text-white bg-opacity-90">
                 Hybrid
@@ -184,7 +185,7 @@ const EventCard = ({ event }: { event: EventObject }) => {
             </h3>
 
             <p className="text-xs text-gray-500 truncate w-full mb-2">
-              {event.organizer}
+              {event.organizer.firstName}
             </p>
             {/* <div className="flex justify-start items-center text-left flex-col-reverse xs:flex-row w-full">
               <p className="text-xs text-gray-400 mb-3  w-full">{event.time}</p>
@@ -201,7 +202,7 @@ const EventCard = ({ event }: { event: EventObject }) => {
               {/* Location: Top on mobile, Right on desktop */}
               {event.type !== "online" ? (
                 <p className="text-xs text-gray-400 text-left min-[350px]:text-right pr-4">
-                  {`${event.location.city}/${event.location.district}`}
+                  {`${event.location.city}`}
                 </p>
               ) : (
                 <p
@@ -219,7 +220,7 @@ const EventCard = ({ event }: { event: EventObject }) => {
               {/* Price Section */}
               <div
                 className={`flex items-center gap-1 text-xs sm:text-sm ${
-                  event.price === 0
+                  event.ticketType.price === 0
                     ? "text-green-600 font-bold"
                     : "text-gray-700"
                 }`}
@@ -227,11 +228,11 @@ const EventCard = ({ event }: { event: EventObject }) => {
                 <FiTag
                   size={14}
                   className={
-                    event.price === 0 ? "text-green-600" : "text-gray-400"
+                    event.ticketType.price === 0 ? "text-green-600" : "text-gray-400"
                   }
                 />
                 <span className="truncate max-w-20 sm:max-w-none">
-                  {event.price === 0 ? "Free" : event.price + " EGP"}
+                  {event.ticketType.price === 0 ? "Free" : event.ticketType.price + " EGP"}
                 </span>
               </div>
 

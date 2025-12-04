@@ -9,6 +9,7 @@ import filterEvents from "@/utils/home/filterPopularEvents";
 import { EventObject } from "@/types/PaginationInterface";
 // import { Category } from "@/types/CategoryInterface";
 import useGeolocation from "@/hooks/useGeolocation";
+import { EventDocument } from "@/types/eventInterface";
 
 // 3. The Main Container Component
 const PopularEvents = () => {
@@ -16,15 +17,12 @@ const PopularEvents = () => {
   const {
     location: { city },
   } = useGeolocation();
-  const [events, setEvents] = useState<EventObject[]>([]);
+  const [events, setEvents] = useState<EventDocument[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("All");
   console.log(events);
-<<<<<<< HEAD
-  const filtered = filterEvents(events, currentFilter);
-  const filteredEvents = filtered.filter((e) => e.type !== "online");
-=======
+  // const filtered = filterEvents(events, currentFilter);
+  // const filteredEvents = filtered.filter((e) => e.type !== "online");
   // const filteredEvents = filterEvents(events, currentFilter);
->>>>>>> 5b6fb1f6a9aa360ab13ebfc1e06af26c2079bfbe
 
   useEffect(() => {
     axiosInstance

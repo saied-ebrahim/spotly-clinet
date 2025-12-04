@@ -4,10 +4,10 @@ import axiosInstance from "@/lib/axios";
 
 import PaginationList from "./PaginationList";
 
-import { EventObject } from "@/types/PaginationInterface";
+import { EventDocument } from "@/types/eventInterface";
 
 const OnlineEvents = () => {
-  const [events, setEvents] = useState<EventObject[]>([]);
+  const [events, setEvents] = useState<EventDocument[]>([]);
 
   useEffect(() => {
     axiosInstance
@@ -15,7 +15,7 @@ const OnlineEvents = () => {
       .then((res) => {
         const events = res.data.data.events;
         const onlineEvents = events.filter(
-          (e: EventObject) => e.type === "online"
+          (e: EventDocument) => e.type === "online"
         );
         setEvents(onlineEvents);
       })

@@ -1,24 +1,17 @@
 "use client";
 
+import axiosInstance from "@/lib/axios";
+import { EventDocument } from "@/types/eventInterface";
 import { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 
-interface Event {
-  id: number;
-  title: string;
-  date: string;
-  venue: string;
-  time: string;
-  price: string;
-  category: string;
-  image: string;
-}
+
 
 interface EditEventModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSave: (updatedEvent: Event) => void;
-  event: Event | null;
+  onSave: (updatedEvent: EventDocument) => void;
+  event: EventDocument | null;
 }
 
 export function EditEventModal({
@@ -27,7 +20,7 @@ export function EditEventModal({
   onSave,
   event,
 }: EditEventModalProps) {
-  const [formData, setFormData] = useState<Event | null>(event);
+  const [formData, setFormData] = useState<EventDocument | null>(event);
 
   if (!isOpen || !formData) return null;
 
@@ -40,6 +33,7 @@ export function EditEventModal({
     e.preventDefault();
     if (formData) {
       onSave(formData);
+      axiosInstance.patch(`/events/${formData._id}`, formData);
       onClose();
     }
   };
@@ -104,8 +98,8 @@ export function EditEventModal({
             </label>
             <input
               type="text"
-              name="venue"
-              value={formData.venue}
+              name="location"
+              value={formData.location.city}
               onChange={handleChange}
               className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all"
             />
@@ -119,7 +113,7 @@ export function EditEventModal({
               <input
                 type="text"
                 name="price"
-                value={formData.price}
+                value={formData.ticketType.price}
                 onChange={handleChange}
                 className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all"
               />
@@ -131,7 +125,7 @@ export function EditEventModal({
               <input
                 type="text"
                 name="category"
-                value={formData.category}
+                value={formData.category[0].name}
                 onChange={handleChange}
                 className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all"
               />

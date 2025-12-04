@@ -30,14 +30,12 @@ export interface SignupRequest {
   email: string;
   password: string;
   gender?: string;
+  phone:number,
   address: {
     city: string;
     country: string;
     state: string;
-  };
-  devices: {
-    deviceFingerprint: string;
-  }[];
+  }
 }
 
 export interface SignupResponse {

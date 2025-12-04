@@ -17,14 +17,21 @@ import {
 } from "react-icons/fi";
 import LinkTo from "../Global/LinkTo";
 import SpotlyLogo from "../Layout/SpotlyLogo";
+import { CreateEventModal } from "./Events/CreateEventModal";
 
 export function DashboardHeader() {
   const [user, setUser] = useState<{ name?: string; email?: string } | null>(
     null
   );
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  
+  const handleCreateSuccess = () => {
+    // Refresh logic here if needed, e.g., refetch events
+    console.log("Event created successfully");
+  };
 
   useEffect(() => {
     const checkSession = async () => {
@@ -116,7 +123,9 @@ export function DashboardHeader() {
         </div>
 
         <div className="flex items-center gap-4">
-          <button className="flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+          <button
+          onClick={() => setIsCreateModalOpen(true)}
+          className="flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
             <FiPlus />
             Create
           </button>
@@ -175,6 +184,11 @@ export function DashboardHeader() {
           </div>
         </div>
       </div>
+      <CreateEventModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSuccess={handleCreateSuccess}
+      />
     </header>
   );
 }
