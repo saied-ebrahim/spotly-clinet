@@ -107,7 +107,10 @@ export function CreateEventModal({
       latitude: 30.0444,
       longitude: 31.2357,
     } as Location,
-    media: [] as Media[],
+    media: {
+      mediaType: "image",
+      mediaUrl: "",
+    } as Media,
     tags: [] as string[],
     category: [] as string[],
     organizer: "",
@@ -164,38 +167,39 @@ export function CreateEventModal({
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
+    // Since backend expects a single media object, we take the first file
+    const file = files[0];
     setUploading(true);
-    const newMedia: Media[] = [];
+
+    const newMedia: Media = {
+      mediaType: "image",
+      mediaUrl: "",
+    };
 
     try {
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const uploadFormData = new FormData();
-        uploadFormData.append("file", file);
+      const uploadFormData = new FormData();
+      uploadFormData.append("file", file);
 
-        const response = await axios.post("/upload", uploadFormData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+      const response = await axios.post("/upload", uploadFormData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
-        // Extract key from response: data.data.key
-        const key = response.data.data?.key;
+      // Extract key from response: data.data.key
+      const key = response.data.data?.key;
 
-        if (key) {
-          const mediaUrl = `https://pub-c00f3c4174b8458d8db60aeff42f8480.r2.dev/${key}`;
+      if (key) {
+        const mediaUrl = `https://pub-c00f3c4174b8458d8db60aeff42f8480.r2.dev/${key}`;
 
-          newMedia.push({
-            mediaType: file.type.startsWith("video") ? "video" : "image",
-            mediaUrl: mediaUrl,
-          });
-        } else {
-          console.error("Upload response missing key:", response.data);
-        }
+        newMedia.mediaType = file.type.startsWith("video") ? "video" : "image";
+        newMedia.mediaUrl = mediaUrl;
+
+        setFormData((prev) => ({
+          ...prev,
+          media: newMedia,
+        }));
+      } else {
+        console.error("Upload response missing key:", response.data);
       }
-
-      setFormData((prev) => ({
-        ...prev,
-        media: [...prev.media, ...newMedia],
-      }));
     } catch (error) {
       console.error("Error uploading file:", error);
       alert("Failed to upload file. Please try again.");
@@ -205,10 +209,13 @@ export function CreateEventModal({
     }
   };
 
-  const removeMedia = (index: number) => {
+  const removeMedia = () => {
     setFormData((prev) => ({
       ...prev,
-      media: prev.media.filter((_, i) => i !== index),
+      media: {
+        mediaType: "image",
+        mediaUrl: "",
+      },
     }));
   };
 
@@ -273,6 +280,7 @@ export function CreateEventModal({
     setLoading(true);
 
     try {
+      console.log("Submitting formData:", formData);
       await axios.post("/events", formData);
       onSuccess();
       onClose();
@@ -587,39 +595,33 @@ export function CreateEventModal({
                     ref={fileInputRef}
                     onChange={handleFileUpload}
                     className="hidden"
-                    multiple
                     accept="image/*,video/*"
                   />
                 </div>
 
-                {formData.media.length > 0 && (
+                {formData.media.mediaUrl && (
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    {formData.media.map((item, index) => (
-                      <div
-                        key={index}
-                        className="relative group aspect-video bg-slate-100 rounded-lg overflow-hidden"
+                    <div className="relative group aspect-video bg-slate-100 rounded-lg overflow-hidden">
+                      {formData.media.mediaType === "image" ? (
+                        <img
+                          src={formData.media.mediaUrl}
+                          alt="Event Media"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <video
+                          src={formData.media.mediaUrl}
+                          className="w-full h-full object-cover"
+                        />
+                      )}
+                      <button
+                        type="button"
+                        onClick={removeMedia}
+                        className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                       >
-                        {item.mediaType === "image" ? (
-                          <img
-                            src={item.mediaUrl}
-                            alt={`Media ${index}`}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <video
-                            src={item.mediaUrl}
-                            className="w-full h-full object-cover"
-                          />
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => removeMedia(index)}
-                          className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          <FaTrash size={12} />
-                        </button>
-                      </div>
-                    ))}
+                        <FaTrash size={12} />
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>

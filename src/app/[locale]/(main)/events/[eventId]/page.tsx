@@ -82,7 +82,7 @@ export default async function EventDetailsPage({
           <Image
             src={
               myEvent.media && myEvent.media.length > 0
-                ? myEvent.media[0].mediaUrl
+                ? myEvent.media.mediaUrl
                 : "https://via.placeholder.com/1200x400?text=No+Image"
             }
             alt={myEvent.title}
