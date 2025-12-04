@@ -7,8 +7,10 @@ import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { BsChevronRight } from "react-icons/bs";
 import Link from "next/link";
 import { EventDocument } from "@/types/eventInterface";
+import { performCheckout } from "./RedirectToCheckout";
+import { useRouter } from "next/router";
 
-export default function TicketModal({
+export default function TicketsModal({
   isOpen,
   onClose,
   event,
@@ -29,7 +31,19 @@ export default function TicketModal({
   };
 
   //   . Prevent Hydration Error: Wait until client-side mount
+  const handleProceed = async () => {
+    let url = await performCheckout({
+      eventID: event._id,
+      quantity: quantity,
+      discount: event.ticketType.discount || 0,
+    });
+    console.log("url", url);
+
+    window.location.href = url as string;
+    
+  };
   useEffect(() => {
+    // eslint-disable-next-line
     setMounted(true);
   }, []);
 
@@ -112,12 +126,14 @@ export default function TicketModal({
               </span>
             </div>
           </div>
-          <Link href={`/events/${event._id}/checkout`}>
-            <button className="w-full bg-[#2c2e3e] hover:bg-[#232432] text-white py-3.5 rounded-md flex items-center justify-center gap-2 transition-colors font-medium">
-              Proceed
-              <BsChevronRight strokeWidth={0.5} />
-            </button>
-          </Link>
+
+          <button
+            onClick={handleProceed}
+            className="w-full bg-[#2c2e3e] hover:bg-[#232432] text-white py-3.5 rounded-md flex items-center justify-center gap-2 transition-colors font-medium"
+          >
+            Proceed
+            <BsChevronRight strokeWidth={0.5} />
+          </button>
         </div>
       </div>
     </div>,

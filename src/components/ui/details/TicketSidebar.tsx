@@ -1,5 +1,5 @@
 "use client";
-import { EventObject } from "@/types/PaginationInterface";
+
 import { formatPrice } from "@/utils/details/formatting";
 import { FaTicketAlt } from "react-icons/fa";
 import { useState } from "react";

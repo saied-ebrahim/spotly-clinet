@@ -1,9 +1,10 @@
 "use client";
+import { LatLngExpression } from "leaflet";
 import { useState, useEffect, useRef } from "react";
 
 // --- Inline Icon Components (Replacing lucide-react) ---
 
-const IconMapPin = ({ className }) => (
+const IconMapPin = ({ className }: { className: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -19,7 +20,7 @@ const IconMapPin = ({ className }) => (
   </svg>
 );
 
-const IconCheck = ({ className }) => (
+const IconCheck = ({ className }: { className: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -34,7 +35,7 @@ const IconCheck = ({ className }) => (
   </svg>
 );
 
-const IconX = ({ className }) => (
+const IconX = ({ className }: { className: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -50,7 +51,7 @@ const IconX = ({ className }) => (
   </svg>
 );
 
-const IconAlertCircle = ({ className }) => (
+const IconAlertCircle = ({ className }: { className: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -67,7 +68,7 @@ const IconAlertCircle = ({ className }) => (
   </svg>
 );
 
-const IconLoader = ({ className }) => (
+const IconLoader = ({ className }: { className: string }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -99,7 +100,7 @@ export default function LocationSelector() {
   const [notification, setNotification] = useState("");
 
   // Default position: Cairo, Egypt
-  const defaultCenter = [30.0444, 31.2357];
+  const defaultCenter: LatLngExpression = [30.0444, 31.2357];
   const defaultZoom = 13;
 
   // Sync ref with state
