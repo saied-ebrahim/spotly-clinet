@@ -2,6 +2,7 @@ import { EgyptTopEventInterace } from "@/types/EgyptTopEventInterface";
 import { EventDocument } from "@/types/eventInterface";
 import Image from "next/image";
 import Link from "next/link";
+import { FiCalendar, FiUsers } from "react-icons/fi";
 const COLORS = [
   "bg-gradient-to-r from-gray-900 via-zinc-800 to-gray-800",
   "bg-gradient-to-r from-slate-900 to-indigo-900",
@@ -85,28 +86,30 @@ export default function EgyptTopEventCard({
 
         {/* Content Section */}
         <div className="lg:w-2/3 text-white">
+        <div className="flex flex-wrap gap-2">
+        {event.category.map((category) => (
           <span className="inline-block bg-white/10 text-white text-xs font-bold px-3 py-1 rounded-full mb-2 uppercase">
-            {/* {event.category} */}
+            {category.name}
           </span>
+        ))}</div>
 
           <h3 className="text-3xl font-extrabold mb-3">{event.title}</h3>
 
           <p className="mb-4 text-emerald-100">{event.description}</p>
 
-          <div className="flex items-center space-x-6 text-sm">
-            <span className="flex items-center font-medium">
-              <i data-lucide="calendar" className="w-4 h-4 mr-1"></i>
-              {`${new Date(event.date).toLocaleDateString(undefined, {
+          <div className="flex text-left items-center space-x-6 text-sm">
+            <span className="flex gap-2 items-center font-medium">
+              <FiCalendar />
+              <span>{`${new Date(event.date).toLocaleDateString(undefined, {
                 year: "numeric",
                 day: "numeric",
                 month: "short",
-              })}`}
+              })}`}</span>
             </span>
 
-            <span className="flex items-center font-medium">
-              <i data-lucide="users" className="w-4 h-4 mr-1"></i>
-              {registered}
-              {event.analytics.ticketsSold > 1000 ? "+" : ""} Registered
+            <span className="flex gap-2 items-center font-medium">
+              <FiUsers />
+              <span>{registered}{event.analytics.ticketsSold > 1000 ? "+" : ""} Registered</span>
             </span>
           </div>
         </div>

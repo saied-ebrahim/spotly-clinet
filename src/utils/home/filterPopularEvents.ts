@@ -1,6 +1,6 @@
-import { EventObject } from "@/types/PaginationInterface";
+import { EventDocument } from "@/types/eventInterface";
 
-const filterEvents = (events: EventObject[], filterType: string) => {
+const filterEvents = (events: EventDocument[], filterType: string) => {
   // Helper: Parse event.date as ISO string (YYYY-MM-DD)
   const today = new Date();
   // start of today (local)
@@ -9,7 +9,7 @@ const filterEvents = (events: EventObject[], filterType: string) => {
   const endOfToday = new Date(today);
   endOfToday.setHours(23, 59, 59, 999);
 
-  const getEventDate = (event: EventObject) => {
+  const getEventDate = (event: EventDocument) => {
     // Expecting event.date as 'YYYY-MM-DD' or similar
     const date = new Date(event.date);
     date.setHours(0, 0, 0, 0);
@@ -72,7 +72,7 @@ const filterEvents = (events: EventObject[], filterType: string) => {
             event.category?.map((c) => String(c).toLowerCase()) || [];
 
           // Robust price detection: accept numeric 0, "$0", "0.00", or the word 'free'
-          const priceRaw = event.price ?? "";
+          const priceRaw = event.ticketType.price ?? "";
           let isPriceFree = false;
           if (typeof priceRaw === "number") {
             isPriceFree = priceRaw === 0;
@@ -102,14 +102,14 @@ const filterEvents = (events: EventObject[], filterType: string) => {
 };
 
 export default filterEvents;
-// import { EventObject } from "@/types/PaginationInterface";
+// import { Event } from "@/types/PaginationInterface";
 
-// const filterEvents = (events: EventObject[], filterType: string) => {
+// const filterEvents = (events: Event[], filterType: string) => {
 //   // Helper: Parse event.date as ISO string (YYYY-MM-DD)
 //   const today = new Date();
 //   today.setHours(0, 0, 0, 0);
 
-//   const getEventDate = (event: EventObject) => {
+//   const getEventDate = (event: Event) => {
 //     // Expecting event.date as 'YYYY-MM-DD' or similar
 //     const date = new Date(event.date);
 //     date.setHours(0, 0, 0, 0);
