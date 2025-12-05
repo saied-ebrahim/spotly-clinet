@@ -1,7 +1,7 @@
 import React from "react";
-import { EventObject } from "@/types/PaginationInterface"; // Assuming you have this type
+import { EventDocument } from "@/types/eventInterface"; // Assuming you have this type
 
-const AddToCalendarButton = ({ event }: { event: EventObject }) => {
+const AddToCalendarButton = ({ event }: { event: EventDocument }) => {
   // 1. Helper to format dates to YYYYMMDDTHHmmSSZ (UTC)
   // Google requires this specific format without dashes or colons
   const formatGoogleDate = (dateString: string) => {
@@ -27,7 +27,7 @@ const AddToCalendarButton = ({ event }: { event: EventObject }) => {
     url.searchParams.append("text", event.title);
     url.searchParams.append("dates", `${startTime}/${endTime}`);
     url.searchParams.append("details", event.description || "");
-    url.searchParams.append("location", event.location.address || "");
+    url.searchParams.append("location", event.location.city + ", " + event.location.district || "");
 
     return url.toString();
   };

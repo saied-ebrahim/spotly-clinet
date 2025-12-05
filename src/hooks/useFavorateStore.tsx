@@ -1,8 +1,9 @@
 import axiosInstance from '@/lib/axios';
 import { create } from 'zustand';
+import { EventDocument } from '@/types/eventInterface';
 interface FavoriteStore {
-  favorites: (string | number)[];
-  toggleFavorite: (id: string | number) => void;
+  favorites: EventDocument[];
+  toggleFavorite: (event: EventDocument) => void;
 }
 // let getFavorites = await axiosInstance.get('/favorites').then((res) => {
 //     return res.data;
@@ -13,12 +14,14 @@ const useFavoriteStore = create<FavoriteStore>((set) => {
   return {
 //   favorites: favorites,
   favorites: [],
-  toggleFavorite: (id) => set((state) => {
-    const isFavorite = state.favorites.includes(id);
+  toggleFavorite: (event: EventDocument) => set((state) => {
+    console.log(state.favorites);
+    const isFavorite = Boolean(state.favorites.find((ev) => ev._id === event._id));
+    console.log(isFavorite);
     return {
       favorites: isFavorite
-        ? state.favorites.filter((favId) => favId !== id) // Remove if exists
-        : [...state.favorites, id], // Add if doesn't exist
+        ? state.favorites.filter((ev) => ev._id !== event._id) // Remove if exists
+        : [...state.favorites, event], // Add if doesn't exist
     };
   }),
 }});

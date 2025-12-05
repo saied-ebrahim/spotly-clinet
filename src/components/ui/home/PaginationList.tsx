@@ -96,7 +96,8 @@ const PaginatedEvents = ({
   const nextPage = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
   const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
-
+  
+  console.log(currentItems)
   return (
     <div className="max-w-7xl mx-auto">
      
