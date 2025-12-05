@@ -255,7 +255,7 @@ const EventsPage = () => {
                     <div className="absolute top-0 left-0 w-full h-full border-4 border-blue-200 rounded-full"></div>
                     <div className="absolute top-0 left-0 w-full h-full border-4 border-transparent border-t-blue-600 rounded-full animate-spin"></div>
                     <div
-                      className="absolute top-0 left-0 w-full h-full border-4 border-transparent border-t-purple-500 rounded-full animate-spin"
+                      className="absolute top-0 left-0 w-full h-full border-4 border-transparent rounded-full animate-spin"
                       style={{ animationDuration: "1.5s" }}
                     ></div>
                   </div>
