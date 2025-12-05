@@ -160,7 +160,7 @@ export default async function EventDetailsPage({
                 <FaMapMarkerAlt className="text-gray-400 w-5 h-5 mt-1 shrink-0" />
                 <div>
                   <p className="font-bold">
-                    {myEvent.location.city + ", " + myEvent.location.country}
+                    {myEvent.location.city + ", " +( myEvent.location.country || "Egypt")}
                   </p>
                   <p className="text-sm text-gray-500 leading-relaxed mt-1">
                     {myEvent.location.district}
