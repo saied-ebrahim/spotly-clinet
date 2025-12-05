@@ -30,14 +30,22 @@ const EventsPage = () => {
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [customDate, setCustomDate] = useState<string | null>(null);
   const [events, setEvents] = useState<EventDocument[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    axiosInstance
-      .get("/events")
-      .then((res) => {
+    const fetchEvents = async () => {
+      setIsLoading(true);
+      try {
+        const res = await axiosInstance.get("/events");
         setEvents(res.data.data.events);
-      })
-      .catch((err) => console.error(err));
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchEvents();
   }, []);
 
   const handleFilterChange = (
@@ -240,7 +248,23 @@ const EventsPage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {filteredEvents.length > 0 ? (
+            {isLoading ? (
+              <div className="col-span-2 flex justify-center items-center py-20">
+                <div className="flex flex-col items-center gap-4">
+                  <div className="relative w-16 h-16">
+                    <div className="absolute top-0 left-0 w-full h-full border-4 border-blue-200 rounded-full"></div>
+                    <div className="absolute top-0 left-0 w-full h-full border-4 border-transparent border-t-blue-600 rounded-full animate-spin"></div>
+                    <div
+                      className="absolute top-0 left-0 w-full h-full border-4 border-transparent border-t-purple-500 rounded-full animate-spin"
+                      style={{ animationDuration: "1.5s" }}
+                    ></div>
+                  </div>
+                  <p className="text-slate-600 font-medium">
+                    Loading events...
+                  </p>
+                </div>
+              </div>
+            ) : filteredEvents.length > 0 ? (
               filteredEvents.map((event) => (
                 <EventCard key={event._id} event={event} />
               ))
