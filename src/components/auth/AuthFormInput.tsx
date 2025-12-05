@@ -1,8 +1,7 @@
-import { forwardRef, InputHTMLAttributes } from "react";
+import { AuthFormInputProps } from "@/types/components/forms/AuthFormInputProps";
+import { forwardRef } from "react";
 
-interface AuthFormInputProps extends InputHTMLAttributes<HTMLInputElement> {
-  placeHolder?: string;
-}
+
 
 const AuthFormInput = forwardRef<HTMLInputElement, AuthFormInputProps>(
   ({ type, placeHolder, className, ...props }, ref) => {

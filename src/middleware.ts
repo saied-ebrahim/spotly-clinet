@@ -3,10 +3,8 @@ import { routing } from "./i18n/routing";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { decryptData } from "./shared/encryption";
-interface DecryptedToken {
-  kind: string;
-  [key: string]: unknown;
-}
+import { DecryptedToken } from "./types/DecryptedToken";
+
 export default function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
 

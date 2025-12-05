@@ -1,11 +1,8 @@
 import Link from "next/link";
 import { useLocale } from "next-intl";
+import { LinkToProps } from "@/types/LinkTo";
 
-interface LinkToProps {
-  href: string;
-  children: React.ReactNode;
-  [key: string]: unknown;
-}
+
 function LinkTo({ href, children, ...props }: LinkToProps) {
   const locale = useLocale();
   return (

@@ -19,6 +19,7 @@ import { enUS as enLocale } from "date-fns/locale/en-US";
 import { useLocale, useTranslations } from "next-intl";
 import { axiosGet } from "@/shared/axiosCall";
 import { CountryRaw, PaginatedResponse } from "@/modules/Header/types";
+import { CustomInputProps, OptionType } from "@/types/components/Custom/Inputs/customInput";
 
 registerLocale("ar", arLocale);
 registerLocale("en", enLocale);
@@ -27,33 +28,7 @@ const locales = {
   en,
 };
 
-interface CustomInputProps {
-  type?: string;
-  placeholder?: string;
-  id?: string;
-  icon?: React.ReactNode;
-  label?: string;
-  className?: string;
-  error?: string;
-  color?: string;
-  size?: string;
-  setOpen?: (open: boolean) => void;
-  open?: boolean;
-  onChange?: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => void;
-  disabled?: boolean;
-  apiUrl?: string;
-  querySearch?: string;
-  triggerApiUrl?: string;
-  reset?: () => void;
-  rows?: number;
-  [key: string]: unknown;
-}
-type OptionType = {
-  label: string;
-  value: string;
-};
+
 
 export default function CustomInput({
   type,

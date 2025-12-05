@@ -7,23 +7,11 @@ import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import { decryptData } from "@/shared/encryption";
 import { toast, ToastContainer } from "react-toastify";
+import { CheckoutPayload, CheckoutResponse } from "@/types/components/Checkout/checkoutApi";
 
 
 
 // 1. Define the shape of your payload
-export interface CheckoutPayload {
-    eventID:string,
-    quantity:number,
-    discount:number
-}
-
-// 2. Define the response shape
-export interface CheckoutResponse {
-  success: boolean;
-  orderId: string;
-  url: string;
-  message?: string;
-}
 
 /**
  * Sends a checkout request using the custom axios instance.
