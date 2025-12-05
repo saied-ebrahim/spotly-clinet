@@ -13,19 +13,24 @@ export interface EventDocument {
   ticketType: ticket;
   analytics: analytics;
 }
+
 interface MediaItem {
   mediaType: "image" | "video" | string;
   mediaUrl: string;
 }
+
 interface location {
   city: string;
   country: string;
-  district?: string; 
+  address?: string;
+  district?: string;
 }
-interface category {
+
+export interface category {
   _id: string;
   name: string;
 }
+
 interface organizer {
   _id: string;
   firstName: string;
@@ -39,6 +44,7 @@ interface ticket {
   quantity?: number;
   discount?: number;
 }
+
 interface analytics {
   ticketsSold: number;
   ticketsAvailable: number;
@@ -48,7 +54,7 @@ interface analytics {
   dislikes: number;
 }
 
-interface tags {
+export interface tags {
   _id: string;
   name: string;
 }

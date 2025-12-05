@@ -7,12 +7,12 @@ export function DashboardSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden w-[80px] flex-col border-r border-slate-200 bg-white lg:flex h-dvh fixed top-0 left-0 pt-20 z-0">
+    <aside className="hidden w-[80px] flex-col border-r border-slate-200 bg-white lg:flex h-dvh fixed top-0 left-0 pt-20 z-50 hover:w-64 transition-all duration-300 group/sidebar">
       <nav className="flex-1 space-y-6 overflow-y-auto px-2 py-4">
         {navSections.map((section, idx) => (
           <div key={idx} className="space-y-2">
             {section.title && (
-              <div className="px-2 text-[10px] uppercase tracking-wider text-slate-400 text-center">
+              <div className="px-2 text-[10px] uppercase tracking-wider text-slate-400 text-center group-hover/sidebar:text-left group-hover/sidebar:pl-4 transition-all duration-300 truncate">
                 {section.title}
               </div>
             )}
@@ -39,7 +39,7 @@ export function DashboardSidebar() {
                   <LinkTo
                     href={linkPath}
                     key={item.key}
-                    className={`group relative flex w-full flex-col items-center justify-center rounded-lg py-3 text-xs font-medium transition ${
+                    className={`group relative flex w-full items-center justify-start pl-7 rounded-lg py-3 text-xs font-medium transition-all duration-300 overflow-hidden ${
                       isActive
                         ? "text-brand-primary bg-brand-primary/10"
                         : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
@@ -47,14 +47,15 @@ export function DashboardSidebar() {
                   >
                     <item.icon
                       size={24}
-                      className={`mb-1 ${
+                      className={`min-w-[24px] ${
                         isActive
                           ? "text-brand-primary"
                           : "text-slate-400 group-hover:text-slate-600"
                       }`}
                     />
-                    {/* Tooltip or label if needed, for now just icon centered as per narrow sidebar common pattern, or small text below */}
-                    {/* <span className="text-[10px]">{item.label}</span> */}
+                    <span className="ml-4 whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-300 text-sm">
+                      {item.label}
+                    </span>
                   </LinkTo>
                 );
               })}

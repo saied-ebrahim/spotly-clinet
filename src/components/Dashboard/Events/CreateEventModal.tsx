@@ -4,7 +4,6 @@ import { useState, useRef, useEffect } from "react";
 import {
   FaTimes,
   FaCloudUploadAlt,
-  FaPlus,
   FaTrash,
   FaChevronDown,
   FaCheck,
@@ -13,25 +12,16 @@ import axios from "@/lib/axios";
 import Cookies from "js-cookie";
 import { decryptData } from "@/shared/encryption";
 import { parseJwt } from "@/shared/jwt";
+import { useForm, Resolver } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import {
+  createEventSchema,
+  CreateEventSchema,
+} from "@/schemas/createEventSchema";
+import { useClickOutside } from "@/hooks/useClickOutside";
+import { toast } from "react-toastify";
 
-interface Category {
-  _id: string;
-  name: string;
-}
-
-interface Location {
-  country: string;
-  city: string;
-  district: string;
-  address: string;
-  latitude: number;
-  longitude: number;
-}
-
-interface Media {
-  mediaType: "image" | "video";
-  mediaUrl: string;
-}
+import { category as Category, tags as Tag } from "@/types/eventInterface";
 
 interface CreateEventModalProps {
   isOpen: boolean;
@@ -46,29 +36,99 @@ export function CreateEventModal({
 }: CreateEventModalProps) {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [tagInput, setTagInput] = useState("");
-  const [displayTags, setDisplayTags] = useState<
-    { id: string; name: string }[]
-  >([]);
 
+  // Data sources
   const [categories, setCategories] = useState<Category[]>([]);
+  const [availableTags, setAvailableTags] = useState<Tag[]>([]);
+
+  // Dropdown states
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+  const [isTagDropdownOpen, setIsTagDropdownOpen] = useState(false);
+
+  // Refs for click outside
+  const categoryDropdownRef = useRef<HTMLDivElement>(null);
+  const tagDropdownRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const [organizerName, setOrganizerName] = useState("");
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get("/categories");
-        if (response.data?.data?.categories) {
-          setCategories(response.data.data.categories);
-        }
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-    fetchCategories();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm<CreateEventSchema>({
+    resolver: yupResolver(createEventSchema) as Resolver<CreateEventSchema>,
+    defaultValues: {
+      title: "",
+      description: "",
+      date: "",
+      time: "",
+      location: {
+        country: "Egypt",
+        city: "Cairo",
+        district: "",
+        address: "",
+        latitude: 30.0444,
+        longitude: 31.2357,
+      },
+      media: {
+        mediaType: "image",
+        mediaUrl: "",
+      },
+      tags: [],
+      category: [],
+      isonline: false,
+      ticketType: {
+        price: 0,
+        quantity: 0,
+      },
+    },
+  });
 
-    // Extract user ID and name from token
+  // Watch values for UI updates
+  const selectedCategories = watch("category");
+  const selectedTags = watch("tags");
+  const currentMedia = watch("media");
+
+  useClickOutside(categoryDropdownRef, () => setIsCategoryDropdownOpen(false));
+  useClickOutside(tagDropdownRef, () => setIsTagDropdownOpen(false));
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchCategories();
+      fetchTags();
+      fetchOrganizerInfo();
+    }
+  }, [isOpen]);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get("/categories");
+      if (response.data?.data?.categories) {
+        setCategories(response.data.data.categories);
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      toast.error("Failed to load categories");
+    }
+  };
+
+  const fetchTags = async () => {
+    try {
+      const response = await axios.get("/tags");
+      if (response.data?.data?.tags) {
+        setAvailableTags(response.data.data.tags);
+      }
+    } catch (error) {
+      console.error("Error fetching tags:", error);
+      toast.error("Failed to load tags");
+    }
+  };
+
+  const fetchOrganizerInfo = () => {
     const cookie = Cookies.get("token");
     if (cookie) {
       try {
@@ -82,7 +142,7 @@ export function CreateEventModal({
               decodedToken.name || decodedToken.unique_name || "User";
 
             if (userId) {
-              setFormData((prev) => ({ ...prev, organizer: userId }));
+              setValue("organizer", userId);
             }
             setOrganizerName(userName);
           }
@@ -91,90 +151,14 @@ export function CreateEventModal({
         console.error("Error parsing token:", error);
       }
     }
-  }, []);
-
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    date: "",
-    time: "",
-    type: "hybrid",
-    location: {
-      country: "Egypt",
-      city: "Cairo",
-      district: "",
-      address: "",
-      latitude: 30.0444,
-      longitude: 31.2357,
-    } as Location,
-    media: {
-      mediaType: "image",
-      mediaUrl: "",
-    } as Media,
-    tags: [] as string[],
-    category: [] as string[],
-    organizer: "",
-    isonline: false,
-    ticketType: {
-      price: 0 as number,
-      quantity: 0 as number,
-    },
-  });
-
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  if (!isOpen) return null;
-
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    const { name, value, type } = e.target;
-    // console.log(name, value, type);
-
-    if (name.includes(".")) {
-      const [parent, child] = name.split(".");
-      setFormData((prev) => ({
-        ...prev,
-        [parent]: {
-          ...(prev[parent as keyof typeof prev] as object),
-          [child]: type === "number" ? Number(value) : value,
-        },
-      }));
-    } else if (name === "price" || name === "quantity") {
-      setFormData((prev) => ({
-        ...prev,
-        ticketType: {
-          ...prev.ticketType,
-          [name]: type === "number" ? Number(value) : value,
-        },
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: type === "number" ? Number(value) : value,
-      }));
-    }
-  };
-
-  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, checked } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: checked }));
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    // Since backend expects a single media object, we take the first file
     const file = files[0];
     setUploading(true);
-
-    const newMedia: Media = {
-      mediaType: "image",
-      mediaUrl: "",
-    };
 
     try {
       const uploadFormData = new FormData();
@@ -184,25 +168,20 @@ export function CreateEventModal({
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      // Extract key from response: data.data.key
       const key = response.data.data?.key;
 
       if (key) {
         const mediaUrl = `https://pub-c00f3c4174b8458d8db60aeff42f8480.r2.dev/${key}`;
+        const mediaType = file.type.startsWith("video") ? "video" : "image";
 
-        newMedia.mediaType = file.type.startsWith("video") ? "video" : "image";
-        newMedia.mediaUrl = mediaUrl;
-
-        setFormData((prev) => ({
-          ...prev,
-          media: newMedia,
-        }));
+        setValue("media", { mediaType, mediaUrl }, { shouldValidate: true });
       } else {
         console.error("Upload response missing key:", response.data);
+        toast.error("Upload failed: Invalid response");
       }
     } catch (error) {
       console.error("Error uploading file:", error);
-      alert("Failed to upload file. Please try again.");
+      toast.error("Failed to upload file");
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -210,87 +189,56 @@ export function CreateEventModal({
   };
 
   const removeMedia = () => {
-    setFormData((prev) => ({
-      ...prev,
-      media: {
-        mediaType: "image",
-        mediaUrl: "",
-      },
-    }));
-  };
-
-  const handleAddTag = async () => {
-    if (!tagInput.trim()) return;
-
-    try {
-      // Post to /tags as requested
-      const response = await axios.post("/tags", { name: tagInput });
-      // Extract ID based on user provided structure: data.data.tag._id
-      const tagId =
-        response.data.data?.tag?._id ||
-        response.data.tag?._id ||
-        response.data._id ||
-        response.data.id;
-
-      if (tagId) {
-        setDisplayTags((prev) => [...prev, { id: tagId, name: tagInput }]);
-        setFormData((prev) => ({
-          ...prev,
-          tags: [...prev.tags, tagId],
-        }));
-        setTagInput("");
-      } else {
-        console.error("No tag ID returned from backend");
-      }
-    } catch (error) {
-      console.error("Error adding tag:", error);
-      alert("Failed to add tag. Please try again.");
-    }
-  };
-
-  const removeTag = (tagIdToRemove: string) => {
-    setDisplayTags((prev) => prev.filter((tag) => tag.id !== tagIdToRemove));
-    setFormData((prev) => ({
-      ...prev,
-      tags: prev.tags.filter((tag) => tag !== tagIdToRemove),
-    }));
+    setValue("media", { mediaType: "image", mediaUrl: "" });
   };
 
   const toggleCategory = (categoryId: string) => {
-    setFormData((prev) => {
-      const currentCategories = prev.category;
-      const isSelected = currentCategories.includes(categoryId);
+    const current = selectedCategories || [];
+    const isSelected = current.includes(categoryId);
 
-      if (isSelected) {
-        return {
-          ...prev,
-          category: currentCategories.filter((id) => id !== categoryId),
-        };
-      } else {
-        return {
-          ...prev,
-          category: [...currentCategories, categoryId],
-        };
-      }
-    });
+    if (isSelected) {
+      setValue(
+        "category",
+        current.filter((id) => id !== categoryId),
+        { shouldValidate: true }
+      );
+    } else {
+      setValue("category", [...current, categoryId], { shouldValidate: true });
+    }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+  const toggleTag = (tagId: string) => {
+    const current = selectedTags || [];
+    const isSelected = current.includes(tagId);
 
+    if (isSelected) {
+      setValue(
+        "tags",
+        current.filter((id) => id !== tagId),
+        { shouldValidate: true }
+      );
+    } else {
+      setValue("tags", [...current, tagId], { shouldValidate: true });
+    }
+  };
+
+  const onSubmit = async (data: CreateEventSchema) => {
+    setLoading(true);
     try {
-      console.log("Submitting formData:", formData);
-      await axios.post("/events", formData);
+      await axios.post("/events", data);
+      toast.success("Event created successfully");
       onSuccess();
       onClose();
+      reset();
     } catch (error) {
       console.error("Error creating event:", error);
-      alert("Failed to create event. Please try again.");
+      toast.error("Failed to create event");
     } finally {
       setLoading(false);
     }
   };
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 overflow-y-auto">
@@ -306,7 +254,7 @@ export function CreateEventModal({
         </div>
 
         <div className="overflow-y-auto p-6">
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Basic Info */}
             <div className="space-y-4">
               <h4 className="font-semibold text-slate-800 border-b pb-2">
@@ -318,52 +266,68 @@ export function CreateEventModal({
                     Title
                   </label>
                   <input
-                    required
+                    {...register("title")}
                     type="text"
-                    name="title"
-                    value={formData.title}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none"
+                    className={`w-full px-4 py-2 rounded-lg border ${
+                      errors.title ? "border-red-500" : "border-slate-300"
+                    } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
                   />
+                  {errors.title && (
+                    <span className="text-red-500 text-sm">
+                      {errors.title.message}
+                    </span>
+                  )}
                 </div>
                 <div className="col-span-2">
                   <label className="block text-sm font-medium text-slate-700 mb-1">
                     Description
                   </label>
                   <textarea
-                    required
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
+                    {...register("description")}
                     rows={3}
-                    className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none"
+                    className={`w-full px-4 py-2 rounded-lg border ${
+                      errors.description ? "border-red-500" : "border-slate-300"
+                    } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
                   />
+                  {errors.description && (
+                    <span className="text-red-500 text-sm">
+                      {errors.description.message}
+                    </span>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
                     Date
                   </label>
                   <input
-                    required
+                    {...register("date")}
                     type="date"
-                    name="date"
-                    value={formData.date}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none"
+                    className={`w-full px-4 py-2 rounded-lg border ${
+                      errors.date ? "border-red-500" : "border-slate-300"
+                    } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
                   />
+                  {errors.date && (
+                    <span className="text-red-500 text-sm">
+                      {errors.date.message}
+                    </span>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
                     Time
                   </label>
                   <input
-                    required
+                    {...register("time")}
                     type="time"
-                    name="time"
-                    value={formData.time}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none"
+                    className={`w-full px-4 py-2 rounded-lg border ${
+                      errors.time ? "border-red-500" : "border-slate-300"
+                    } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
                   />
+                  {errors.time && (
+                    <span className="text-red-500 text-sm">
+                      {errors.time.message}
+                    </span>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
@@ -378,30 +342,44 @@ export function CreateEventModal({
                     Price
                   </label>
                   <input
-                    required
+                    {...register("ticketType.price")}
                     type="number"
-                    name="price"
-                    value={formData.ticketType.price}
-                    onChange={handleChange}
                     min="0"
-                    className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none"
+                    className={`w-full px-4 py-2 rounded-lg border ${
+                      errors.ticketType?.price
+                        ? "border-red-500"
+                        : "border-slate-300"
+                    } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
                   />
+                  {errors.ticketType?.price && (
+                    <span className="text-red-500 text-sm">
+                      {errors.ticketType.price.message}
+                    </span>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
-                    quantity
+                    Quantity
                   </label>
                   <input
-                    required
+                    {...register("ticketType.quantity")}
                     type="number"
-                    name="quantity"
-                    value={formData.ticketType.quantity}
-                    onChange={handleChange}
                     min="0"
-                    className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none"
+                    className={`w-full px-4 py-2 rounded-lg border ${
+                      errors.ticketType?.quantity
+                        ? "border-red-500"
+                        : "border-slate-300"
+                    } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
                   />
+                  {errors.ticketType?.quantity && (
+                    <span className="text-red-500 text-sm">
+                      {errors.ticketType.quantity.message}
+                    </span>
+                  )}
                 </div>
-                <div className="relative">
+
+                {/* Categories Dropdown */}
+                <div className="relative" ref={categoryDropdownRef}>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
                     Categories
                   </label>
@@ -410,11 +388,13 @@ export function CreateEventModal({
                     onClick={() =>
                       setIsCategoryDropdownOpen(!isCategoryDropdownOpen)
                     }
-                    className="w-full px-4 py-2 text-left rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none bg-white flex justify-between items-center"
+                    className={`w-full px-4 py-2 text-left rounded-lg border ${
+                      errors.category ? "border-red-500" : "border-slate-300"
+                    } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none bg-white flex justify-between items-center`}
                   >
                     <span className="text-slate-700 truncate">
-                      {formData.category.length > 0
-                        ? `${formData.category.length} selected`
+                      {selectedCategories?.length > 0
+                        ? `${selectedCategories.length} selected`
                         : "Select categories"}
                     </span>
                     <FaChevronDown
@@ -424,6 +404,11 @@ export function CreateEventModal({
                       size={12}
                     />
                   </button>
+                  {errors.category && (
+                    <span className="text-red-500 text-sm">
+                      {errors.category.message}
+                    </span>
+                  )}
 
                   {isCategoryDropdownOpen && (
                     <div className="absolute z-20 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
@@ -435,12 +420,12 @@ export function CreateEventModal({
                         >
                           <div
                             className={`w-4 h-4 rounded border flex items-center justify-center mr-3 ${
-                              formData.category.includes(cat._id)
+                              selectedCategories?.includes(cat._id)
                                 ? "bg-brand-primary border-brand-primary text-white"
                                 : "border-slate-300"
                             }`}
                           >
-                            {formData.category.includes(cat._id) && (
+                            {selectedCategories?.includes(cat._id) && (
                               <FaCheck size={10} />
                             )}
                           </div>
@@ -451,9 +436,9 @@ export function CreateEventModal({
                   )}
 
                   {/* Selected Categories Chips */}
-                  {formData.category.length > 0 && (
+                  {selectedCategories?.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-2">
-                      {formData.category.map((catId) => {
+                      {selectedCategories.map((catId) => {
                         const cat = categories.find((c) => c._id === catId);
                         return cat ? (
                           <span
@@ -474,13 +459,12 @@ export function CreateEventModal({
                     </div>
                   )}
                 </div>
+
                 <div className="flex items-center gap-4 mt-6">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
+                      {...register("isonline")}
                       type="checkbox"
-                      name="isonline"
-                      checked={formData.isonline}
-                      onChange={handleCheckboxChange}
                       className="w-4 h-4 text-brand-primary rounded border-slate-300 focus:ring-brand-primary"
                     />
                     <span className="text-sm font-medium text-slate-700">
@@ -502,74 +486,116 @@ export function CreateEventModal({
                     Country
                   </label>
                   <input
+                    {...register("location.country")}
                     type="text"
-                    name="location.country"
-                    value={formData.location.country}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none"
+                    className={`w-full px-4 py-2 rounded-lg border ${
+                      errors.location?.country
+                        ? "border-red-500"
+                        : "border-slate-300"
+                    } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
                   />
+                  {errors.location?.country && (
+                    <span className="text-red-500 text-sm">
+                      {errors.location.country.message}
+                    </span>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
                     City
                   </label>
                   <input
+                    {...register("location.city")}
                     type="text"
-                    name="location.city"
-                    value={formData.location.city}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none"
+                    className={`w-full px-4 py-2 rounded-lg border ${
+                      errors.location?.city
+                        ? "border-red-500"
+                        : "border-slate-300"
+                    } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
                   />
+                  {errors.location?.city && (
+                    <span className="text-red-500 text-sm">
+                      {errors.location.city.message}
+                    </span>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
                     District
                   </label>
                   <input
+                    {...register("location.district")}
                     type="text"
-                    name="location.district"
-                    value={formData.location.district}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none"
+                    className={`w-full px-4 py-2 rounded-lg border ${
+                      errors.location?.district
+                        ? "border-red-500"
+                        : "border-slate-300"
+                    } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
                   />
+                  {errors.location?.district && (
+                    <span className="text-red-500 text-sm">
+                      {errors.location.district.message}
+                    </span>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
                     Address
                   </label>
                   <input
+                    {...register("location.address")}
                     type="text"
-                    name="location.address"
-                    value={formData.location.address}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none"
+                    className={`w-full px-4 py-2 rounded-lg border ${
+                      errors.location?.address
+                        ? "border-red-500"
+                        : "border-slate-300"
+                    } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
                   />
+                  {errors.location?.address && (
+                    <span className="text-red-500 text-sm">
+                      {errors.location.address.message}
+                    </span>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
                     Latitude
                   </label>
                   <input
+                    {...register("location.latitude")}
                     type="number"
                     step="any"
-                    name="location.latitude"
-                    value={formData.location.latitude}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none"
+                    className={`w-full px-4 py-2 rounded-lg border ${
+                      errors.location?.latitude
+                        ? "border-red-500"
+                        : "border-slate-300"
+                    } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
                   />
+                  {errors.location?.latitude && (
+                    <span className="text-red-500 text-sm">
+                      {errors.location.latitude.message}
+                    </span>
+                  )}
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
                     Longitude
                   </label>
                   <input
+                    {...register("location.longitude")}
                     type="number"
                     step="any"
-                    name="location.longitude"
-                    value={formData.location.longitude}
-                    onChange={handleChange}
-                    className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none"
+                    className={`w-full px-4 py-2 rounded-lg border ${
+                      errors.location?.longitude
+                        ? "border-red-500"
+                        : "border-slate-300"
+                    } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
                   />
+                  {errors.location?.longitude && (
+                    <span className="text-red-500 text-sm">
+                      {errors.location.longitude.message}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -598,19 +624,24 @@ export function CreateEventModal({
                     accept="image/*,video/*"
                   />
                 </div>
+                {errors.media?.mediaUrl && (
+                  <span className="text-red-500 text-sm">
+                    {errors.media.mediaUrl.message}
+                  </span>
+                )}
 
-                {formData.media.mediaUrl && (
+                {currentMedia?.mediaUrl && (
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                     <div className="relative group aspect-video bg-slate-100 rounded-lg overflow-hidden">
-                      {formData.media.mediaType === "image" ? (
+                      {currentMedia.mediaType === "image" ? (
                         <img
-                          src={formData.media.mediaUrl}
+                          src={currentMedia.mediaUrl}
                           alt="Event Media"
                           className="w-full h-full object-cover"
                         />
                       ) : (
                         <video
-                          src={formData.media.mediaUrl}
+                          src={currentMedia.mediaUrl}
                           className="w-full h-full object-cover"
                         />
                       )}
@@ -632,41 +663,80 @@ export function CreateEventModal({
               <h4 className="font-semibold text-slate-800 border-b pb-2">
                 Tags
               </h4>
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={tagInput}
-                  onChange={(e) => setTagInput(e.target.value)}
-                  placeholder="Add a tag"
-                  className="flex-1 px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none"
-                  onKeyDown={(e) =>
-                    e.key === "Enter" && (e.preventDefault(), handleAddTag())
-                  }
-                />
+              <div className="relative" ref={tagDropdownRef}>
                 <button
                   type="button"
-                  onClick={handleAddTag}
-                  className="p-2 bg-brand-primary text-white rounded-lg hover:opacity-90 transition-opacity"
+                  onClick={() => setIsTagDropdownOpen(!isTagDropdownOpen)}
+                  className={`w-full px-4 py-2 text-left rounded-lg border ${
+                    errors.tags ? "border-red-500" : "border-slate-300"
+                  } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none bg-white flex justify-between items-center`}
                 >
-                  <FaPlus />
-                </button>
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {displayTags.map((tag) => (
-                  <span
-                    key={tag.id}
-                    className="flex items-center gap-1 px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm"
-                  >
-                    {tag.name}
-                    <button
-                      type="button"
-                      onClick={() => removeTag(tag.id)}
-                      className="text-slate-400 hover:text-red-500"
-                    >
-                      <FaTimes size={12} />
-                    </button>
+                  <span className="text-slate-700 truncate">
+                    {selectedTags?.length > 0
+                      ? `${selectedTags.length} selected`
+                      : "Select tags"}
                   </span>
-                ))}
+                  <FaChevronDown
+                    className={`text-slate-400 transition-transform ${
+                      isTagDropdownOpen ? "rotate-180" : ""
+                    }`}
+                    size={12}
+                  />
+                </button>
+                {errors.tags && (
+                  <span className="text-red-500 text-sm">
+                    {errors.tags.message}
+                  </span>
+                )}
+
+                {isTagDropdownOpen && (
+                  <div className="absolute z-20 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+                    {availableTags.map((tag) => (
+                      <div
+                        key={tag._id}
+                        onClick={() => toggleTag(tag._id)}
+                        className="flex items-center px-4 py-2 hover:bg-slate-50 cursor-pointer"
+                      >
+                        <div
+                          className={`w-4 h-4 rounded border flex items-center justify-center mr-3 ${
+                            selectedTags?.includes(tag._id)
+                              ? "bg-brand-primary border-brand-primary text-white"
+                              : "border-slate-300"
+                          }`}
+                        >
+                          {selectedTags?.includes(tag._id) && (
+                            <FaCheck size={10} />
+                          )}
+                        </div>
+                        <span className="text-slate-700">{tag.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Selected Tags Chips */}
+                {selectedTags?.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {selectedTags.map((tagId) => {
+                      const tag = availableTags.find((t) => t._id === tagId);
+                      return tag ? (
+                        <span
+                          key={tagId}
+                          className="flex items-center gap-1 px-3 py-1 bg-slate-100 text-slate-700 rounded-full text-sm"
+                        >
+                          {tag.name}
+                          <button
+                            type="button"
+                            onClick={() => toggleTag(tagId)}
+                            className="text-slate-400 hover:text-red-500"
+                          >
+                            <FaTimes size={12} />
+                          </button>
+                        </span>
+                      ) : null;
+                    })}
+                  </div>
+                )}
               </div>
             </div>
           </form>
@@ -681,7 +751,7 @@ export function CreateEventModal({
             Cancel
           </button>
           <button
-            onClick={handleSubmit}
+            onClick={handleSubmit(onSubmit)}
             disabled={loading || uploading}
             className="px-6 py-2 rounded-lg bg-brand-primary text-white font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
           >
