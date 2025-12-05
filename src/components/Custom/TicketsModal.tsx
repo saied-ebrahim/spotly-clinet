@@ -38,7 +38,7 @@ export default function TicketsModal({
       discount: event.ticketType.discount || 0,
     });
     console.log("url", url);
-
+    if (!url) return;
     window.location.href = url as string;
     
   };
