@@ -19,6 +19,7 @@ import RecommendationList from "@/components/ui/details/RecommendationList";
 import AddToCalendarButton from "@/components/ui/details/AddToCallender";
 import axiosInstance from "@/lib/axios";
 import { EventDocument } from "@/types/eventInterface";
+import { getImageUrl } from "@/utils/general";
 
 // --- 1. Dynamic Import for Map (Disables SSR) ---
 // const EventMap = dynamic(() => import("@/components/ui/details/EventMap"), {
@@ -45,12 +46,12 @@ export default async function EventDetailsPage({
   params: Promise<{ eventId: string }>;
 }) {
   const { eventId } = await params;
-  const getImageUrl = (url?: string) => {
-    console.log(url);
-    if (!url) return "/no-image.jpg";
-    if (url.startsWith("http") || url.startsWith("/")) return url;
-    return `https://${url}`;
-  };
+  // const getImageUrl = (url?: string) => {
+  //   console.log(url);
+  //   if (!url) return "/no-image.jpg";
+  //   if (url.startsWith("http") || url.startsWith("/")) return url;
+  //   return `https://${url}`;
+  // };
   console.log(eventId);
 
   // const res = await fetch("http://localhost:8080/events");
@@ -59,8 +60,8 @@ export default async function EventDetailsPage({
     .then((res) => res.data.data.events)
     .catch((err) => console.error(err));
   // const data = await res.json();
-  const myEvent = data.find((e: EventDocument) => String(e._id) === eventId);
-  const imageUrl = getImageUrl(myEvent.media?.mediaUrl);
+  const myEvent:EventDocument | undefined = data.find((e: EventDocument) => String(e._id) === eventId);
+  const imageUrl = getImageUrl(myEvent?.media?.mediaUrl);
   console.log(myEvent);
 
   // --- Helper Functions ---
@@ -159,10 +160,10 @@ export default async function EventDetailsPage({
                 <FaMapMarkerAlt className="text-gray-400 w-5 h-5 mt-1 shrink-0" />
                 <div>
                   <p className="font-bold">
-                    {myEvent.location.city}, {myEvent.location.country}
+                    {myEvent.location.city + ", " + myEvent.location.country}
                   </p>
                   <p className="text-sm text-gray-500 leading-relaxed mt-1">
-                    {myEvent.location.address}
+                    {myEvent.location.district}
                   </p>
                 </div>
               </div>
@@ -198,7 +199,7 @@ export default async function EventDetailsPage({
                     {/* Placeholder Avatar */}
                     <Image
                       src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=100&h=100"
-                      alt={myEvent.organizer}
+                      alt={myEvent.organizer.firstName + " " + myEvent.organizer.lastName}
                       fill
                       className="object-cover"
                     />

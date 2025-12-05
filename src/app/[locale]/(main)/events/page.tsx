@@ -6,7 +6,7 @@ import { EventCard } from "@/components/Dashboard/Events/EventCard";
 import { DateSelectionModal } from "@/components/Dashboard/Events/DateSelectionModal";
 import { FiChevronDown } from "react-icons/fi";
 import axiosInstance from "@/lib/axios";
-import { EventObject } from "@/types/PaginationInterface";
+
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { EventDocument } from "@/types/eventInterface";
@@ -30,14 +30,22 @@ const EventsPage = () => {
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [customDate, setCustomDate] = useState<string | null>(null);
   const [events, setEvents] = useState<EventDocument[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    axiosInstance
-      .get("/events")
-      .then((res) => {
+    const fetchEvents = async () => {
+      setIsLoading(true);
+      try {
+        const res = await axiosInstance.get("/events");
         setEvents(res.data.data.events);
-      })
-      .catch((err) => console.error(err));
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchEvents();
   }, []);
 
   const handleFilterChange = (
@@ -170,7 +178,7 @@ const EventsPage = () => {
     const matchesLocation =
       location === "" ||
       (event.location?.city &&
-        event.location.city.toLowerCase().includes(location.toLowerCase()))
+        event.location.city.toLowerCase().includes(location.toLowerCase()));
 
     // Price Filter
     const matchesPrice = checkPriceFilter(
@@ -187,15 +195,20 @@ const EventsPage = () => {
         if (category === "Price" || category === "Date") return true; // Handled separately
         if (values.length === 0) return true;
 
-        let eventProperty;
-        if (category === "Category") eventProperty = event.category;
-        else return true;
+        if (category === "Category") {
+          // Check if event belongs to any of the selected categories
+          const eventCategories = Array.isArray(event.category)
+            ? event.category
+            : [event.category];
 
-        if (!eventProperty) return true;
+          return values.some((selectedCat) =>
+            eventCategories.some((cat) =>
+              cat?.name?.toLowerCase().includes(selectedCat.toLowerCase())
+            )
+          );
+        }
 
-        return values.some((val) =>
-          eventProperty.toString().toLowerCase().includes(val.toLowerCase())
-        );
+        return true;
       }
     );
 
@@ -235,12 +248,25 @@ const EventsPage = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {filteredEvents.length > 0 ? (
+            {isLoading ? (
+              <div className="col-span-2 flex justify-center items-center py-20">
+                <div className="flex flex-col items-center gap-4">
+                  <div className="relative w-16 h-16">
+                    <div className="absolute top-0 left-0 w-full h-full border-4 border-blue-200 rounded-full"></div>
+                    <div className="absolute top-0 left-0 w-full h-full border-4 border-transparent border-t-blue-600 rounded-full animate-spin"></div>
+                    <div
+                      className="absolute top-0 left-0 w-full h-full border-4 border-transparent rounded-full animate-spin"
+                      style={{ animationDuration: "1.5s" }}
+                    ></div>
+                  </div>
+                  <p className="text-slate-600 font-medium">
+                    Loading events...
+                  </p>
+                </div>
+              </div>
+            ) : filteredEvents.length > 0 ? (
               filteredEvents.map((event) => (
-                <EventCard
-                  key={event._id}
-                  event={event}
-                />
+                <EventCard key={event._id} event={event} />
               ))
             ) : (
               <div className="col-span-2 text-center py-12 text-slate-500">

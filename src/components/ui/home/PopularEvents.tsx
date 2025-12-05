@@ -4,10 +4,8 @@ import axiosInstance from "@/lib/axios";
 
 import PaginationList from "./PaginationList";
 
-// import filterEvents from "@/components/Custom/filterPopularEvents";
 import filterEvents from "@/utils/home/filterPopularEvents";
-import { EventObject } from "@/types/PaginationInterface";
-// import { Category } from "@/types/CategoryInterface";
+
 import useGeolocation from "@/hooks/useGeolocation";
 import { EventDocument } from "@/types/eventInterface";
 
@@ -20,11 +18,14 @@ const PopularEvents = () => {
   const [events, setEvents] = useState<EventDocument[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("All");
   console.log(events);
-  // const filtered = filterEvents(events, currentFilter);
-  // const filteredEvents = filtered.filter((e) => e.type !== "online");
-  // const filteredEvents = filterEvents(events, currentFilter);
+  const filtered = filterEvents(events, currentFilter);
+  const filteredEvents = filtered.filter((e) => e.type !== "online");
+  // the filter below is for choosing event in the city of the user
+  // const filteredEvents = filtered.filter((e) => e.type !== "online" && e.location.district === city);
+
 
   useEffect(() => {
+ 
     axiosInstance
       .get("/events")
       .then((res) => {
@@ -37,7 +38,8 @@ const PopularEvents = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 font-sans">
         {/* Header */}
         <h2 className="text-3xl font-bold text-gray-900 mb-6">
-          Popular Events in {city || "Your Location"}
+          {/* Popular Events in {city || "Your Location"} */}
+          Popular Events
         </h2>
 
         {/* Filter Buttons */}
@@ -62,8 +64,8 @@ const PopularEvents = () => {
             Browse through our latest events and workshops.
           </p>
         </div>
-        {events.length > 0 ? (
-          <PaginationList itemsPerPage={6} allEvents={events} /> // this is a COMMON COMPONENT for pagination
+        {filteredEvents.length > 0 ? (
+          <PaginationList itemsPerPage={6} allEvents={filteredEvents} /> // this is a COMMON COMPONENT for pagination
         ) : (
           <h1 className="text-center w-full text-xl">No Events Found</h1>
         )}
