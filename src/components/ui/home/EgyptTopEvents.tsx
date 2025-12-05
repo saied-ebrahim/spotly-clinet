@@ -45,28 +45,46 @@ export default function EgyptTopEvents() {
   };
 
   // Enrich events with formatted registeredCount for display, then sort by numeric value
-  type EnrichedEvent = (typeof topEvents)[number] & {
-    registeredCount?: string;
-  };
-  const enrichedEvents: EnrichedEvent[] = topEvents.map((e) => {
+  // type EnrichedEvent = (typeof topEvents)[number] & {
+  //   registeredCount?: string;
+  // };
+  // const enrichedEvents: EnrichedEvent[] = topEvents.map((e) => {
+  //   const legacy = e as unknown as { registeredCount?: string };
+  //   const numericSold =
+  //     e.analytics?.ticketsSold ?? parseCount(legacy.registeredCount);
+  //   return {
+  //     ...(e as EnrichedEvent),
+  //     registeredCount: formatCount(numericSold),
+  //   } as EnrichedEvent;
+  // });
+
+  // const sortedEvents = [...enrichedEvents].sort(
+  //   (a: EnrichedEvent, b: EnrichedEvent) => {
+  //     return (
+  //       parseCount(String(b.registeredCount)) -
+  //       parseCount(String(a.registeredCount))
+  //     );
+  //   }
+  // );
+  const enrichedEvents: EgyptTopEventInterace[] = topEvents.map((e) => {
     const legacy = e as unknown as { registeredCount?: string };
     const numericSold =
       e.analytics?.ticketsSold ?? parseCount(legacy.registeredCount);
     return {
-      ...(e as EnrichedEvent),
+      ...(e as EgyptTopEventInterace),
       registeredCount: formatCount(numericSold),
-    } as EnrichedEvent;
+    } as EgyptTopEventInterace;
   });
 
   const sortedEvents = [...enrichedEvents].sort(
-    (a: EnrichedEvent, b: EnrichedEvent) => {
+    (a: EgyptTopEventInterace, b: EgyptTopEventInterace) => {
       return (
-        parseCount(String(b.registeredCount)) -
-        parseCount(String(a.registeredCount))
+        parseCount(String(b.analytics?.ticketsSold)) -
+        parseCount(String(a.analytics?.ticketsSold))
       );
     }
   );
-
+// ---------------
   // 3. SPLIT THE DATA instead of slicing one array
   // We keep the first 3 separate so they are always visible
   const initialEvents = sortedEvents.slice(0, 3);

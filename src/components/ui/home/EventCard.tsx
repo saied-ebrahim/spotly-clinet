@@ -39,7 +39,7 @@ export const getCategoryColor = (category: string) => {
 const EventCard = ({ event }: { event: EventDocument }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const { toggleFavorite } = useFavoriteStore();
-
+console.log(event)
  const handleAddFavorites = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -118,7 +118,7 @@ const EventCard = ({ event }: { event: EventDocument }) => {
               {formatTime(event.time)}
             </p>
             <p className="text-xs text-gray-400 mb-3 truncate">
-              {`${event.location.city === "Alexandria" ? "Alex" : event.location.city}/${event.location.district}`}
+              {`${event.location?.city === "Alexandria" ? "Alex" : event.location?.city}/${event.location?.district}`}
             </p>
             </div>
 

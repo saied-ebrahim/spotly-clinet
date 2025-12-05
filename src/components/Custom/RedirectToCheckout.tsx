@@ -4,6 +4,11 @@
 import axiosInstance from "@/lib/axios";
 import { AxiosError } from "axios";
 import { useRouter } from "next/router";
+import Cookies from "js-cookie";
+import { decryptData } from "@/shared/encryption";
+import { toast, ToastContainer } from "react-toastify";
+
+
 
 // 1. Define the shape of your payload
 export interface CheckoutPayload {
@@ -32,7 +37,15 @@ export async function performCheckout(
   // Since your axiosInstance baseURL is '/api/v1', we just append the specific endpoint.
   // Resulting URL: /api/v1/checkout/
  // const url = "/checkoaut/";
+ const encrypted = Cookies.get("token");
+const token = encrypted ? (decryptData(encrypted) as any)?.token : null;
   console.log("payload", payload);
+  console.log("token", token);
+  if (!token) {
+   
+    toast.error("Please login first");
+    return null
+  };
   try {
   
     const { data } = await axiosInstance.post<CheckoutResponse>("/checkout/", {

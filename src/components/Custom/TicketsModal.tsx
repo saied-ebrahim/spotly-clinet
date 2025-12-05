@@ -9,6 +9,7 @@ import Link from "next/link";
 import { EventDocument } from "@/types/eventInterface";
 import { performCheckout } from "./RedirectToCheckout";
 import { useRouter } from "next/router";
+import { ToastContainer } from "react-toastify";
 
 export default function TicketsModal({
   isOpen,
@@ -136,6 +137,7 @@ export default function TicketsModal({
           </button>
         </div>
       </div>
+        <ToastContainer />
     </div>,
     document.body // Target container
   );
