@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { FiStar, FiTag } from "react-icons/fi";
-import { EventObject } from "@/types/PaginationInterface";
+
 import Link from "next/link";
 import { formatTime, getMonthDay } from "@/utils/details/formatting";
 import { EventDocument } from "@/types/eventInterface";
@@ -8,98 +8,7 @@ import useFavoriteStore from "@/hooks/useFavorateStore";
 import { useEffect, useState } from "react";
 import { getImageUrl } from "@/utils/general";
 
-// const EventCard = ({ event }: { event: EventObject }) => {
-//   const handleAddFavorites = (e: React.MouseEvent<HTMLButtonElement>) => {
-//     // 1. Prevent the default button behavior
-//     e.preventDefault();
-//     // 2. STOP the event from bubbling up to the parent <Link>
-//     e.stopPropagation();
 
-//     console.log(`Added event ID ${event.id} to favorites!`);
-//   };
-//   return (
-//     <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 font-sans relative group">
-//       {/* 1. The Link wraps the content, but NOT the button */}
-//       <Link href={`/events/${event.id}`} className="block h-full">
-//         {/* Image Header Section */}
-//         <div className="relative h-48 overflow-hidden">
-//           <Image
-//             src={event.imageUrl}
-//             alt={event.title}
-//             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-//             fill
-//           />
-
-//           <span
-//             className={`absolute bottom-3 left-3 text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm ${event.categoryColor}`}
-//           >
-//             {event.category}
-//           </span>
-//         </div>
-
-//         {/* Content Section */}
-//         <div className="p-4 flex gap-4">
-//           {/* Date Block (Left side) */}
-//           <div className="flex flex-col items-center text-blue-700 shrink-0">
-//             <span className="text-sm font-bold uppercase tracking-wide">
-//               {event.month}
-//             </span>
-//             <span className="text-2xl font-extrabold leading-none mt-1">
-//               {event.date}
-//             </span>
-//           </div>
-
-//           {/* Details Block (Right side) */}
-//           <div className="flex flex-col gap-1 grow font-medium">
-//             <h3 className="text-lg leading-tight font-bold text-gray-900 line-clamp-2 h-[45px]">
-//               {event.title}
-//             </h3>
-//             <p className="text-xs text-gray-500 truncate">{event.organizer}</p>
-//             <p className="text-xs text-gray-400 mb-3">{event.time}</p>
-
-//             {/* Price and Interest Footer */}
-//             <div className="flex items-center justify-between mt-auto pt-2 border-t border-dashed border-gray-100">
-//               {/* Price Section */}
-//               <div
-//                 className={`flex items-center gap-1 text-sm ${
-//                   parseInt(event.price) === 0
-//                     ? "text-green-600 font-bold"
-//                     : "text-gray-700"
-//                 }`}
-//               >
-//                 <FiTag
-//                   size={14}
-//                   className={
-//                     parseInt(event.price) === 0
-//                       ? "text-green-600"
-//                       : "text-gray-400"
-//                   }
-//                 />
-//                 <span>{event.price}</span>
-//               </div>
-
-//               {/* Interest Section */}
-//               {event.interested > 0 && (
-//                 <div className="flex items-center gap-1 text-xs text-gray-500 font-semibold">
-//                   <FiStar size={14} className="text-blue-600 fill-blue-600" />
-//                   <span>{event.interested} interested</span>
-//                 </div>
-//               )}
-//             </div>
-//           </div>
-//         </div>
-//       </Link>
-
-//       <button
-//         type="button"
-//         onClick={handleAddFavorites}
-//         className="absolute top-3 right-3 bg-white/90 p-2 rounded-full shadow-sm hover:text-red-500 transition-colors z-20 cursor-pointer"
-//       >
-//         <FiHeart size={18} />
-//       </button>
-//     </div>
-//   );
-// };
 const colors = [
 "bg-red-500 text-white",
   "bg-orange-500 text-white",
@@ -118,24 +27,15 @@ const colors = [
 
 export const getCategoryColor = (category: string) => {
   let hash = 0;
-  // Iterate through characters to create a number sum
   for (let i = 0; i < category.length; i++) {
     hash = category.charCodeAt(i) + ((hash << 5) - hash);
   }
-  
-  // Use modulo to ensure the index is always within the array bounds
   const index = Math.abs(hash % colors.length);
-  
   return colors[index];
 };
-// const getImageUrl = (url?: string) => {
-//   if (!url) return "/events.json";
-//   if (url.startsWith("http") || url.startsWith("/")) return url;
-//   return `https://${url}`;
-// };
 
 
-// let colorsText = ["text-blue-600", "text-green-600", "text-red-600", "text-yellow-600"];
+
 const EventCard = ({ event }: { event: EventDocument }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const { toggleFavorite } = useFavoriteStore();
@@ -163,16 +63,16 @@ const EventCard = ({ event }: { event: EventDocument }) => {
 
   return (
     <div className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 font-sans relative flex flex-col h-full w-full max-w-sm mx-auto">
-      {/* 1. The anchor wraps the content, but NOT the button */}
-      {/* Replaced Next.js Link with standard anchor tag for preview compatibility */}
+    
       <Link href={`/events/${event._id}`} className="flex flex-col h-full text-inherit no-underline">
         {/* Image Header Section - Responsive Height */}
         <div className="relative h-40 sm:h-48 w-full shrink-0 overflow-hidden bg-gray-100">
           {/* Replaced Next.js Image with standard img tag */}
-          <img
+          <Image
             src={imageUrl}
             alt={event.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            fill
           />
 
           <span
