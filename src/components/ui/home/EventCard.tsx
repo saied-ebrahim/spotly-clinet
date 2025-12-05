@@ -2,7 +2,7 @@ import Image from "next/image";
 import { FiStar, FiTag } from "react-icons/fi";
 import { EventObject } from "@/types/PaginationInterface";
 import Link from "next/link";
-import { getMonthDay } from "@/utils/details/formatting";
+import { formatTime, getMonthDay } from "@/utils/details/formatting";
 import { EventDocument } from "@/types/eventInterface";
 import useFavoriteStore from "@/hooks/useFavorateStore";
 import { useEffect, useState } from "react";
@@ -357,18 +357,23 @@ const EventCard = ({ event }: { event: EventDocument }) => {
           </div>
 
           {/* Details Block (Right side) - Flex Grow to fill space */}
-          <div className="flex flex-col gap-1 grow font-medium min-w-0">
+          <div className="flex flex-col gap-1 grow font-medium min-w-0 pr-3">
             {/* Title - Responsive Text & Auto Height */}
             <h3 className="text-base sm:text-lg leading-tight font-bold text-gray-900 line-clamp-2 min-h-[2.5rem]">
               {event.title}
             </h3>
             
-            <p className="text-xs text-gray-500 truncate w-full">
+            <p className="text-sm text-gray-500 truncate w-full">
               {event.organizer.firstName + " " + event.organizer.lastName}
             </p>
+            <div className="flex justify-between gap-1 items-center">
             <p className="text-xs text-gray-400 mb-3 truncate">
-              {event.time}
+              {formatTime(event.time)}
             </p>
+            <p className="text-xs text-gray-400 mb-3 truncate">
+              {`${event.location.city === "Alexandria" ? "Alex" : event.location.city}/${event.location.district}`}
+            </p>
+            </div>
 
             {/* Price and Interest Footer - Pushed to bottom */}
             {/* <div className="flex relative -left-[3rem]  items-center justify-between mt-auto pt-3 border-t border-dashed border-gray-100 w-[calc(100%+2rem)]">
@@ -399,7 +404,7 @@ const EventCard = ({ event }: { event: EventDocument }) => {
                 </div>
               )}
             </div> */}
-            <div className="flex items-center justify-between mt-auto pt-3 border-t border-dashed border-gray-100 w-full">
+            <div className={`flex items-center justify-between mt-auto pt-3 border-t border-dashed border-gray-100 w-full ${event.analytics.likes > 0 ? "pr-0" : "pr-5"}`}>
               {/* Price Section */}
               <div
                 className={`flex items-center gap-1 text-xs sm:text-sm ${
@@ -422,12 +427,12 @@ const EventCard = ({ event }: { event: EventDocument }) => {
               </div>
 
               {/* Interest Section */}
-              {event.analytics.likes > 0 && (
+              {event.analytics.likes > 0 ? (
                 <div className="flex items-center gap-1 text-[10px] sm:text-xs text-gray-500 font-semibold ml-2">
                   <FiStar size={12} className="text-blue-600 fill-blue-600 shrink-0 sm:w-[14px] sm:h-[14px]" />
                   <span className="whitespace-nowrap">{interested} interested</span>
                 </div>
-              )}
+              ) : <span></span>}
             </div>
           </div>
         </div>

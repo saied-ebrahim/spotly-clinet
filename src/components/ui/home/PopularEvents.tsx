@@ -20,8 +20,8 @@ const PopularEvents = () => {
   const [events, setEvents] = useState<EventDocument[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("All");
   console.log(events);
-  // const filtered = filterEvents(events, currentFilter);
-  // const filteredEvents = filtered.filter((e) => e.type !== "online");
+  const filtered = filterEvents(events, currentFilter);
+  const filteredEvents = filtered.filter((e) => e.type !== "online");
   // const filteredEvents = filterEvents(events, currentFilter);
 
   useEffect(() => {
@@ -68,8 +68,8 @@ const PopularEvents = () => {
             Browse through our latest events and workshops.
           </p>
         </div>
-        {events.length > 0 ? (
-          <PaginationList itemsPerPage={6} allEvents={events} /> // this is a COMMON COMPONENT for pagination
+        {filteredEvents.length > 0 ? (
+          <PaginationList itemsPerPage={6} allEvents={filteredEvents} /> // this is a COMMON COMPONENT for pagination
         ) : (
           <h1 className="text-center w-full text-xl">No Events Found</h1>
         )}
