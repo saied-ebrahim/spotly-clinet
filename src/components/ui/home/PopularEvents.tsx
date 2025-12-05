@@ -4,10 +4,8 @@ import axiosInstance from "@/lib/axios";
 
 import PaginationList from "./PaginationList";
 
-// import filterEvents from "@/components/Custom/filterPopularEvents";
 import filterEvents from "@/utils/home/filterPopularEvents";
-import { EventObject } from "@/types/PaginationInterface";
-// import { Category } from "@/types/CategoryInterface";
+
 import useGeolocation from "@/hooks/useGeolocation";
 import { EventDocument } from "@/types/eventInterface";
 
@@ -22,15 +20,12 @@ const PopularEvents = () => {
   console.log(events);
   const filtered = filterEvents(events, currentFilter);
   const filteredEvents = filtered.filter((e) => e.type !== "online");
-  // const filteredEvents = filterEvents(events, currentFilter);
+  // the filter below is for choosing event in the city of the user
+  // const filteredEvents = filtered.filter((e) => e.type !== "online" && e.location.district === city);
+
 
   useEffect(() => {
-    // axiosInstance
-    //   .get("/events/")
-    //   .then((res) => {
-    //     setEvents(res.data.data.events);
-    //   })
-    //   .catch((err) => console.error(err));
+ 
     axiosInstance
       .get("/events")
       .then((res) => {

@@ -19,6 +19,7 @@ import RecommendationList from "@/components/ui/details/RecommendationList";
 import AddToCalendarButton from "@/components/ui/details/AddToCallender";
 import axiosInstance from "@/lib/axios";
 import { EventDocument } from "@/types/eventInterface";
+import { getImageUrl } from "@/utils/general";
 
 // --- 1. Dynamic Import for Map (Disables SSR) ---
 // const EventMap = dynamic(() => import("@/components/ui/details/EventMap"), {
@@ -45,12 +46,12 @@ export default async function EventDetailsPage({
   params: Promise<{ eventId: string }>;
 }) {
   const { eventId } = await params;
-  const getImageUrl = (url?: string) => {
-    console.log(url);
-    if (!url) return "/no-image.jpg";
-    if (url.startsWith("http") || url.startsWith("/")) return url;
-    return `https://${url}`;
-  };
+  // const getImageUrl = (url?: string) => {
+  //   console.log(url);
+  //   if (!url) return "/no-image.jpg";
+  //   if (url.startsWith("http") || url.startsWith("/")) return url;
+  //   return `https://${url}`;
+  // };
   console.log(eventId);
 
   // const res = await fetch("http://localhost:8080/events");

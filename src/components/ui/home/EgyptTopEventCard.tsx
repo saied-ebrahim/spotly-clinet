@@ -1,5 +1,7 @@
 import { EgyptTopEventInterace } from "@/types/EgyptTopEventInterface";
-import { EventDocument } from "@/types/eventInterface";
+import { getMonthDay } from "@/utils/details/formatting";
+
+import { getImageUrl } from "@/utils/general";
 import Image from "next/image";
 import Link from "next/link";
 import { FiCalendar, FiUsers } from "react-icons/fi";
@@ -26,11 +28,7 @@ export default function EgyptTopEventCard({
     image?: string;
     registeredCount?: string;
   };
-  const getImageUrl = (url?: string) => {
-    if (!url) return "/placeholder-event.jpg";
-    if (url.startsWith("http") || url.startsWith("/")) return url;
-    return `https://${url}`;
-  };
+  const { month, date: dayDate } = getMonthDay(event.date);
 
   const imageUrl = getImageUrl(event.media?.mediaUrl || legacy.image);
   // local formatter to match EgyptTopEvents formatting (e.g. 1200 -> 1.2k+)
@@ -72,7 +70,7 @@ export default function EgyptTopEventCard({
   return (
     <Link href={`/events/${event._id}`}>
       <div
-        className={`mb-10 bg-linear-to-r ${colorClass} p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-8`}
+        className={`mb-10 bg-linear-to-r ${colorClass} p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col lg:flex-row items-center space-y-4 lg:space-y-0 lg:space-x-8 px-4 sm:px-6 lg:px-8`}
       >
         {/* Image Section */}
         <div className="relative lg:w-1/3 w-full h-48 lg:h-64">
@@ -95,16 +93,12 @@ export default function EgyptTopEventCard({
 
           <h3 className="text-3xl font-extrabold mb-3">{event.title}</h3>
 
-          <p className="mb-4 text-emerald-100">{event.description}</p>
+          <p className="mb-4 text-emerald-100 line-clamp-2">{event.description}</p>
 
           <div className="flex text-left items-center space-x-6 text-sm">
             <span className="flex gap-2 items-center font-medium">
               <FiCalendar />
-              <span>{`${new Date(event.date).toLocaleDateString(undefined, {
-                year: "numeric",
-                day: "numeric",
-                month: "short",
-              })}`}</span>
+              <span>{`${month} ${dayDate}`}</span>
             </span>
 
             <span className="flex gap-2 items-center font-medium">
