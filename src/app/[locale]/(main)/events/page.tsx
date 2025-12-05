@@ -6,7 +6,7 @@ import { EventCard } from "@/components/Dashboard/Events/EventCard";
 import { DateSelectionModal } from "@/components/Dashboard/Events/DateSelectionModal";
 import { FiChevronDown } from "react-icons/fi";
 import axiosInstance from "@/lib/axios";
-import { EventObject } from "@/types/PaginationInterface";
+
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { EventDocument } from "@/types/eventInterface";
@@ -170,7 +170,7 @@ const EventsPage = () => {
     const matchesLocation =
       location === "" ||
       (event.location?.city &&
-        event.location.city.toLowerCase().includes(location.toLowerCase()))
+        event.location.city.toLowerCase().includes(location.toLowerCase()));
 
     // Price Filter
     const matchesPrice = checkPriceFilter(
@@ -187,15 +187,20 @@ const EventsPage = () => {
         if (category === "Price" || category === "Date") return true; // Handled separately
         if (values.length === 0) return true;
 
-        let eventProperty;
-        if (category === "Category") eventProperty = event.category;
-        else return true;
+        if (category === "Category") {
+          // Check if event belongs to any of the selected categories
+          const eventCategories = Array.isArray(event.category)
+            ? event.category
+            : [event.category];
 
-        if (!eventProperty) return true;
+          return values.some((selectedCat) =>
+            eventCategories.some((cat) =>
+              cat?.name?.toLowerCase().includes(selectedCat.toLowerCase())
+            )
+          );
+        }
 
-        return values.some((val) =>
-          eventProperty.toString().toLowerCase().includes(val.toLowerCase())
-        );
+        return true;
       }
     );
 
@@ -237,10 +242,7 @@ const EventsPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {filteredEvents.length > 0 ? (
               filteredEvents.map((event) => (
-                <EventCard
-                  key={event._id}
-                  event={event}
-                />
+                <EventCard key={event._id} event={event} />
               ))
             ) : (
               <div className="col-span-2 text-center py-12 text-slate-500">
