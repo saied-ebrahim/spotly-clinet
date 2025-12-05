@@ -96,16 +96,10 @@ const PaginatedEvents = ({
   const nextPage = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
   const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
-  //   console.log(allEvents.length);
-  //   console.log(itemsPerPage);
+
   return (
     <div className="max-w-7xl mx-auto">
-      {/* <div className="mb-8 text-center sm:text-left">
-        <h2 className="text-3xl font-bold text-gray-900">Upcoming Events</h2>
-        <p className="text-gray-500 mt-2">
-          Browse through our latest events and workshops.
-        </p>
-      </div> */}
+     
 
       <div
         key={currentPage}
