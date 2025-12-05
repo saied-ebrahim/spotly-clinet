@@ -4,6 +4,8 @@ import { EventObject } from "@/types/PaginationInterface";
 import Link from "next/link";
 import { getMonthDay } from "@/utils/details/formatting";
 import { EventDocument } from "@/types/eventInterface";
+import useFavoriteStore from "@/hooks/useFavorateStore";
+import { useEffect, useState } from "react";
 
 // const EventCard = ({ event }: { event: EventObject }) => {
 //   const handleAddFavorites = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -130,15 +132,17 @@ const getImageUrl = (url?: string) => {
   if (url.startsWith("http") || url.startsWith("/")) return url;
   return `https://${url}`;
 };
+
+
 // let colorsText = ["text-blue-600", "text-green-600", "text-red-600", "text-yellow-600"];
 const EventCard = ({ event }: { event: EventDocument }) => {
-  const handleAddFavorites = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // 1. Prevent the default button behavior
-    // e.preventDefault();
-    // // 2. STOP the event from bubbling up to the parent anchor tag
-    // e.stopPropagation();
-
-    console.log(`Added event ID ${event._id} to favorites!`);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const { toggleFavorite } = useFavoriteStore();
+ const handleAddFavorites = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsAnimating(true);
+    toggleFavorite(event._id);
   };
 // event.analytics.likes+=100
   // Extract month and date from event.date (YYYY-MM-DD format)
@@ -151,10 +155,17 @@ const EventCard = ({ event }: { event: EventDocument }) => {
   //   return { month, date: day };
   // };
 
-
+  useEffect(() => {
+    if (isAnimating) {
+      const timer = setTimeout(() => setIsAnimating(false), 300); // 300ms matches CSS duration
+      return () => clearTimeout(timer);
+    }
+  }, [isAnimating]);
   const { month, date: dayDate } = getMonthDay(event.date);
   const imageUrl = getImageUrl(event.media?.mediaUrl);
   const interested = event.analytics?.likes || 0;
+
+  const isFavorite = useFavoriteStore((state) => state.favorites.includes(event._id));
 
   // return (
   //   <div className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 font-sans relative flex flex-col h-full w-full max-w-sm mx-auto">
@@ -321,7 +332,7 @@ const EventCard = ({ event }: { event: EventDocument }) => {
           <div className="absolute flex gap-1 bottom-3 left-3">
 
           {event.category.length > 0 && event.category.map((category) => (
-            <span className={`text-[10px] text-uppercase font-semibold tracking-wider px-2 py-1 rounded-sm ${getCategoryColor(category.name)} text-white bg-opacity-90`}>
+            <span className={`text-[10px] uppercase font-semibold tracking-wider px-2 py-1 rounded-sm ${getCategoryColor(category.name)} text-white bg-opacity-90`}>
               {category.name}
             </span>
           ))}
@@ -422,13 +433,24 @@ const EventCard = ({ event }: { event: EventDocument }) => {
         </div>
       </Link>
 
-      <button
+    
+         <button
         type="button"
         onClick={handleAddFavorites}
-        className="absolute top-3 right-3 bg-white/90 p-2 rounded-full shadow-sm hover:text-red-500 transition-colors z-20 cursor-pointer active:scale-95 text-gray-600"
-        aria-label="Add to favorites"
+        className={`absolute top-3 right-3 p-2 rounded-full shadow-sm transition-all duration-300 z-20 cursor-pointer 
+          ${isFavorite 
+            ? "bg-red-50 text-yellow-500 hover:bg-yellow-100" 
+            : "bg-white/90 text-gray-400 hover:text-yellow-500 hover:bg-white"
+          }
+          ${isAnimating ? "scale-125 shadow-md ring-2 ring-yellow-100" : "hover:scale-110 active:scale-95"}
+        `}
+        aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
       >
-        <FiStar size={18} />
+        <FiStar 
+          size={18} 
+          fill={isFavorite ? "currentColor" : "none"} 
+          className={`transition-transform duration-300 ${isAnimating ? "scale-110" : ""}`}
+        />
       </button>
     </div>
   );
