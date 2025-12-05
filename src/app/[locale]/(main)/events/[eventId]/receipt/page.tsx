@@ -10,12 +10,12 @@ function page() {
     title: "Midnight Jazz Festival 2025",
     description: "Live at the Blue Note Pavilion",
     date: "Saturday, Nov 15, 2025",
-    time: "20:00 - 23:30",
-    type: "Concert",
+    time: "20:00",
+    type: "Hybrid",
     location: {
-      city: "New York",
-      country: "USA",
-      district: "Blue Note Pavilion, 12th Ave",
+      city: "Cairo",
+      country: "Egypt",
+      district: "New Cairo",
       latitude: 40.7128,
       longitude: -74.0060
     },
@@ -38,10 +38,10 @@ function page() {
     },
     ticketType: {
       ticketID: "vip-tier-1",
-      title: "VIP Front Row Experience",
+      title: "Standard Ticket",
       price: 145.00,
       quantity: 1,
-      discount: 5.00
+      discount: 0.5
     },
     analytics: {
       ticketsSold: 450,
@@ -56,9 +56,9 @@ function page() {
     receiptNo: "N 842",
     purchaseDate: "10.24.2025 14:30",
     orderId: "ORD-992831",
-    attendee: "Alex Richardson",
+    attendee: "Ahmed Mohamed",
     seat: "Row A, Seat 12",
-    fees: 12.50,
+    
   };
   const total = eventData.ticketType.price + eventData.ticketType.discount;
 
