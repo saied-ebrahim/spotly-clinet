@@ -8,6 +8,7 @@ export interface EventDocument {
   location: location;
   media: MediaItem;
   tags: tags[];
+  favorites: string[];
   category: category[];
   organizer: organizer;
   ticketType: ticket;
@@ -19,8 +20,10 @@ interface MediaItem {
 }
 interface location {
   city: string;
-  country: string;
-  district?: string; 
+  country?: string;
+  district: string; 
+  latitude: number;
+  longitude: number;
 }
 interface category {
   _id: string;
