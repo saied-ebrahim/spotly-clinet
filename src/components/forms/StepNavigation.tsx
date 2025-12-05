@@ -1,15 +1,9 @@
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 import { useLocale } from "next-intl";
+import { StepNavigationProps } from "@/types/StepNavigationProps";
 
-interface StepNavigationProps {
-  currentStep: number;
-  totalSteps: number;
-  onBack: () => void;
-  isNextDisabled?: boolean;
-  nextLabel?: string;
-  backLabel?: string;
-}
+
 
 export default function StepNavigation({
   currentStep,

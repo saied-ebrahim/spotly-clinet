@@ -10,7 +10,6 @@ import {
   FaMapMarkerAlt,
   FaExternalLinkAlt,
 } from "react-icons/fa";
-import { EventObject } from "@/types/PaginationInterface";
 
 import EventMap from "@/components/ui/details/EventMap";
 import { formatDate } from "@/utils/details/formatting";
