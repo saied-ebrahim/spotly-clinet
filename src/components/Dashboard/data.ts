@@ -8,6 +8,7 @@ import {
   FiSettings,
   FiTag,
   FiUser,
+  FiPackage,
 } from "react-icons/fi";
 
 export type NavItem = {
@@ -47,6 +48,13 @@ export const navSections: NavSection[] = [
         icon: FiShoppingBag,
         key: "orders",
         link: "orders",
+      },
+      {
+        label: "Sold Products",
+        icon: FiPackage,
+        key: "sold-products",
+        link: "sold-products",
+        allowedRoles: ["Organizer"],
       },
       {
         label: "Tags",
