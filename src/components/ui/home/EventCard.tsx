@@ -39,12 +39,12 @@ export const getCategoryColor = (category: string) => {
 const EventCard = ({ event }: { event: EventDocument }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const { toggleFavorite } = useFavoriteStore();
-
+console.log(event)
  const handleAddFavorites = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setIsAnimating(true);
-    toggleFavorite(event._id);
+    toggleFavorite(event);
   };
 
 
@@ -58,7 +58,7 @@ const EventCard = ({ event }: { event: EventDocument }) => {
   const imageUrl = getImageUrl(event.media?.mediaUrl);
   const interested = event.analytics?.likes || 0;
 
-  const isFavorite = useFavoriteStore((state) => state.favorites.includes(event._id));
+  const isFavorite = useFavoriteStore((state) => state.favorites.includes(event));
 
 
   return (
@@ -83,7 +83,7 @@ const EventCard = ({ event }: { event: EventDocument }) => {
           <div className="absolute flex gap-1 bottom-3 left-3">
 
           {event.category.length > 0 && event.category.map((category) => (
-            <span className={`text-[10px] uppercase font-semibold tracking-wider px-2 py-1 rounded-sm ${getCategoryColor(category.name)} text-white bg-opacity-90`}>
+            <span key={category._id} className={`text-[10px] uppercase font-semibold tracking-wider px-2 py-1 rounded-sm ${getCategoryColor(category.name)} text-white bg-opacity-90`}>
               {category.name}
             </span>
           ))}
@@ -118,7 +118,7 @@ const EventCard = ({ event }: { event: EventDocument }) => {
               {formatTime(event.time)}
             </p>
             <p className="text-xs text-gray-400 mb-3 truncate">
-              {`${event.location.city === "Alexandria" ? "Alex" : event.location.city}/${event.location.district}`}
+              {`${event.location?.city === "Alexandria" ? "Alex" : event.location?.city}/${event.location?.district}`}
             </p>
             </div>
 

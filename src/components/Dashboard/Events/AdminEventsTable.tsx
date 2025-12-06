@@ -54,7 +54,9 @@ export function AdminEventsTable({ initialData }: AdminEventsTableProps) {
 
   const handleConfirmDelete = () => {
     if (selectedEvent) {
-      setRowData((prev) => prev.filter((item) => item._id !== selectedEvent._id));
+      setRowData((prev) =>
+        prev.filter((item) => item._id !== selectedEvent._id)
+      );
       axiosInstance.delete(`/events/${selectedEvent._id}`);
       setIsDeleteModalOpen(false);
       setSelectedEvent(null);
@@ -64,6 +66,29 @@ export function AdminEventsTable({ initialData }: AdminEventsTableProps) {
   const columnDefs: ColDef<EventDocument>[] = useMemo(
     () => [
       { field: "_id", headerName: "ID", width: 70, sortable: true, hide: true },
+      {
+        headerName: "Image",
+        field: "media.mediaUrl",
+        width: 100,
+        cellRenderer: (params: { data: EventDocument }) => {
+          const imageUrl = params.data.media?.mediaUrl;
+          return (
+            <div className="flex items-center justify-center h-full">
+              {imageUrl ? (
+                <img
+                  src={imageUrl}
+                  alt={params.data.title}
+                  className="w-10 h-10 rounded-lg object-cover"
+                />
+              ) : (
+                <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-xs text-slate-400">
+                  N/A
+                </div>
+              )}
+            </div>
+          );
+        },
+      },
       {
         field: "title",
         headerName: "Title",
@@ -89,6 +114,26 @@ export function AdminEventsTable({ initialData }: AdminEventsTableProps) {
         flex: 1,
         minWidth: 120,
         sortable: true,
+        valueFormatter: (params) => {
+          return params.value ? params.value.split("T")[0] : "";
+        },
+      },
+      {
+        field: "time",
+        headerName: "Time",
+        flex: 1,
+        minWidth: 100,
+        sortable: true,
+      },
+      {
+        field: "createdAt",
+        headerName: "Created At",
+        flex: 1,
+        minWidth: 120,
+        sortable: true,
+        valueFormatter: (params) => {
+          return params.value ? params.value.split("T")[0] : "";
+        },
       },
       {
         field: "location.city",
@@ -97,7 +142,12 @@ export function AdminEventsTable({ initialData }: AdminEventsTableProps) {
         minWidth: 150,
         sortable: true,
       },
-      { field: "ticketType.price", headerName: "Price", width: 100, sortable: true },
+      {
+        field: "ticketType.price",
+        headerName: "Price",
+        width: 100,
+        sortable: true,
+      },
       {
         headerName: "Actions",
         width: 120,

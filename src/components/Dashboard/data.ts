@@ -6,6 +6,8 @@ import {
   FiTrendingUp,
   FiDollarSign,
   FiSettings,
+  FiTag,
+  FiUser,
 } from "react-icons/fi";
 
 export type NavItem = {
@@ -17,6 +19,7 @@ export type NavItem = {
   link?: string;
   parentLink?: string;
   dependentParent?: boolean;
+  allowedRoles?: string[];
 };
 
 export type NavSection = {
@@ -44,6 +47,20 @@ export const navSections: NavSection[] = [
         icon: FiShoppingBag,
         key: "orders",
         link: "orders",
+      },
+      {
+        label: "Tags",
+        icon: FiTag,
+        key: "tags",
+        link: "tags",
+        allowedRoles: ["Admin"],
+      },
+      {
+        label: "Users",
+        icon: FiUser,
+        key: "users",
+        link: "users",
+        allowedRoles: ["Admin"],
       },
       {
         label: "Marketing",

@@ -1,17 +1,10 @@
 "use client";
 
+import { ConfirmationModalProps } from "@/types/components/modals/ConfirmationModalProps";
 import { useEffect } from "react";
 import { FaExclamationTriangle, FaTimes } from "react-icons/fa";
 
-interface ConfirmationModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  title?: string;
-  message?: string;
-  confirmText?: string;
-  cancelText?: string;
-}
+
 
 export default function ConfirmationModal({
   isOpen,

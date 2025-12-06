@@ -1,9 +1,28 @@
+"use client";
+import { AdminOrdersTable } from "@/components/Dashboard/Orders/AdminOrdersTable";
+import axiosInstance from "@/lib/axios";
+import { useEffect, useState } from "react";
+import { OrderDocument } from "@/types/orderInterface";
+
 export default function AdminOrdersPage() {
+  const [orders, setOrders] = useState<OrderDocument[]>([]);
+
+  useEffect(() => {
+    axiosInstance
+      .get("/orders")
+      .then((res) => {
+        if (res.data?.data?.orders) {
+          setOrders(res.data.data.orders);
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to fetch orders:", err);
+      });
+  }, []);
+
   return (
-    <div className="flex h-full items-center justify-center">
-      <h1 className="text-2xl font-bold text-slate-800">
-        Admin Orders Component
-      </h1>
+    <div className="h-full space-y-6">
+      <AdminOrdersTable initialData={orders} />
     </div>
   );
 }

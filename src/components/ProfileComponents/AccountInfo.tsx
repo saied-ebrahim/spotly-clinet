@@ -5,24 +5,7 @@ import { FaCamera, FaSave } from "react-icons/fa";
 import { useTranslations } from "next-intl";
 import axiosInstance from "@/lib/axios";
 
-interface UserData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  gender: string;
-  address: {
-    city: string;
-    country: string;
-    state: string;
-  };
-}
 
-interface ApiResponse {
-  status: string;
-  data: {
-    user: UserData;
-  };
-}
 
 export default function AccountInfo() {
   const t = useTranslations("profile");
@@ -187,6 +170,7 @@ export default function AccountInfo() {
 }
 
 import { InputFieldProps } from "../../types/Profileinterfaces";
+import { ApiResponse } from "@/types/Profileinterfaces/AccountInfo";
 
 function InputField({
   label,

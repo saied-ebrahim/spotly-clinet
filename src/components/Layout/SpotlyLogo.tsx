@@ -1,7 +1,5 @@
-type SpotlyLogoProps = {
-  color1?: string;
-  color2?: string;
-};
+import { SpotlyLogoProps } from "@/types/components/ui/SpotlyLogo";
+
 
 export default function SpotlyLogo({
   color1 = "#0F5C3B",

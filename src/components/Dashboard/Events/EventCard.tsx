@@ -28,9 +28,11 @@ export function EventCard({ event }: EventCardProps) {
         )}
 
         {/* Category Badge */}
-        <div className="absolute bottom-2 left-2 bg-yellow-400 text-slate-900 text-xs font-bold px-2 py-1 rounded">
-          {event.category[0].name}
-        </div>
+        {event.category?.[0]?.name && (
+          <div className="absolute bottom-2 left-2 bg-yellow-400 text-slate-900 text-xs font-bold px-2 py-1 rounded">
+            {event.category[0].name}
+          </div>
+        )}
 
         {/* Favorite Button */}
         <button className="absolute top-2 right-2 p-1.5 bg-white rounded-full text-slate-400 hover:text-red-500 shadow-sm">
@@ -48,7 +50,7 @@ export function EventCard({ event }: EventCardProps) {
           <div className="space-y-1 mb-3">
             <div className="flex items-center text-sm text-slate-600">
               <span className="font-medium mr-1">
-                {formatDate(event.date)} | {event.location.city}
+                {formatDate(event.date)} | {event.location?.city || "N/A"}
               </span>
             </div>
             <div className="text-sm text-slate-500">{event.time}</div>

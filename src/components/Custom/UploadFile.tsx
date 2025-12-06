@@ -1,18 +1,7 @@
 import { UnmountClosed } from "react-collapse";
-import { useTranslations } from "next-intl";
+import { UploadFileProps } from "@/types/Upload";
 
-interface UploadFileProps {
-  t: ReturnType<typeof useTranslations<"">>;
-  handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  attachments: File[];
-  handleViewFile: (file: File) => void;
-  handleDeleteFile: (index: number) => void;
-  errors: string;
-  label: string;
-  size: number;
-  accept: string;
-  fileTypesMessage?: string;
-}
+
 
 function UploadFile({
   t,

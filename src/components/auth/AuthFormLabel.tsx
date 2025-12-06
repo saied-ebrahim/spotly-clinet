@@ -1,7 +1,5 @@
-interface AuthFormLabelProps {
-  children: string;
-  htmlFor: string;
-}
+import { AuthFormLabelProps } from "@/types/components/forms/AuthFormLabelProps";
+
 
 export default function AuthFormLabel({
   htmlFor,

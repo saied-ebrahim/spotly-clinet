@@ -10,7 +10,6 @@ import {
   FaMapMarkerAlt,
   FaExternalLinkAlt,
 } from "react-icons/fa";
-import { EventObject } from "@/types/PaginationInterface";
 
 import EventMap from "@/components/ui/details/EventMap";
 import { formatDate } from "@/utils/details/formatting";
@@ -60,8 +59,8 @@ export default async function EventDetailsPage({
     .then((res) => res.data.data.events)
     .catch((err) => console.error(err));
   // const data = await res.json();
-  const myEvent = data.find((e: EventDocument) => String(e._id) === eventId);
-  const imageUrl = getImageUrl(myEvent.media?.mediaUrl);
+  const myEvent:EventDocument | undefined = data.find((e: EventDocument) => String(e._id) === eventId);
+  const imageUrl = getImageUrl(myEvent?.media?.mediaUrl);
   console.log(myEvent);
 
   // --- Helper Functions ---
@@ -160,10 +159,10 @@ export default async function EventDetailsPage({
                 <FaMapMarkerAlt className="text-gray-400 w-5 h-5 mt-1 shrink-0" />
                 <div>
                   <p className="font-bold">
-                    {myEvent.location.city}, {myEvent.location.country}
+                    {myEvent.location.city + ", " + myEvent.location.country}
                   </p>
                   <p className="text-sm text-gray-500 leading-relaxed mt-1">
-                    {myEvent.location.address}
+                    {myEvent.location.district}
                   </p>
                 </div>
               </div>
@@ -199,7 +198,7 @@ export default async function EventDetailsPage({
                     {/* Placeholder Avatar */}
                     <Image
                       src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=100&h=100"
-                      alt={myEvent.organizer}
+                      alt={myEvent.organizer.firstName + " " + myEvent.organizer.lastName}
                       fill
                       className="object-cover"
                     />

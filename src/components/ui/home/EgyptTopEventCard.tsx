@@ -86,7 +86,7 @@ export default function EgyptTopEventCard({
         <div className="lg:w-2/3 text-white">
         <div className="flex flex-wrap gap-2">
         {event.category.map((category) => (
-          <span className="inline-block bg-white/10 text-white text-xs font-bold px-3 py-1 rounded-full mb-2 uppercase">
+          <span key={category._id} className="inline-block bg-white/10 text-white text-xs font-bold px-3 py-1 rounded-full mb-2 uppercase">
             {category.name}
           </span>
         ))}</div>

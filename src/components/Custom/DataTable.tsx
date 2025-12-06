@@ -16,26 +16,12 @@ import {
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import Loader from "../Global/Loader";
+import { DataTableProps } from "@/types/components/tables/DataTableProps";
 
 // Register AG Grid modules
 ModuleRegistry.registerModules([AllCommunityModule]);
 
-export interface DataTableProps<T extends object> {
-  rowData: T[];
-  columnDefs: ColDef<T>[];
-  height?: string | number | "auto";
-  mobileHeight?: string | number;
-  pagination?: boolean;
-  paginationPageSize?: number;
-  paginationPageSizeSelector?: number[];
-  rowSelection?: "single" | "multiple" | false;
-  showRowNumbers?: boolean;
-  defaultColDef?: ColDef;
-  onRowClicked?: (row: T) => void;
-  className?: string;
-  locale?: string;
-  loading?: boolean;
-}
+
 
 export default function DataTable<T extends object>({
   loading = false,
