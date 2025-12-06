@@ -26,6 +26,10 @@ export function DashboardSidebar() {
                     ? pathSegments[dashboardIndex + 1]
                     : "Admin"; // Default to Admin if not found, though redirect should handle this
 
+                if (item.allowedRoles && !item.allowedRoles.includes(role)) {
+                  return null;
+                }
+
                 // Construct the link based on the role
                 const linkPath =
                   item.link === ""
