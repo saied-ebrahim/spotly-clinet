@@ -78,7 +78,7 @@ console.log(event)
           <span
             className={`absolute top-3 left-3 text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-sm bg-[#811b49] text-white bg-opacity-90`}
           >
-            {"Event Type"}
+            {event.type}
           </span>
           <div className="absolute flex gap-1 bottom-3 left-3">
 

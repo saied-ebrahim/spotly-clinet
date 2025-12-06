@@ -9,7 +9,6 @@ export interface EventDocument {
   location: location;
   media: MediaItem;
   tags: tags[];
-  favorites: string[];
   category: category[];
   organizer: organizer;
   ticketType: ticket;
