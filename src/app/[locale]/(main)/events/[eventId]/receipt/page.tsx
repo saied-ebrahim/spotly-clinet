@@ -6,9 +6,10 @@ import { FaTicket } from 'react-icons/fa6';
 import { FiShare2 } from 'react-icons/fi';
 
 let getData = async () => {
-  const res = await axiosInstance.get("/events");
-  console.log(res);
-  return res;
+  // const res = await axiosInstance.get(`/events/${eventId}`);
+  const checkout = await axiosInstance.get("/checkout/complete?session_id=cs_test_a1NDJyTIdZxQdzo2zdwxOGfrtAmMhrIbV852cTVa1sqM6yK93pL0ONS3UB");
+  console.log(checkout);
+  return checkout;
 }
 
 const eventData = {
@@ -66,8 +67,8 @@ const receiptMeta = {
   seat: "Row A, Seat 12",
   
 };
-async function ReceiptPage() {
-  const event = await getData();
+async function ReceiptPage({ params }: { params: { eventId: string } }) {
+  // const event = await getData(params.eventId);
   const total = eventData.ticketType.price + eventData.ticketType.discount;
 
   
