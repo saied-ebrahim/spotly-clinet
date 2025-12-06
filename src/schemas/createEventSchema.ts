@@ -5,13 +5,18 @@ export const createEventSchema = yup.object().shape({
   description: yup.string().required("Description is required"),
   date: yup.string().required("Date is required"),
   time: yup.string().required("Time is required"),
-  location: yup.object().shape({
-    country: yup.string().required("Country is required"),
-    city: yup.string().required("City is required"),
-    district: yup.string().required("District is required"),
-    address: yup.string().required("Address is required"),
-    latitude: yup.number().required("Latitude is required"),
-    longitude: yup.number().required("Longitude is required"),
+  location: yup.object().when("isonline", {
+    is: false,
+    then: (schema) =>
+      schema.shape({
+        country: yup.string().required("Country is required"),
+        city: yup.string().required("City is required"),
+        district: yup.string().required("District is required"),
+        address: yup.string().required("Address is required"),
+        latitude: yup.number().required("Latitude is required"),
+        longitude: yup.number().required("Longitude is required"),
+      }),
+    otherwise: (schema) => schema.optional(),
   }),
   ticketType: yup.object().shape({
     price: yup
@@ -42,9 +47,29 @@ export const createEventSchema = yup.object().shape({
   organizer: yup.string().optional(),
 });
 
-export type CreateEventSchema = Omit<
-  yup.InferType<typeof createEventSchema>,
-  "organizer"
-> & {
+export interface CreateEventSchema {
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+  location?: {
+    country: string;
+    city: string;
+    district: string;
+    address: string;
+    latitude: number;
+    longitude: number;
+  };
+  ticketType: {
+    price: number;
+    quantity: number;
+  };
+  category: string[];
+  tags: string[];
+  isonline: boolean;
+  media: {
+    mediaType: "image" | "video";
+    mediaUrl: string;
+  };
   organizer?: string;
-};
+}

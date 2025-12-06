@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import {
   FaTimes,
   FaCloudUploadAlt,
@@ -60,7 +60,9 @@ export function CreateEventModal({
     reset,
     formState: { errors },
   } = useForm<CreateEventSchema>({
-    resolver: yupResolver(createEventSchema) as Resolver<CreateEventSchema>,
+    resolver: yupResolver(
+      createEventSchema
+    ) as unknown as Resolver<CreateEventSchema>,
     defaultValues: {
       title: "",
       description: "",
@@ -96,15 +98,7 @@ export function CreateEventModal({
   useClickOutside(categoryDropdownRef, () => setIsCategoryDropdownOpen(false));
   useClickOutside(tagDropdownRef, () => setIsTagDropdownOpen(false));
 
-  useEffect(() => {
-    if (isOpen) {
-      fetchCategories();
-      fetchTags();
-      fetchOrganizerInfo();
-    }
-  }, [isOpen]);
-
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     try {
       const response = await axios.get("/categories");
       if (response.data?.data?.categories) {
@@ -114,9 +108,9 @@ export function CreateEventModal({
       console.error("Error fetching categories:", error);
       toast.error("Failed to load categories");
     }
-  };
+  }, []);
 
-  const fetchTags = async () => {
+  const fetchTags = useCallback(async () => {
     try {
       const response = await axios.get("/tags");
       if (response.data?.data?.tags) {
@@ -126,9 +120,9 @@ export function CreateEventModal({
       console.error("Error fetching tags:", error);
       toast.error("Failed to load tags");
     }
-  };
+  }, []);
 
-  const fetchOrganizerInfo = () => {
+  const fetchOrganizerInfo = useCallback(() => {
     const cookie = Cookies.get("token");
     if (cookie) {
       try {
@@ -151,7 +145,15 @@ export function CreateEventModal({
         console.error("Error parsing token:", error);
       }
     }
-  };
+  }, [setValue]);
+
+  useEffect(() => {
+    if (isOpen) {
+      fetchCategories();
+      fetchTags();
+      fetchOrganizerInfo();
+    }
+  }, [isOpen, fetchCategories, fetchTags, fetchOrganizerInfo]);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -225,7 +227,16 @@ export function CreateEventModal({
   const onSubmit = async (data: CreateEventSchema) => {
     setLoading(true);
     try {
-      await axios.post("/events", data);
+      const payload: Partial<CreateEventSchema> & { type: string } = {
+        ...data,
+        type: data.isonline ? "online" : "offline",
+      };
+
+      if (data.isonline) {
+        delete payload.location;
+      }
+
+      await axios.post("/events", payload);
       toast.success("Event created successfully");
       onSuccess();
       onClose();
@@ -476,129 +487,131 @@ export function CreateEventModal({
             </div>
 
             {/* Location */}
-            <div className="space-y-4">
-              <h4 className="font-semibold text-slate-800 border-b pb-2">
-                Location
-              </h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Country
-                  </label>
-                  <input
-                    {...register("location.country")}
-                    type="text"
-                    className={`w-full px-4 py-2 rounded-lg border ${
-                      errors.location?.country
-                        ? "border-red-500"
-                        : "border-slate-300"
-                    } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
-                  />
-                  {errors.location?.country && (
-                    <span className="text-red-500 text-sm">
-                      {errors.location.country.message}
-                    </span>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
-                    City
-                  </label>
-                  <input
-                    {...register("location.city")}
-                    type="text"
-                    className={`w-full px-4 py-2 rounded-lg border ${
-                      errors.location?.city
-                        ? "border-red-500"
-                        : "border-slate-300"
-                    } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
-                  />
-                  {errors.location?.city && (
-                    <span className="text-red-500 text-sm">
-                      {errors.location.city.message}
-                    </span>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
-                    District
-                  </label>
-                  <input
-                    {...register("location.district")}
-                    type="text"
-                    className={`w-full px-4 py-2 rounded-lg border ${
-                      errors.location?.district
-                        ? "border-red-500"
-                        : "border-slate-300"
-                    } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
-                  />
-                  {errors.location?.district && (
-                    <span className="text-red-500 text-sm">
-                      {errors.location.district.message}
-                    </span>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Address
-                  </label>
-                  <input
-                    {...register("location.address")}
-                    type="text"
-                    className={`w-full px-4 py-2 rounded-lg border ${
-                      errors.location?.address
-                        ? "border-red-500"
-                        : "border-slate-300"
-                    } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
-                  />
-                  {errors.location?.address && (
-                    <span className="text-red-500 text-sm">
-                      {errors.location.address.message}
-                    </span>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Latitude
-                  </label>
-                  <input
-                    {...register("location.latitude")}
-                    type="number"
-                    step="any"
-                    className={`w-full px-4 py-2 rounded-lg border ${
-                      errors.location?.latitude
-                        ? "border-red-500"
-                        : "border-slate-300"
-                    } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
-                  />
-                  {errors.location?.latitude && (
-                    <span className="text-red-500 text-sm">
-                      {errors.location.latitude.message}
-                    </span>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Longitude
-                  </label>
-                  <input
-                    {...register("location.longitude")}
-                    type="number"
-                    step="any"
-                    className={`w-full px-4 py-2 rounded-lg border ${
-                      errors.location?.longitude
-                        ? "border-red-500"
-                        : "border-slate-300"
-                    } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
-                  />
-                  {errors.location?.longitude && (
-                    <span className="text-red-500 text-sm">
-                      {errors.location.longitude.message}
-                    </span>
-                  )}
+            {!watch("isonline") && (
+              <div className="space-y-4">
+                <h4 className="font-semibold text-slate-800 border-b pb-2">
+                  Location
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                      Country
+                    </label>
+                    <input
+                      {...register("location.country")}
+                      type="text"
+                      className={`w-full px-4 py-2 rounded-lg border ${
+                        errors.location?.country
+                          ? "border-red-500"
+                          : "border-slate-300"
+                      } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
+                    />
+                    {errors.location?.country && (
+                      <span className="text-red-500 text-sm">
+                        {errors.location.country.message}
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                      City
+                    </label>
+                    <input
+                      {...register("location.city")}
+                      type="text"
+                      className={`w-full px-4 py-2 rounded-lg border ${
+                        errors.location?.city
+                          ? "border-red-500"
+                          : "border-slate-300"
+                      } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
+                    />
+                    {errors.location?.city && (
+                      <span className="text-red-500 text-sm">
+                        {errors.location.city.message}
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                      District
+                    </label>
+                    <input
+                      {...register("location.district")}
+                      type="text"
+                      className={`w-full px-4 py-2 rounded-lg border ${
+                        errors.location?.district
+                          ? "border-red-500"
+                          : "border-slate-300"
+                      } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
+                    />
+                    {errors.location?.district && (
+                      <span className="text-red-500 text-sm">
+                        {errors.location.district.message}
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                      Address
+                    </label>
+                    <input
+                      {...register("location.address")}
+                      type="text"
+                      className={`w-full px-4 py-2 rounded-lg border ${
+                        errors.location?.address
+                          ? "border-red-500"
+                          : "border-slate-300"
+                      } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
+                    />
+                    {errors.location?.address && (
+                      <span className="text-red-500 text-sm">
+                        {errors.location.address.message}
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                      Latitude
+                    </label>
+                    <input
+                      {...register("location.latitude")}
+                      type="number"
+                      step="any"
+                      className={`w-full px-4 py-2 rounded-lg border ${
+                        errors.location?.latitude
+                          ? "border-red-500"
+                          : "border-slate-300"
+                      } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
+                    />
+                    {errors.location?.latitude && (
+                      <span className="text-red-500 text-sm">
+                        {errors.location.latitude.message}
+                      </span>
+                    )}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                      Longitude
+                    </label>
+                    <input
+                      {...register("location.longitude")}
+                      type="number"
+                      step="any"
+                      className={`w-full px-4 py-2 rounded-lg border ${
+                        errors.location?.longitude
+                          ? "border-red-500"
+                          : "border-slate-300"
+                      } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
+                    />
+                    {errors.location?.longitude && (
+                      <span className="text-red-500 text-sm">
+                        {errors.location.longitude.message}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Media */}
             <div className="space-y-4">
