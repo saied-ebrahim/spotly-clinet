@@ -15,7 +15,7 @@ export default function SoldProductsPage() {
       try {
         setLoading(true);
         const response = await axiosInstance.get<SoldProductsResponse>(
-          "/organizers/events/orders"
+          "/organizers/events/orders/myorders"
         );
 
         if (response.data.status === "success" && response.data.orders) {

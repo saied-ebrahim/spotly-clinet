@@ -1,6 +1,8 @@
+import { UserID } from "./order";
+
 export interface SoldProduct {
   _id: string;
-  userID: string;
+  userID: UserID;
   ticketTypeID: string;
   quantity: number;
   discount: number;

@@ -2,7 +2,11 @@
 
 import { useState, useMemo } from "react";
 import DataTable from "@/components/Custom/DataTable";
-import { ColDef, ValueFormatterParams } from "ag-grid-community";
+import {
+  ColDef,
+  ValueFormatterParams,
+  ValueGetterParams,
+} from "ag-grid-community";
 import { SoldProduct } from "@/types/soldProduct";
 
 interface SoldProductsTableProps {
@@ -20,10 +24,13 @@ export function SoldProductsTable({
     if (!searchTerm) return rowData;
     const lowerTerm = searchTerm.toLowerCase();
     return rowData.filter((order) => {
-      // Search by ID or Ticket Type ID since we don't have user name populated
+      // Search by ID, Ticket Type ID, or User Name
+      const userName =
+        `${order.userID?.firstName} ${order.userID?.lastName}`.toLowerCase();
       return (
         order._id.toLowerCase().includes(lowerTerm) ||
-        order.ticketTypeID.toLowerCase().includes(lowerTerm)
+        order.ticketTypeID.toLowerCase().includes(lowerTerm) ||
+        userName.includes(lowerTerm)
       );
     });
   }, [rowData, searchTerm]);
@@ -38,8 +45,12 @@ export function SoldProductsTable({
         filter: true,
       },
       {
+        headerName: "User",
         field: "userID",
-        headerName: "User ID",
+        valueGetter: (params: ValueGetterParams<SoldProduct>) => {
+          if (!params.data?.userID) return "N/A";
+          return `${params.data.userID.firstName} ${params.data.userID.lastName}`;
+        },
         width: 220,
         sortable: true,
         filter: true,
@@ -88,7 +99,7 @@ export function SoldProductsTable({
         <div className="w-full sm:w-64">
           <input
             type="text"
-            placeholder="Search by Order ID..."
+            placeholder="Search by Order ID, User..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="px-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary w-full"

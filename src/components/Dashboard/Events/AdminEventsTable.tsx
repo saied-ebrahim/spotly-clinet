@@ -1,38 +1,41 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import DataTable from "@/components/Custom/DataTable";
-import { ColDef } from "ag-grid-community";
+import { ColDef, ValueGetterParams } from "ag-grid-community";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
 import { EditEventModal } from "./EditEventModal";
 import ConfirmationModal from "@/components/Custom/ConfirmationModal";
 import { EventDocument } from "@/types/eventInterface";
 import axiosInstance from "@/lib/axios";
+import { toast } from "react-toastify";
 
-interface AdminEventsTableProps {
-  initialData: EventDocument[];
+interface Pagination {
+  totalPages: number;
+  currentPage: number;
+  totalEvents: number;
+  hasNextPage: boolean;
+  hasPrevPage: boolean;
 }
 
-export function AdminEventsTable({ initialData }: AdminEventsTableProps) {
-  const [rowData, setRowData] = useState<EventDocument[]>(initialData);
-  const [searchTerm, setSearchTerm] = useState("");
+interface AdminEventsTableProps {
+  rowData: EventDocument[];
+  loading?: boolean;
+  pagination: Pagination | null;
+  onPageChange: (page: number) => void;
+}
+
+export function AdminEventsTable({
+  rowData,
+  loading = false,
+  pagination,
+  onPageChange,
+}: AdminEventsTableProps) {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<EventDocument | null>(
     null
   );
-
-  useEffect(() => {
-    setRowData(initialData);
-  }, [initialData]);
-
-  const filteredData = useMemo(() => {
-    if (!searchTerm) return rowData;
-    const lowerTerm = searchTerm.toLowerCase();
-    return rowData.filter((event) =>
-      event.title.toLowerCase().includes(lowerTerm)
-    );
-  }, [rowData, searchTerm]);
 
   const handleEditClick = (event: EventDocument) => {
     setSelectedEvent(event);
@@ -44,22 +47,35 @@ export function AdminEventsTable({ initialData }: AdminEventsTableProps) {
     setIsDeleteModalOpen(true);
   };
 
-  const handleSaveEvent = (updatedEvent: EventDocument): void => {
-    setRowData((prev) =>
-      prev.map((item) => (item._id === updatedEvent._id ? updatedEvent : item))
-    );
+  const handleSaveEvent = (_updatedEvent: EventDocument): void => {
+    // Optimistic update handled by parent refresh usually, but here we can't easily update parent state without callback
+    // Ideally we assume parent fetches new data or we just close modal.
+    // Given the props flow, we might need a refresh callback prop, but for now strict UI update locally or just close.
+    // Since rowData comes from parent, we can't setRowData here.
+    // For now, let's just close modal. The page might need to refetch.
     setIsEditModalOpen(false);
     setSelectedEvent(null);
+    // Trigger a refresh would be better, but let's assume the user will reload or we add a refresh prop later if needed.
+    // Or we could call onPageChange(pagination.currentPage) to refresh?
+    if (pagination) {
+      onPageChange(pagination.currentPage);
+    }
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (selectedEvent) {
-      setRowData((prev) =>
-        prev.filter((item) => item._id !== selectedEvent._id)
-      );
-      axiosInstance.delete(`/events/${selectedEvent._id}`);
-      setIsDeleteModalOpen(false);
-      setSelectedEvent(null);
+      try {
+        await axiosInstance.delete(`/events/${selectedEvent._id}`);
+        toast.success("Event deleted successfully");
+        setIsDeleteModalOpen(false);
+        setSelectedEvent(null);
+        if (pagination) {
+          onPageChange(pagination.currentPage);
+        }
+      } catch (error) {
+        console.error("Error deleting event:", error);
+        toast.error("Failed to delete event");
+      }
     }
   };
 
@@ -100,7 +116,7 @@ export function AdminEventsTable({ initialData }: AdminEventsTableProps) {
       {
         headerName: "Category",
         field: "category",
-        valueGetter: (params: { data: EventDocument | undefined }) => {
+        valueGetter: (params: ValueGetterParams<EventDocument>) => {
           return params.data?.category?.map((cat) => cat.name).join(", ") || "";
         },
         flex: 1,
@@ -123,23 +139,6 @@ export function AdminEventsTable({ initialData }: AdminEventsTableProps) {
         headerName: "Time",
         flex: 1,
         minWidth: 100,
-        sortable: true,
-      },
-      {
-        field: "createdAt",
-        headerName: "Created At",
-        flex: 1,
-        minWidth: 120,
-        sortable: true,
-        valueFormatter: (params) => {
-          return params.value ? params.value.split("T")[0] : "";
-        },
-      },
-      {
-        field: "location.city",
-        headerName: "Location",
-        flex: 1,
-        minWidth: 150,
         sortable: true,
       },
       {
@@ -177,28 +176,59 @@ export function AdminEventsTable({ initialData }: AdminEventsTableProps) {
     []
   );
 
+  const gridHeight = useMemo(() => {
+    // Auto-height calculation
+    const ROW_HEIGHT = 52;
+    const HEADER_HEIGHT = 48;
+    const BUFFER = 20; // extra buffer
+    const calculated =
+      (rowData?.length || 0) * ROW_HEIGHT + HEADER_HEIGHT + BUFFER;
+    return Math.max(calculated, 400); // Minimum height logic
+  }, [rowData]);
+
   return (
-    <div className="w-full bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-      <div className="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h2 className="text-lg font-bold text-slate-800">All Events</h2>
-        <input
-          type="text"
-          placeholder="Search events..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="px-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary w-full sm:w-64"
+    <div className="w-full bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden text-left">
+      <div className="p-0">
+        <DataTable
+          rowData={rowData}
+          columnDefs={columnDefs}
+          pagination={false} // We handle pagination externally
+          loading={loading}
+          height={gridHeight}
         />
       </div>
 
-      <div className="p-4">
-        <DataTable
-          rowData={filteredData}
-          columnDefs={columnDefs}
-          pagination={true}
-          paginationPageSize={10}
-          height={600}
-        />
-      </div>
+      {/* Pagination Controls */}
+      {pagination && (
+        <div className="px-4 py-3 border-t border-slate-200 bg-[#f8fafc] flex items-center justify-between text-sm text-[#475569]">
+          <div>
+            Page{" "}
+            <span className="font-semibold text-slate-900">
+              {pagination.currentPage}
+            </span>{" "}
+            of{" "}
+            <span className="font-semibold text-slate-900">
+              {pagination.totalPages}
+            </span>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => onPageChange(pagination.currentPage - 1)}
+              disabled={!pagination.hasPrevPage || loading}
+              className="px-3 py-1.5 rounded-md border border-[#cbd5e1] bg-white text-[#475569] hover:bg-[#f1f5f9] hover:border-[#94a3b8] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+            >
+              Previous
+            </button>
+            <button
+              onClick={() => onPageChange(pagination.currentPage + 1)}
+              disabled={!pagination.hasNextPage || loading}
+              className="px-3 py-1.5 rounded-md border border-[#cbd5e1] bg-white text-[#475569] hover:bg-[#f1f5f9] hover:border-[#94a3b8] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      )}
 
       {isEditModalOpen && selectedEvent && (
         <EditEventModal
