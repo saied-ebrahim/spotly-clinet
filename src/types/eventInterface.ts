@@ -4,6 +4,7 @@ export interface EventDocument {
   description: string;
   date: string;
   time: string;
+  createdAt: string;
   type: string;
   location: location;
   media: MediaItem;
@@ -22,8 +23,9 @@ interface MediaItem {
 
 interface location {
   city: string;
+  address: string;
   country?: string;
-  district: string; 
+  district: string;
   latitude: number;
   longitude: number;
 }

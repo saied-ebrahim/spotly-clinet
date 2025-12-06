@@ -114,6 +114,26 @@ export function AdminEventsTable({ initialData }: AdminEventsTableProps) {
         flex: 1,
         minWidth: 120,
         sortable: true,
+        valueFormatter: (params) => {
+          return params.value ? params.value.split("T")[0] : "";
+        },
+      },
+      {
+        field: "time",
+        headerName: "Time",
+        flex: 1,
+        minWidth: 100,
+        sortable: true,
+      },
+      {
+        field: "createdAt",
+        headerName: "Created At",
+        flex: 1,
+        minWidth: 120,
+        sortable: true,
+        valueFormatter: (params) => {
+          return params.value ? params.value.split("T")[0] : "";
+        },
       },
       {
         field: "location.city",
