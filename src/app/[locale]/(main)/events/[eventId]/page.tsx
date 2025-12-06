@@ -145,9 +145,6 @@ export default async function EventDetailsPage({
                   <FaRegClock className="text-gray-400 w-5 h-5" />
                   <span className="font-medium">{myEvent.time}</span>
                 </div>
-                {/* <button className="text-blue-600 text-sm font-semibold hover:underline ml-8 flex items-center gap-1">
-                  <FaPlus className="w-3 h-3" /> Add to Calendar
-                </button> */}
                 <AddToCalendarButton event={myEvent} />
               </div>
             </section>
