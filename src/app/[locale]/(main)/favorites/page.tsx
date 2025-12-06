@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useFavoriteStore from "@/hooks/useFavorateStore";
 import EventCard from "@/components/ui/home/EventCard";
 import { useRouter } from "next/navigation";
@@ -9,26 +9,55 @@ import { decryptData } from "@/shared/encryption";
 
 const FavoritesPage = () => {
   const router = useRouter();
-  const { favorites } = useFavoriteStore();
+  const { favorites, loadFavorites } = useFavoriteStore();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in
-    const cookie = Cookies.get("token");
-    if (!cookie) {
-      router.push("/auth/login");
-      return;
-    }
-
-    try {
-      const decrypted = decryptData(cookie) as { token?: string };
-      if (!decrypted || !decrypted.token) {
+    const initializeFavorites = () => {
+      // Check if user is logged in
+      const cookie = Cookies.get("token");
+      if (!cookie) {
         router.push("/auth/login");
+        return;
       }
-    } catch (err) {
-      console.error("Token validation failed", err);
-      router.push("/auth/login");
-    }
-  }, [router]);
+
+      try {
+        const decrypted = decryptData(cookie) as { token?: string };
+        if (!decrypted || !decrypted.token) {
+          router.push("/auth/login");
+          return;
+        }
+
+        // Load favorites from localStorage
+        loadFavorites();
+      } catch (err) {
+        console.error("Token validation failed", err);
+        router.push("/auth/login");
+        return;
+      }
+      
+      // Set loading to false after all checks
+      setIsLoading(false);
+    };
+
+    initializeFavorites();
+  }, [router, loadFavorites]);
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto py-8 px-4">
+        <div className="flex justify-center items-center py-20">
+          <div className="flex flex-col items-center gap-4">
+            <div className="relative w-16 h-16">
+              <div className="absolute top-0 left-0 w-full h-full border-4 border-blue-200 rounded-full"></div>
+              <div className="absolute top-0 left-0 w-full h-full border-4 border-transparent border-t-blue-600 rounded-full animate-spin"></div>
+            </div>
+            <p className="text-slate-600 font-medium">Loading favourites...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto py-8 px-4">

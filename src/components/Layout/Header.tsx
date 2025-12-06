@@ -122,12 +122,20 @@ export default function Header() {
     } finally {
       Cookies.remove("token");
       localStorage.removeItem("deviceID");
+      clearFavorites(); // Clear favorites on logout
       setUser(null);
       window.location.href = "/";
     }
   };
 
-  const { favorites } = useFavoriteStore();
+  const { favorites, loadFavorites, clearFavorites } = useFavoriteStore();
+
+  // Load favorites when user changes
+  useEffect(() => {
+    if (user) {
+      loadFavorites();
+    }
+  }, [user, loadFavorites]);
 
   const nav = [
     { label: "Home", href: "/" },
