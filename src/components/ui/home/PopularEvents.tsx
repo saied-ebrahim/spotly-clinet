@@ -20,13 +20,14 @@ const PopularEvents = () => {
   const [events, setEvents] = useState<EventDocument[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("All");
   let allLocations = useGetGovArEn();
+  const closestCity = findClosestCity(city as string, allLocations);
+  let eventsInCurrentLocation = events.filter((e) => e.location.district === closestCity);
   // console.log(events);
-  const filtered = filterEvents(events, currentFilter);
+  const filtered = filterEvents(eventsInCurrentLocation, currentFilter);
   const filteredEvents = filtered.filter((e) => e.type !== "online");
   // let allLocations = filteredEvents.map((e) => e.location.district as string);
   // the filter below is for choosing event in the city of the user
   // const filteredEvents = filtered.filter((e) => e.type !== "online" && e.location.district === city);
-  const closestCity = findClosestCity(city as string, allLocations);
 
 //  console.log(city);
 //  console.log(allLocations);
