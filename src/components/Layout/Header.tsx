@@ -9,8 +9,10 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import Cookies from "js-cookie";
 import { decryptData, encryptData } from "@/shared/encryption";
 import { FaUserCircle, FaChevronDown } from "react-icons/fa";
+import { FiStar } from "react-icons/fi";
 import { authService } from "@/services/authService";
 import { parseJwt } from "@/shared/jwt";
+import useFavoriteStore from "@/hooks/useFavorateStore";
 export default function Header() {
   const pathname = usePathname();
   const locale = useLocale();
@@ -125,6 +127,8 @@ export default function Header() {
     }
   };
 
+  const { favorites } = useFavoriteStore();
+
   const nav = [
     { label: "Home", href: "/" },
     { label: "Events", href: "/events" },
@@ -176,6 +180,37 @@ export default function Header() {
               )}
             </Link>
           ))}
+
+          {/* Favourites Link - Only show when user is logged in */}
+          {user && (
+            <Link
+              href="/favorites"
+              className="relative group transition inline-flex items-center gap-2"
+            >
+              <FiStar size={18} />
+              <span>Favourites</span>
+              {favorites.length > 0 && (
+                <span className="absolute -top-2 -right-2 bg-yellow-400 text-black text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {favorites.length}
+                </span>
+              )}
+
+              {/* Active underline */}
+              {pathname === "/favorites" ? (
+                <span
+                  className={`absolute -bottom-1 h-[3px] w-full bg-yellow-400 rounded-md ${
+                    locale === "ar" ? "right-0" : "left-0"
+                  }`}
+                ></span>
+              ) : (
+                <span
+                  className={`absolute -bottom-1 h-[3px] w-0 bg-yellow-400 rounded-md group-hover:w-full transition-all duration-300 ${
+                    locale === "ar" ? "right-0" : "left-0"
+                  }`}
+                ></span>
+              )}
+            </Link>
+          )}
 
           <LanguageSwitcher />
 
@@ -270,6 +305,33 @@ export default function Header() {
               )}
             </Link>
           ))}
+
+          {/* Favourites Link - Mobile - Only show when user is logged in */}
+          {user && (
+            <Link
+              href="/favorites"
+              className={`relative flex items-center gap-2 transition hover:text-green-300 ${
+                locale === "ar" ? "text-right" : "text-left"
+              }`}
+              onClick={() => setOpen(false)}
+            >
+              <FiStar size={18} />
+              <span>Favourites</span>
+              {favorites.length > 0 && (
+                <span className="bg-yellow-400 text-black text-xs font-bold rounded-full px-2 py-0.5">
+                  {favorites.length}
+                </span>
+              )}
+
+              {pathname === "/favorites" && (
+                <span
+                  className={`absolute bottom-0 h-[3px] bg-yellow-400 rounded-md ${
+                    locale === "ar" ? "right-0" : "left-0"
+                  }`}
+                ></span>
+              )}
+            </Link>
+          )}
 
           {/* LANG SWITCHER */}
           <LanguageSwitcher />
