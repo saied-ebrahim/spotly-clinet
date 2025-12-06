@@ -8,6 +8,8 @@ import filterEvents from "@/utils/home/filterPopularEvents";
 
 import useGeolocation from "@/hooks/useGeolocation";
 import { EventDocument } from "@/types/eventInterface";
+import { findClosestCity } from "@/utils/home/findClosestCityMatch";
+import { useGetGovArEn } from "@/hooks/useGetGovArEn";
 
 // 3. The Main Container Component
 const PopularEvents = () => {
@@ -17,13 +19,18 @@ const PopularEvents = () => {
   } = useGeolocation();
   const [events, setEvents] = useState<EventDocument[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("All");
-  console.log(events);
+  let allLocations = useGetGovArEn();
+  // console.log(events);
   const filtered = filterEvents(events, currentFilter);
   const filteredEvents = filtered.filter((e) => e.type !== "online");
+  // let allLocations = filteredEvents.map((e) => e.location.district as string);
   // the filter below is for choosing event in the city of the user
   // const filteredEvents = filtered.filter((e) => e.type !== "online" && e.location.district === city);
+  const closestCity = findClosestCity(city as string, allLocations);
 
-
+//  console.log(city);
+//  console.log(allLocations);
+//  console.log(closestCity);
   useEffect(() => {
  
     axiosInstance
@@ -38,8 +45,7 @@ const PopularEvents = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 font-sans">
         {/* Header */}
         <h2 className="text-3xl font-bold text-gray-900 mb-6">
-          {/* Popular Events in {city || "Your Location"} */}
-          Popular Events
+          Popular Events in {closestCity || "Your Location"}
         </h2>
 
         {/* Filter Buttons */}
