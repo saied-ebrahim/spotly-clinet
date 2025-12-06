@@ -5,12 +5,7 @@ import { FaClock, FaDownload, FaMapPin, FaUser } from 'react-icons/fa';
 import { FaTicket } from 'react-icons/fa6';
 import { FiShare2 } from 'react-icons/fi';
 
-let getData = async () => {
-  // const res = await axiosInstance.get(`/events/${eventId}`);
-  const checkout = await axiosInstance.get("/checkout/complete?session_id=cs_test_a1NDJyTIdZxQdzo2zdwxOGfrtAmMhrIbV852cTVa1sqM6yK93pL0ONS3UB");
-  console.log(checkout);
-  return checkout;
-}
+
 
 const eventData = {
   _id: "evt-992831",
