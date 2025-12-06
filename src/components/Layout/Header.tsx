@@ -195,10 +195,10 @@ export default function Header() {
               href="/favorites"
               className="relative group transition inline-flex items-center gap-2"
             >
-              <FiStar size={18} />
+              <FiStar size={20} />
               <span>Favourites</span>
               {favorites.length > 0 && (
-                <span className="absolute -top-2 -right-2 bg-yellow-400 text-black text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="absolute -top-3 -right-3 bg-yellow-400 text-black text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-md">
                   {favorites.length}
                 </span>
               )}
@@ -323,10 +323,10 @@ export default function Header() {
               }`}
               onClick={() => setOpen(false)}
             >
-              <FiStar size={18} />
+              <FiStar size={20} />
               <span>Favourites</span>
               {favorites.length > 0 && (
-                <span className="bg-yellow-400 text-black text-xs font-bold rounded-full px-2 py-0.5">
+                <span className="bg-yellow-400 text-black text-xs font-bold rounded-full px-2 py-0.5 shadow-md">
                   {favorites.length}
                 </span>
               )}
