@@ -1,14 +1,33 @@
-import { FiCalendar, FiTag, FiHeart } from "react-icons/fi";
+import { FiCalendar, FiTag, FiStar } from "react-icons/fi";
 import Image from "next/image";
 import { EventDocument } from "@/types/eventInterface";
 import { formatDate } from "@/utils/details/formatting";
+import useFavoriteStore from "@/hooks/useFavorateStore";
+import { useEffect, useState } from "react";
 
 interface EventCardProps {
   event: EventDocument;
 }
 
 export function EventCard({ event }: EventCardProps) {
-  // console.log(event.media?.mediaUrl);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const { toggleFavorite, favorites } = useFavoriteStore();
+
+  const handleAddFavorites = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsAnimating(true);
+    toggleFavorite(event);
+  };
+
+  useEffect(() => {
+    if (isAnimating) {
+      const timer = setTimeout(() => setIsAnimating(false), 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isAnimating]);
+
+  const isFavorite = favorites.some((ev) => ev._id === event._id);
 
   return (
     <div className="flex flex-col sm:flex-row bg-white rounded-xl overflow-hidden border border-slate-200 hover:shadow-md transition-shadow">
@@ -35,8 +54,30 @@ export function EventCard({ event }: EventCardProps) {
         )}
 
         {/* Favorite Button */}
-        <button className="absolute top-2 right-2 p-1.5 bg-white rounded-full text-slate-400 hover:text-red-500 shadow-sm">
-          <FiHeart size={16} />
+        <button
+          type="button"
+          onClick={handleAddFavorites}
+          className={`absolute top-2 right-2 p-1.5 rounded-full shadow-sm transition-all duration-300 cursor-pointer 
+            ${
+              isFavorite
+                ? "bg-yellow-50 text-yellow-500 hover:bg-yellow-100"
+                : "bg-white text-slate-400 hover:text-yellow-500 hover:bg-white"
+            }
+            ${
+              isAnimating
+                ? "scale-125 shadow-md ring-2 ring-yellow-100"
+                : "hover:scale-110 active:scale-95"
+            }
+          `}
+          aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+        >
+          <FiStar
+            size={16}
+            fill={isFavorite ? "currentColor" : "none"}
+            className={`transition-transform duration-300 ${
+              isAnimating ? "scale-110" : ""
+            }`}
+          />
         </button>
       </div>
 

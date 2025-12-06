@@ -6,6 +6,7 @@ import EventCard from "@/components/ui/home/EventCard";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { decryptData } from "@/shared/encryption";
+import { FiStar } from "react-icons/fi";
 
 const FavoritesPage = () => {
   const router = useRouter();
@@ -35,7 +36,7 @@ const FavoritesPage = () => {
         router.push("/auth/login");
         return;
       }
-      
+
       // Set loading to false after all checks
       setIsLoading(false);
     };
@@ -76,7 +77,9 @@ const FavoritesPage = () => {
 
       {favorites.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
-          <div className="text-6xl mb-4">⭐</div>
+          <div className="mb-6 p-6 bg-yellow-50 rounded-full">
+            <FiStar size={64} className="text-yellow-500" />
+          </div>
           <h2 className="text-2xl font-semibold text-slate-700 mb-2">
             There is yet no item in favourites
           </h2>
