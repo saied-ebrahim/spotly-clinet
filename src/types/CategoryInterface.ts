@@ -5,6 +5,17 @@ export interface Category {
   events?: string[];
 }
 
+export interface CategoryDocument {
+  _id: string;
+  name: string;
+  description: string;
+  image: string;
+  events: any[];
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+}
+
 export interface CategoryItemInterface {
   name: string;
   image: string;

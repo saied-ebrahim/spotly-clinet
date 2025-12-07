@@ -7,10 +7,11 @@ import {
   ValueGetterParams,
   ValueFormatterParams,
 } from "ag-grid-community";
-import { FiTrash2 } from "react-icons/fi";
+import { FiTrash2, FiEye } from "react-icons/fi";
 import ConfirmationModal from "@/components/Custom/ConfirmationModal";
 import { OrderDocument } from "@/types/orderInterface";
-import axiosInstance from "@/lib/axios";
+// import axiosInstance from "@/lib/axios";
+import { ViewOrderModal } from "./ViewOrderModal";
 
 interface AdminOrdersTableProps {
   initialData: OrderDocument[];
@@ -20,6 +21,7 @@ export function AdminOrdersTable({ initialData }: AdminOrdersTableProps) {
   const [rowData, setRowData] = useState<OrderDocument[]>(initialData);
   const [searchTerm, setSearchTerm] = useState("");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<OrderDocument | null>(
     null
   );
@@ -45,14 +47,14 @@ export function AdminOrdersTable({ initialData }: AdminOrdersTableProps) {
     setIsDeleteModalOpen(true);
   };
 
+  const handleViewClick = (order: OrderDocument) => {
+    setSelectedOrder(order);
+    setIsViewModalOpen(true);
+  };
+
   const handleConfirmDelete = () => {
     if (selectedOrder) {
-      // Optimistic delete or calling API if available
-      // For now, removing from UI to simulate deletion as requested "display all orders"
-      // If there is an endpoint like DELETE /orders/:id, we should use it.
-      // Assuming /orders/:id based on standard REST, but will comment out since user didn't specify.
-
-      // axiosInstance.delete(`/orders/${selectedOrder._id}`);
+      // Optimistic delete
       setRowData((prev) =>
         prev.filter((item) => item._id !== selectedOrder._id)
       );
@@ -91,12 +93,15 @@ export function AdminOrdersTable({ initialData }: AdminOrdersTableProps) {
         },
         flex: 1,
         minWidth: 150,
+        sortable: true,
+        filter: true,
       },
       {
         field: "quantity",
         headerName: "Qty",
         width: 100,
         sortable: true,
+        filter: true,
       },
       {
         field: "totalAfterDiscount",
@@ -124,12 +129,29 @@ export function AdminOrdersTable({ initialData }: AdminOrdersTableProps) {
         },
       },
       {
+        headerName: "Event",
+        valueGetter: (params: ValueGetterParams<OrderDocument>) => {
+          return params.data?.eventID?.title || "N/A";
+        },
+        flex: 2,
+        minWidth: 180,
+        sortable: true,
+        filter: true,
+      },
+      {
         headerName: "Actions",
         width: 100,
         pinned: "right",
         cellRenderer: (params: { data: OrderDocument }) => {
           return (
             <div className="flex items-center gap-2 h-full">
+              <button
+                onClick={() => handleViewClick(params.data)}
+                className="p-2 text-brand-primary hover:bg-brand-primary/10 rounded-full transition-colors"
+                title="View"
+              >
+                <FiEye size={16} />
+              </button>
               <button
                 onClick={() => handleDeleteClick(params.data)}
                 className="p-2 text-red-600 hover:bg-red-50 rounded-full transition-colors"
@@ -167,6 +189,12 @@ export function AdminOrdersTable({ initialData }: AdminOrdersTableProps) {
           height={600}
         />
       </div>
+
+      <ViewOrderModal
+        isOpen={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
+        order={selectedOrder}
+      />
 
       <ConfirmationModal
         isOpen={isDeleteModalOpen}
