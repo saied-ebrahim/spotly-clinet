@@ -5,8 +5,6 @@ import { FaCamera, FaSave } from "react-icons/fa";
 import { useTranslations } from "next-intl";
 import axiosInstance from "@/lib/axios";
 
-
-
 export default function AccountInfo() {
   const t = useTranslations("profile");
   const [loading, setLoading] = useState(true);
@@ -81,7 +79,7 @@ export default function AccountInfo() {
             </div>
             <button
               type="button"
-              className="absolute bottom-0 right-0 p-3 bg-indigo-600 rounded-full text-white shadow-lg hover:bg-indigo-700 transition-all duration-300 hover:scale-110 group-hover:shadow-xl"
+              className="absolute bottom-0 right-0 p-3 bg-brand-primary rounded-full text-white shadow-lg hover:bg-brand-primary/90 transition-all duration-300 hover:scale-110 group-hover:shadow-xl"
             >
               <FaCamera className="w-5 h-5" />
             </button>
@@ -155,13 +153,12 @@ export default function AccountInfo() {
         <div className="flex justify-center sm:justify-start pt-4">
           <button
             type="submit"
-            className="group relative px-8 py-3 bg-linear-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden"
+            className="group relative px-8 py-3 bg-brand-primary text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden"
           >
             <span className="relative z-10 flex items-center gap-2">
               <FaSave className="w-5 h-5" />
               {t("saveMyProfile")}
             </span>
-            <div className="absolute inset-0 bg-linear-to-r from-purple-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </button>
         </div>
       </form>
@@ -189,7 +186,7 @@ function InputField({
         placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all duration-300 bg-white/50 backdrop-blur-sm hover:bg-white"
+        className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all duration-300 bg-white/50 backdrop-blur-sm hover:bg-white"
       />
     </div>
   );
@@ -238,7 +235,7 @@ function SelectField({
         <select
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all duration-300 bg-white/50 backdrop-blur-sm hover:bg-white appearance-none cursor-pointer"
+          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all duration-300 bg-white/50 backdrop-blur-sm hover:bg-white appearance-none cursor-pointer"
         >
           {options.map((option) => (
             <option key={option.value} value={option.value}>

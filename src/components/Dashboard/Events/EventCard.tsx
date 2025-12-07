@@ -7,11 +7,15 @@ interface EventCardProps {
   event: EventDocument;
 }
 
-export function EventCard({ event }: EventCardProps) {
-  // console.log(event.media?.mediaUrl);
+import Link from "next/link";
+// ... existing imports
 
+export function EventCard({ event }: EventCardProps) {
   return (
-    <div className="flex flex-col sm:flex-row bg-white rounded-xl overflow-hidden border border-slate-200 hover:shadow-md transition-shadow">
+    <Link
+      href={`/events/${event._id}`}
+      className="flex flex-col sm:flex-row bg-white rounded-xl overflow-hidden border border-slate-200 hover:shadow-md transition-shadow group cursor-pointer"
+    >
       {/* Image Section */}
       <div className="relative w-full sm:w-48 h-48 bg-slate-200 shrink-0">
         {event.media?.mediaUrl ? (
@@ -34,16 +38,25 @@ export function EventCard({ event }: EventCardProps) {
           </div>
         )}
 
-        {/* Favorite Button */}
-        <button className="absolute top-2 right-2 p-1.5 bg-white rounded-full text-slate-400 hover:text-red-500 shadow-sm">
+        {/* Favorite Button - Changed to div to prevent button inside link */}
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            // Handle favorite logic here if needed
+          }}
+          className="absolute top-2 right-2 p-1.5 bg-white rounded-full text-slate-400 hover:text-red-500 shadow-sm z-10 transition-colors"
+        >
           <FiHeart size={16} />
-        </button>
+        </div>
       </div>
 
       {/* Content Section */}
       <div className="p-4 flex flex-col justify-between flex-1">
         <div>
-          <h3 className="text-lg font-bold text-slate-900 mb-2 line-clamp-2">
+          <h3 className="text-lg font-bold text-slate-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
             {event.title}
           </h3>
 
@@ -59,9 +72,11 @@ export function EventCard({ event }: EventCardProps) {
 
         <div className="flex items-center text-brand-primary font-bold text-sm">
           <FiTag className="mr-1.5" />
-          {event.ticketType.price}
+          {event.ticketType.price === 0
+            ? "Free"
+            : `${event.ticketType.price} EGP`}
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

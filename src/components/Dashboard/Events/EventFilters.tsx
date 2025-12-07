@@ -17,6 +17,10 @@ const FilterSection = ({
   selectedFilters?: Record<string, string[]>;
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
+  const [showAll, setShowAll] = useState(false);
+
+  const displayedOptions = showAll ? options : options.slice(0, 5);
+  const hasMore = options.length > 5;
 
   return (
     <div className="border-b border-slate-100 py-4 last:border-0">
@@ -33,7 +37,7 @@ const FilterSection = ({
       </button>
       {isOpen && (
         <div className="mt-3 space-y-2">
-          {options.map((option) => (
+          {displayedOptions.map((option) => (
             <div key={option} className="flex items-center">
               <input
                 id={`filter-${title}-${option}`}
@@ -51,9 +55,14 @@ const FilterSection = ({
               </label>
             </div>
           ))}
-          <button className="text-xs font-medium text-brand-primary hover:underline pt-1">
-            More
-          </button>
+          {hasMore && (
+            <button
+              onClick={() => setShowAll(!showAll)}
+              className="text-xs font-medium text-brand-primary hover:underline pt-1"
+            >
+              {showAll ? "Show Less" : "Show More"}
+            </button>
+          )}
         </div>
       )}
     </div>
@@ -65,8 +74,12 @@ interface EventFiltersProps {
   selectedFilters?: Record<string, string[]>;
 }
 
-export function EventFilters({ onFilterChange, selectedFilters = {} }: EventFiltersProps) {
+export function EventFilters({
+  onFilterChange,
+  selectedFilters = {},
+}: EventFiltersProps) {
   const [categories, setCategories] = useState<string[]>([]);
+  const [tags, setTags] = useState<string[]>([]);
 
   useEffect(() => {
     axiosInstance
@@ -79,8 +92,21 @@ export function EventFilters({ onFilterChange, selectedFilters = {} }: EventFilt
       })
       .catch((err) => {
         console.error("Error fetching categories:", err);
-        // Fallback to empty array if API fails
         setCategories([]);
+      });
+
+    // Fetch Tags
+    axiosInstance
+      .get("/tags")
+      .then((data) => {
+        const tagNames = data.data.data.tags.map(
+          (tag: { name: string }) => tag.name
+        );
+        setTags(tagNames);
+      })
+      .catch((err) => {
+        console.error("Error fetching tags:", err);
+        setTags([]);
       });
   }, []);
 
@@ -115,14 +141,8 @@ export function EventFilters({ onFilterChange, selectedFilters = {} }: EventFilt
         selectedFilters={selectedFilters}
       />
       <FilterSection
-        title="Format"
-        options={[
-          "Community Engagement",
-          "Concerts & Performances",
-          "Conferences",
-          "Experiential Events",
-          "Festivals & Fairs",
-        ]}
+        title="Tags"
+        options={tags}
         onChange={onFilterChange}
         selectedFilters={selectedFilters}
       />

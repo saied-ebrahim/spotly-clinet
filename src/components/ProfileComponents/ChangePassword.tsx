@@ -76,13 +76,12 @@ export default function ChangePassword() {
           <button
             type="button"
             onClick={() => setPasswordNotSet(false)}
-            className="group relative px-8 py-3 bg-linear-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden"
+            className="group relative px-8 py-3 bg-brand-primary text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden"
           >
             <span className="relative z-10 flex items-center gap-2">
               <FaLock className="w-5 h-5" />
               {t("setPassword")}
             </span>
-            <div className="absolute inset-0 bg-linear-to-r from-purple-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </button>
         </div>
       </div>
@@ -115,7 +114,7 @@ export default function ChangePassword() {
                 handleInputChange("currentPassword", e.target.value)
               }
               required
-              className="w-full pl-12 pr-12 py-3 rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all duration-300 bg-white/50 backdrop-blur-sm hover:bg-white"
+              className="w-full pl-12 pr-12 py-3 rounded-xl border border-gray-300 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all duration-300 bg-white/50 backdrop-blur-sm hover:bg-white"
             />
             <button
               type="button"
@@ -144,7 +143,7 @@ export default function ChangePassword() {
               value={formData.newPassword}
               onChange={(e) => handleInputChange("newPassword", e.target.value)}
               required
-              className="w-full pl-12 pr-12 py-3 rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all duration-300 bg-white/50 backdrop-blur-sm hover:bg-white"
+              className="w-full pl-12 pr-12 py-3 rounded-xl border border-gray-300 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all duration-300 bg-white/50 backdrop-blur-sm hover:bg-white"
             />
             <button
               type="button"
@@ -175,7 +174,7 @@ export default function ChangePassword() {
                 handleInputChange("confirmPassword", e.target.value)
               }
               required
-              className="w-full pl-12 pr-12 py-3 rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all duration-300 bg-white/50 backdrop-blur-sm hover:bg-white"
+              className="w-full pl-12 pr-12 py-3 rounded-xl border border-gray-300 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all duration-300 bg-white/50 backdrop-blur-sm hover:bg-white"
             />
             <button
               type="button"
@@ -192,21 +191,21 @@ export default function ChangePassword() {
         </div>
 
         {/* Password Requirements */}
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4">
-          <h4 className="text-sm font-semibold text-blue-900 mb-2">
+        <div className="bg-slate-50 border border-slate-200 rounded-xl p-4">
+          <h4 className="text-sm font-semibold text-slate-900 mb-2">
             {t("passwordRequirements")}
           </h4>
-          <ul className="text-sm text-blue-800 space-y-1">
+          <ul className="text-sm text-slate-700 space-y-1">
             <li className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-blue-600" />
+              <div className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
               {t("passwordMinLength")}
             </li>
             <li className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-blue-600" />
+              <div className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
               {t("passwordUpperLower")}
             </li>
             <li className="flex items-center gap-2">
-              <div className="w-1.5 h-1.5 rounded-full bg-blue-600" />
+              <div className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
               {t("passwordNumber")}
             </li>
           </ul>
@@ -216,13 +215,12 @@ export default function ChangePassword() {
         <div className="flex justify-center sm:justify-start pt-4">
           <button
             type="submit"
-            className="group relative px-8 py-3 bg-linear-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden"
+            className="group relative px-8 py-3 bg-brand-primary text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden"
           >
             <span className="relative z-10 flex items-center gap-2">
               <FaSave className="w-5 h-5" />
               {t("updatePassword")}
             </span>
-            <div className="absolute inset-0 bg-linear-to-r from-purple-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </button>
         </div>
       </form>

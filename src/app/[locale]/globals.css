@@ -37,7 +37,29 @@ button {
 .container {
   @apply px-[10px] lg:px-[30px] max-w-7xl mx-auto;
 }
+/* ----------------------------------- */
 
+@keyframes scan {
+  0% {
+    top: 15%;
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    top: 85%;
+    opacity: 0;
+  }
+}
+
+.animate-scan {
+  animation: scan 2s linear infinite;
+}
+/* ----------------------------------- */
 /*  ----- fade styling pagination \/  */
 @keyframes slideIn {
   from {

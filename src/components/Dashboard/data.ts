@@ -8,6 +8,7 @@ import {
   FiSettings,
   FiTag,
   FiUser,
+  FiPackage,
 } from "react-icons/fi";
 
 export type NavItem = {
@@ -49,10 +50,26 @@ export const navSections: NavSection[] = [
         link: "orders",
       },
       {
+        label: "Sold Products",
+        icon: FiPackage,
+        key: "sold-products",
+        link: "sold-products",
+        allowedRoles: ["Organizer"],
+      },
+      {
         label: "Tags",
         icon: FiTag,
         key: "tags",
         link: "tags",
+        allowedRoles: ["Admin"],
+      },
+      {
+        label: "Categories",
+        icon: FiTag, // Using FiTag or maybe FiGrid/FiList? FiTag is used for Tags. Let's use FiList or FiGrid if available. The user didn't specify. I'll stick to FiTag or reuse an appropriate icon. Since Tags uses FiTag, maybe Categories can use something else or just reuse.
+        // Wait, current file imports FiTag. I should check if other icons are available.
+        // Let's use FiTag for now to be safe with imports, or check imports.
+        key: "categories",
+        link: "categories",
         allowedRoles: ["Admin"],
       },
       {
@@ -63,10 +80,10 @@ export const navSections: NavSection[] = [
         allowedRoles: ["Admin"],
       },
       {
-        label: "Marketing",
+        label: "Analytics",
         icon: FiTrendingUp,
-        key: "marketing",
-        link: "marketing",
+        key: "analytics",
+        link: "analytics",
       },
       {
         label: "Finance",

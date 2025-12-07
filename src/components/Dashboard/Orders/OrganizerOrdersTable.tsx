@@ -7,12 +7,12 @@ import {
   ValueGetterParams,
   ValueFormatterParams,
 } from "ag-grid-community";
-import { Order } from "@/types/order";
+import { OrderDocument } from "@/types/orderInterface";
 import { FiEye } from "react-icons/fi";
 import { ViewOrderModal } from "./ViewOrderModal";
 
 interface OrganizerOrdersTableProps {
-  rowData: Order[];
+  rowData: OrderDocument[];
   loading?: boolean;
 }
 
@@ -20,11 +20,13 @@ export function OrganizerOrdersTable({
   rowData,
   loading = false,
 }: OrganizerOrdersTableProps) {
-  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [selectedOrder, setSelectedOrder] = useState<OrderDocument | null>(
+    null
+  );
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const handleViewClick = (order: Order) => {
+  const handleViewClick = (order: OrderDocument) => {
     setSelectedOrder(order);
     setIsViewModalOpen(true);
   };
@@ -39,12 +41,12 @@ export function OrganizerOrdersTable({
     });
   }, [rowData, searchTerm]);
 
-  const columnDefs: ColDef<Order>[] = useMemo(
+  const columnDefs: ColDef<OrderDocument>[] = useMemo(
     () => [
       { field: "_id", headerName: "ID", width: 90, sortable: true, hide: true },
       {
         headerName: "Customer",
-        valueGetter: (params: ValueGetterParams<Order>) => {
+        valueGetter: (params: ValueGetterParams<OrderDocument>) => {
           const user = params.data?.userID;
           return user ? `${user.firstName} ${user.lastName}` : "N/A";
         },
@@ -55,7 +57,7 @@ export function OrganizerOrdersTable({
       },
       {
         headerName: "Email",
-        valueGetter: (params: ValueGetterParams<Order>) => {
+        valueGetter: (params: ValueGetterParams<OrderDocument>) => {
           return params.data?.userID?.email || "N/A";
         },
         flex: 1,
@@ -65,25 +67,30 @@ export function OrganizerOrdersTable({
       },
       {
         headerName: "Location",
-        valueGetter: (params: ValueGetterParams<Order>) => {
+        valueGetter: (params: ValueGetterParams<OrderDocument>) => {
           const addr = params.data?.userID?.address;
           return addr ? `${addr.city || "-"}, ${addr.country || "-"}` : "N/A";
         },
         flex: 1,
         minWidth: 150,
+        sortable: true,
+        filter: true,
       },
       {
         field: "quantity",
         headerName: "Qty",
         width: 100,
         sortable: true,
+        filter: true,
       },
       {
         field: "totalAfterDiscount",
         headerName: "Total",
         width: 120,
         sortable: true,
-        valueFormatter: (params: ValueFormatterParams<Order, number>) => {
+        valueFormatter: (
+          params: ValueFormatterParams<OrderDocument, number>
+        ) => {
           return params.value != null ? `$${params.value.toFixed(2)}` : "";
         },
       },
@@ -93,17 +100,29 @@ export function OrganizerOrdersTable({
         flex: 1,
         minWidth: 150,
         sortable: true,
-        valueFormatter: (params: ValueFormatterParams<Order, string>) => {
+        valueFormatter: (
+          params: ValueFormatterParams<OrderDocument, string>
+        ) => {
           return params.value
             ? new Date(params.value).toLocaleDateString()
             : "";
         },
       },
       {
+        headerName: "Event",
+        valueGetter: (params: ValueGetterParams<OrderDocument>) => {
+          return params.data?.eventID?.title || "N/A";
+        },
+        flex: 2,
+        minWidth: 180,
+        sortable: true,
+        filter: true,
+      },
+      {
         headerName: "Actions",
         width: 100,
         pinned: "right",
-        cellRenderer: (params: { data: Order }) => {
+        cellRenderer: (params: { data: OrderDocument }) => {
           return (
             <div className="flex items-center gap-2 h-full">
               <button

@@ -81,7 +81,12 @@ export default function OrganizerEventsPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-slate-800">My Events</h1>
       </div>
-      <AdminEventsTable initialData={events} />
+      <AdminEventsTable
+        rowData={events}
+        loading={loading}
+        pagination={null}
+        onPageChange={() => {}}
+      />
     </div>
   );
 }

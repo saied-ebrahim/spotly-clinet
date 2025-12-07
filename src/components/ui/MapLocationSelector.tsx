@@ -88,38 +88,53 @@ const IconLoader = ({ className }: { className: string }) => (
  * A self-contained map component that loads Leaflet dynamically.
  * Uses raw Leaflet logic inside React hooks.
  */
-export default function LocationSelector() {
+interface LocationData {
+  address: string;
+  city: string;
+  district: string;
+  country: string;
+  lat: number;
+  lng: number;
+}
+
+interface MapLocationSelectorProps {
+  onLocationSelect?: (location: LocationData) => void;
+  onClose?: () => void; // Optional close handler if needed
+}
+
+/**
+ * COMPONENT: LocationSelector
+ */
+export default function LocationSelector({
+  onLocationSelect,
+  onClose,
+}: MapLocationSelectorProps) {
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<Map | null>(null);
   const markerRef = useRef<Marker | null>(null);
-  const confirmedRef = useRef(false); // Ref to track confirmation inside event listeners
+  const confirmedRef = useRef(false);
 
   const [isLeafletLoaded, setIsLeafletLoaded] = useState(false);
+  const [isGeocoderLoaded, setIsGeocoderLoaded] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState<LatLng | null>(null);
   const [confirmed, setConfirmed] = useState(false);
   const [notification, setNotification] = useState("");
+  const [isGeocoding, setIsGeocoding] = useState(false);
 
-  // Default position: Cairo, Egypt
-  const defaultCenter: LatLngExpression = [30.0444, 31.2357];
-  const defaultZoom = 13;
-
-  // Sync ref with state
   useEffect(() => {
     confirmedRef.current = confirmed;
   }, [confirmed]);
 
-  /**
-   * EFFECT: Load Leaflet Resources
-   * Injects Leaflet CSS and JS from CDN since we can't import 'leaflet' directly.
-   */
   useEffect(() => {
     const loadLeaflet = () => {
-      if (window.L) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if (window.L && (window.L.Control as any).Geocoder) {
         setIsLeafletLoaded(true);
+        setIsGeocoderLoaded(true);
         return;
       }
 
-      // Load CSS
+      // Load Leaflet CSS
       const link = document.createElement("link");
       link.rel = "stylesheet";
       link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
@@ -127,87 +142,106 @@ export default function LocationSelector() {
       link.crossOrigin = "";
       document.head.appendChild(link);
 
-      // Load JS
+      // Load Leaflet JS
       const script = document.createElement("script");
       script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
       script.integrity = "sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=";
       script.crossOrigin = "";
-      script.onload = () => setIsLeafletLoaded(true);
+      script.onload = () => {
+        setIsLeafletLoaded(true);
+        loadGeocoder();
+      };
       document.head.appendChild(script);
+    };
+
+    const loadGeocoder = () => {
+      // Load Geocoder CSS
+      const geoLink = document.createElement("link");
+      geoLink.rel = "stylesheet";
+      geoLink.href =
+        "https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css";
+      document.head.appendChild(geoLink);
+
+      // Load Geocoder JS
+      const geoScript = document.createElement("script");
+      geoScript.src =
+        "https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js";
+      geoScript.onload = () => setIsGeocoderLoaded(true);
+      document.head.appendChild(geoScript);
     };
 
     loadLeaflet();
   }, []);
 
-  /**
-   * EFFECT: Initialize Map
-   * Runs once Leaflet is loaded and the container is ready.
-   */
   useEffect(() => {
-    if (!isLeafletLoaded || !mapContainerRef.current || mapInstanceRef.current)
+    if (
+      !isLeafletLoaded ||
+      !isGeocoderLoaded ||
+      !mapContainerRef.current ||
+      mapInstanceRef.current
+    )
       return;
 
+    // Default position: Cairo, Egypt
+    const defaultCenter: LatLngExpression = [30.0444, 31.2357];
+    const defaultZoom = 13;
+
     const L = window.L;
-
-    // Initialize Map
-    const map = L.map(mapContainerRef.current, {
-      zoomControl: false, // We can add custom control if needed, or leave default
-    }).setView(defaultCenter, defaultZoom);
-
-    // Add Zoom Control manually if we disabled it above, or let it default.
-    // Default is fine, let's keep it standard.
-    // map.addControl(L.control.zoom({ position: 'topright' }));
-
+    const map = L.map(mapContainerRef.current, { zoomControl: false }).setView(
+      defaultCenter,
+      defaultZoom
+    );
     mapInstanceRef.current = map as Map;
 
-    // Add Tile Layer
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     }).addTo(map);
 
-    // Add Click Handler
+    // Add Geocoder Control
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if ((L.Control as any).Geocoder) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      new (L.Control as any).Geocoder({
+        defaultMarkGeocode: false,
+        placeholder: "Search for location...",
+        collapsed: false,
+      })
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .on("markgeocode", function (e: any) {
+          const latlng = e.geocode.center;
+          setSelectedPosition(latlng);
+          map.fitBounds(e.geocode.bbox);
+        })
+        .addTo(map);
+    }
+
     map.on("click", (e) => {
-      // Check the ref, not the state, to get the fresh value inside the closure
       if (confirmedRef.current) return;
       setSelectedPosition(e.latlng);
     });
 
-    // Cleanup
     return () => {
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
       }
     };
-  }, [isLeafletLoaded]);
+  }, [isLeafletLoaded, isGeocoderLoaded]);
 
-  /**
-   * EFFECT: Handle Marker and Recenter Logic
-   * Syncs the React state `selectedPosition` with the Leaflet map.
-   */
   useEffect(() => {
     if (!mapInstanceRef.current || !isLeafletLoaded || !selectedPosition)
       return;
-
-    // If confirmed, we do not move the marker even if selectedPosition somehow updates
     if (confirmed) return;
 
     const L = window.L;
     const map = mapInstanceRef.current;
 
-    // Create Custom Icon
+    // Custom Icon (reusing existing SVG logic for brevity, or simplifying)
     const customIcon = L.divIcon({
       className: "custom-marker",
-      html: `<div style="
-        width: 30px; 
-        height: 42px; 
-        display: flex; 
-        justify-content: center; 
-        align-items: center; 
-        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-        color: #ef4444;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      html: `<div style="width: 30px; height: 42px; display: flex; justify-content: center; align-items: center; color: #ef4444; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="40" height="40">
           <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/>
           <circle cx="12" cy="10" r="3"/>
         </svg>
@@ -217,7 +251,6 @@ export default function LocationSelector() {
       popupAnchor: [0, -45],
     });
 
-    // Add or Move Marker
     if (markerRef.current) {
       markerRef.current.setLatLng(selectedPosition);
     } else {
@@ -226,23 +259,67 @@ export default function LocationSelector() {
       }).addTo(map);
     }
 
-    // Recentering Logic:
-    // We maintain the user's current zoom level unless it's very far out.
-    // If they are zoomed out (level < 10), we zoom them in a bit to see the street.
     const currentZoom = map.getZoom();
     const targetZoom = currentZoom < 12 ? 14 : currentZoom;
-
-    map.flyTo(selectedPosition, targetZoom, {
-      animate: true,
-      duration: 1.5, // Slightly slower for smoother feel
-    });
+    map.flyTo(selectedPosition, targetZoom, { animate: true, duration: 1.5 });
   }, [selectedPosition, isLeafletLoaded, confirmed]);
 
-  // UI Handlers
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
+    if (!selectedPosition) return;
     setConfirmed(true);
-    setNotification("Location confirmed!");
-    setTimeout(() => setNotification(""), 3000);
+    setIsGeocoding(true);
+
+    try {
+      // Reverse Geocoding with Nominatim
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${selectedPosition.lat}&lon=${selectedPosition.lng}`
+      );
+      const data = await response.json();
+
+      const address = data.display_name || "";
+      const city =
+        data.address?.city || data.address?.town || data.address?.village || "";
+      const district =
+        data.address?.suburb ||
+        data.address?.neighbourhood ||
+        data.address?.district ||
+        ""; // Capture district
+      const country = data.address?.country || "";
+
+      const locationData: LocationData = {
+        address,
+        city,
+        district,
+        country,
+        lat: selectedPosition.lat,
+        lng: selectedPosition.lng,
+      };
+
+      if (onLocationSelect) {
+        onLocationSelect(locationData);
+      }
+      setNotification("Location confirmed!");
+    } catch (error) {
+      console.error("Geocoding error:", error);
+      setNotification("Location confirmed (Address lookup failed)");
+      // Still return coords if geocoding fails
+      if (onLocationSelect) {
+        onLocationSelect({
+          address: "",
+          city: "",
+          district: "",
+          country: "",
+          lat: selectedPosition.lat,
+          lng: selectedPosition.lng,
+        });
+      }
+    } finally {
+      setIsGeocoding(false);
+      setTimeout(() => {
+        setNotification("");
+        if (onClose) onClose(); // Auto close if desired
+      }, 1500);
+    }
   };
 
   const handleCancel = () => {
@@ -251,11 +328,6 @@ export default function LocationSelector() {
     if (markerRef.current) {
       markerRef.current.remove();
       markerRef.current = null;
-    }
-    // Optionally return to default view
-    if (mapInstanceRef.current) {
-      // mapInstanceRef.current.flyTo(defaultCenter, defaultZoom);
-      // Actually, staying where the user was looking is usually better UX
     }
   };
 
@@ -266,19 +338,26 @@ export default function LocationSelector() {
 
   return (
     <div className="flex flex-col w-full h-full bg-gray-50 p-4 font-sans relative">
-      {/* Header */}
-      <div className="mb-4 z-10">
-        <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
-          <IconMapPin className="text-blue-600 w-8 h-8" /> Select Location
-        </h1>
-        <p className="text-gray-600 text-sm mt-1">
-          Tap on the map to pin your destination.
-        </p>
+      <div className="mb-4 z-10 flex justify-between items-start">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+            <IconMapPin className="text-blue-600 w-8 h-8" /> Select Location
+          </h1>
+          <p className="text-gray-600 text-sm mt-1">
+            Tap on the map to pin your destination.
+          </p>
+        </div>
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="p-2 bg-white rounded-full shadow hover:bg-gray-100"
+          >
+            <IconX className="w-6 h-6 text-gray-600" />
+          </button>
+        )}
       </div>
 
-      {/* Map Container Wrapper */}
-      <div className="relative flex-grow w-full rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-gray-200">
-        {/* Loading State */}
+      <div className="relative flex-grow w-full rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-gray-200 min-h-[400px]">
         {!isLeafletLoaded && (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-500 z-50 bg-gray-100">
             <IconLoader className="w-10 h-10 animate-spin mb-2 text-blue-500" />
@@ -286,32 +365,25 @@ export default function LocationSelector() {
           </div>
         )}
 
-        {/* The Actual Map Div */}
         <div ref={mapContainerRef} className="w-full h-full z-0 outline-none" />
 
-        {/* Confirmation Card (Bottom Overlay) */}
         {selectedPosition && !confirmed && (
-          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-[95%] max-w-xs bg-white rounded-xl shadow-2xl p-4 z-[1000] transition-all duration-300 ease-out border border-gray-100">
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 w-[95%] max-w-xs bg-white rounded-xl shadow-2xl p-4 z-[1000] border border-gray-100">
             <div className="flex flex-col items-center text-center space-y-3">
-              {/* Header Section with Icon and Title */}
               <div className="flex flex-col items-center gap-2">
                 <div className="bg-blue-50 p-2 rounded-full">
                   <IconAlertCircle className="w-5 h-5 text-blue-600" />
                 </div>
-
                 <div>
                   <h3 className="font-bold text-gray-900 text-base leading-tight">
                     Confirm Location?
                   </h3>
-                  {/* Coordinates - made smaller and monospaced */}
                   <div className="text-[10px] text-gray-500 mt-1 font-mono bg-gray-50 px-2 py-0.5 rounded border border-gray-100 inline-block">
                     {selectedPosition.lat.toFixed(5)},{" "}
                     {selectedPosition.lng.toFixed(5)}
                   </div>
                 </div>
               </div>
-
-              {/* Actions */}
               <div className="flex w-full gap-2 pt-1">
                 <button
                   onClick={handleCancel}
@@ -330,9 +402,19 @@ export default function LocationSelector() {
           </div>
         )}
 
-        {/* Confirmed State Badge (Top Right) */}
-        {confirmed && (
-          <div className="absolute top-4 right-4 z-[1000] animate-in fade-in slide-in-from-top-4 duration-500">
+        {isGeocoding && (
+          <div className="absolute inset-0 bg-white/50 backdrop-blur-sm z-[2000] flex items-center justify-center">
+            <div className="bg-white p-4 rounded-xl shadow-xl flex flex-col items-center">
+              <IconLoader className="w-8 h-8 animate-spin text-brand-primary mb-2" />
+              <span className="text-sm font-medium text-slate-700">
+                Fetching Address...
+              </span>
+            </div>
+          </div>
+        )}
+
+        {confirmed && !isGeocoding && (
+          <div className="absolute top-4 right-4 z-[1000]">
             <div className="bg-white/90 backdrop-blur-sm border border-green-200 text-green-700 px-4 py-3 rounded-lg shadow-lg flex items-center gap-3">
               <div className="bg-green-100 p-1.5 rounded-full">
                 <IconCheck className="w-4 h-4 text-green-700" />
@@ -353,9 +435,8 @@ export default function LocationSelector() {
         )}
       </div>
 
-      {/* Toast Notification */}
       {notification && (
-        <div className="fixed bottom-6 right-6 bg-gray-900 text-white text-sm px-5 py-3 rounded-lg shadow-xl flex items-center gap-3 z-[2000] animate-in slide-in-from-bottom-5">
+        <div className="fixed bottom-6 right-6 bg-gray-900 text-white text-sm px-5 py-3 rounded-lg shadow-xl flex items-center gap-3 z-[2000]">
           <IconCheck className="w-4 h-4 text-green-400" />
           {notification}
         </div>

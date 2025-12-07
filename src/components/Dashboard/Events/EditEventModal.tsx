@@ -95,12 +95,17 @@ export function EditEventModal({
         title: formData.title,
         date: formData.date,
         time: formData.time,
-        location: {
-          city: formData.location.city,
-          country: formData.location.country,
-          address: formData.location.address,
-          district: formData.location.district,
-        },
+        // Conditionally include location only for offline events
+        ...(formData.type !== "online" && {
+          location: {
+            city: formData.location?.city || "",
+            country: formData.location?.country || "",
+            address: formData.location?.address || "",
+            district: formData.location?.district || "",
+            latitude: formData.location?.latitude || 0,
+            longitude: formData.location?.longitude || 0,
+          },
+        }),
         ticketType: {
           price: Number(formData.ticketType.price),
           quantity: Number(formData.ticketType.quantity || 0),
@@ -229,113 +234,138 @@ export function EditEventModal({
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">
-                Location
-              </label>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-xs text-slate-500 mb-1">
-                    Country
-                  </label>
-                  <input
-                    type="text"
-                    name="location.country"
-                    value={formData.location.country}
-                    onChange={(e) =>
-                      setFormData((prev) =>
-                        prev
-                          ? {
-                              ...prev,
-                              location: {
-                                ...prev.location,
-                                country: e.target.value,
-                              },
-                            }
-                          : null
-                      )
-                    }
-                    className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all"
-                    placeholder="Country"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs text-slate-500 mb-1">
-                    City
-                  </label>
-                  <input
-                    type="text"
-                    name="location.city"
-                    value={formData.location.city}
-                    onChange={(e) =>
-                      setFormData((prev) =>
-                        prev
-                          ? {
-                              ...prev,
-                              location: {
-                                ...prev.location,
-                                city: e.target.value,
-                              },
-                            }
-                          : null
-                      )
-                    }
-                    className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all"
-                    placeholder="City"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs text-slate-500 mb-1">
-                    Address
-                  </label>
-                  <input
-                    type="text"
-                    name="location.address"
-                    value={formData.location.address || ""}
-                    onChange={(e) =>
-                      setFormData((prev) =>
-                        prev
-                          ? {
-                              ...prev,
-                              location: {
-                                ...prev.location,
-                                address: e.target.value,
-                              },
-                            }
-                          : null
-                      )
-                    }
-                    className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all"
-                    placeholder="Address"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs text-slate-500 mb-1">
-                    District
-                  </label>
-                  <input
-                    type="text"
-                    name="location.district"
-                    value={formData.location.district || ""}
-                    onChange={(e) =>
-                      setFormData((prev) =>
-                        prev
-                          ? {
-                              ...prev,
-                              location: {
-                                ...prev.location,
-                                district: e.target.value,
-                              },
-                            }
-                          : null
-                      )
-                    }
-                    className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all"
-                    placeholder="District"
-                  />
+            {formData.type !== "online" && (
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1">
+                  Location
+                </label>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-xs text-slate-500 mb-1">
+                      Country
+                    </label>
+                    <input
+                      type="text"
+                      name="location.country"
+                      value={formData.location?.country || ""}
+                      onChange={(e) =>
+                        setFormData((prev) =>
+                          prev
+                            ? {
+                                ...prev,
+                                location: {
+                                  ...prev.location,
+                                  country: e.target.value,
+                                  city: prev.location?.city || "",
+                                  address: prev.location?.address || "",
+                                  district: prev.location?.district || "",
+                                  latitude: prev.location?.latitude || 0,
+                                  longitude: prev.location?.longitude || 0,
+                                },
+                              }
+                            : null
+                        )
+                      }
+                      className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all"
+                      placeholder="Country"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-slate-500 mb-1">
+                      City
+                    </label>
+                    <input
+                      type="text"
+                      name="location.city"
+                      value={formData.location?.city || ""}
+                      onChange={(e) =>
+                        setFormData((prev) =>
+                          prev
+                            ? {
+                                ...prev,
+                                location: {
+                                  ...prev.location,
+                                  city: e.target.value,
+                                  // Ensure other required fields exist to satisfy TS if needed
+                                  country: prev.location?.country || "",
+                                  address: prev.location?.address || "",
+                                  district: prev.location?.district || "",
+                                  latitude: prev.location?.latitude || 0,
+                                  longitude: prev.location?.longitude || 0,
+                                },
+                              }
+                            : null
+                        )
+                      }
+                      className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all"
+                      placeholder="City"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-slate-500 mb-1">
+                      Address
+                    </label>
+                    <input
+                      type="text"
+                      name="location.address"
+                      value={formData.location?.address || ""}
+                      onChange={(e) =>
+                        setFormData((prev) =>
+                          prev
+                            ? {
+                                ...prev,
+                                location: {
+                                  ...prev.location,
+                                  address: e.target.value,
+                                  // Ensure other required fields exist to satisfy TS if needed
+                                  country: prev.location?.country || "",
+                                  city: prev.location?.city || "",
+                                  district: prev.location?.district || "",
+                                  latitude: prev.location?.latitude || 0,
+                                  longitude: prev.location?.longitude || 0,
+                                },
+                              }
+                            : null
+                        )
+                      }
+                      className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all"
+                      placeholder="Address"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-slate-500 mb-1">
+                      District
+                    </label>
+                    <input
+                      type="text"
+                      name="location.district"
+                      value={formData.location?.district || ""}
+                      onChange={(e) =>
+                        setFormData((prev) =>
+                          prev
+                            ? {
+                                ...prev,
+                                location: {
+                                  ...prev.location,
+                                  district: e.target.value,
+                                  // Ensure other required fields exist to satisfy TS if needed
+                                  country: prev.location?.country || "",
+                                  city: prev.location?.city || "",
+                                  address: prev.location?.address || "",
+                                  latitude: prev.location?.latitude || 0,
+                                  longitude: prev.location?.longitude || 0,
+                                },
+                              }
+                            : null
+                        )
+                      }
+                      className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all"
+                      placeholder="District"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             <div className="grid grid-cols-2 gap-4">
               <div>
