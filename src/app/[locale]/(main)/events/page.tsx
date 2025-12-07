@@ -36,7 +36,7 @@ const EventsPage = () => {
     const fetchEvents = async () => {
       setIsLoading(true);
       try {
-        const res = await axiosInstance.get("/events");
+        const res = await axiosInstance.get("/events?limit=30");
         setEvents(res.data.data.events);
       } catch (err) {
         console.error(err);
@@ -123,39 +123,39 @@ const EventsPage = () => {
     const eventDate = parseEventDate(eventDateStr);
     if (!eventDate) return false;
 
+    // Normalize event date to midnight for comparison
+    const normalizedEventDate = new Date(eventDate);
+    normalizedEventDate.setHours(0, 0, 0, 0);
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+
     const tomorrow = new Date(today);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     return selectedDates.some((filter) => {
       if (filter === "Today") {
-        return eventDate.getTime() === today.getTime();
+        return normalizedEventDate.getTime() === today.getTime();
       }
       if (filter === "Tomorrow") {
-        return eventDate.getTime() === tomorrow.getTime();
+        return normalizedEventDate.getTime() === tomorrow.getTime();
       }
       if (filter === "This Week") {
         const nextWeek = new Date(today);
         nextWeek.setDate(today.getDate() + 7);
-        return eventDate >= today && eventDate <= nextWeek;
+        return normalizedEventDate >= today && normalizedEventDate <= nextWeek;
       }
       if (filter === "This Weekend") {
         const friday = new Date(today);
         friday.setDate(today.getDate() + ((5 - today.getDay() + 7) % 7));
         const sunday = new Date(friday);
         sunday.setDate(friday.getDate() + 2);
-        return eventDate >= friday && eventDate <= sunday;
+        return normalizedEventDate >= friday && normalizedEventDate <= sunday;
       }
       if (filter === "Pick a Date" && customDate) {
         const selected = new Date(customDate);
         selected.setHours(0, 0, 0, 0);
-        // Compare year, month, day to avoid time issues if eventDate has time (it shouldn't based on parsing)
-        return (
-          eventDate.getFullYear() === selected.getFullYear() &&
-          eventDate.getMonth() === selected.getMonth() &&
-          eventDate.getDate() === selected.getDate()
-        );
+        return normalizedEventDate.getTime() === selected.getTime();
       }
       return false;
     });
@@ -204,6 +204,19 @@ const EventsPage = () => {
           return values.some((selectedCat) =>
             eventCategories.some((cat) =>
               cat?.name?.toLowerCase().includes(selectedCat.toLowerCase())
+            )
+          );
+        }
+
+        if (category === "Tags") {
+          // Check if event has any of the selected tags (by name)
+          const eventTags = Array.isArray(event.tags)
+            ? event.tags
+            : [event.tags];
+
+          return values.some((selectedTag) =>
+            eventTags.some((tag) =>
+              tag?.name?.toLowerCase().includes(selectedTag.toLowerCase())
             )
           );
         }

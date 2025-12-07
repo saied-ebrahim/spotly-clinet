@@ -40,12 +40,12 @@ export default function ChangeEmail() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Current Email */}
-        <div className="bg-linear-to-r from-blue-50 to-indigo-50 p-6 rounded-xl border border-blue-200/50">
+        <div className="bg-slate-50 p-6 rounded-xl border border-slate-200">
           <label className="block text-sm font-semibold text-gray-700 mb-3">
             {t("currentEmail")}
           </label>
           <div className="flex items-center gap-3 text-gray-900">
-            <FaEnvelope className="w-5 h-5 text-indigo-600" />
+            <FaEnvelope className="w-5 h-5 text-brand-primary" />
             <span className="font-medium">{formData.currentEmail}</span>
             <FaCheckCircle className="w-5 h-5 text-green-600 ml-auto" />
           </div>
@@ -64,7 +64,7 @@ export default function ChangeEmail() {
               value={formData.newEmail}
               onChange={(e) => handleInputChange("newEmail", e.target.value)}
               required
-              className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all duration-300 bg-white/50 backdrop-blur-sm hover:bg-white"
+              className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all duration-300 bg-white/50 backdrop-blur-sm hover:bg-white"
             />
           </div>
         </div>
@@ -84,7 +84,7 @@ export default function ChangeEmail() {
                 handleInputChange("confirmEmail", e.target.value)
               }
               required
-              className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 outline-none transition-all duration-300 bg-white/50 backdrop-blur-sm hover:bg-white"
+              className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 outline-none transition-all duration-300 bg-white/50 backdrop-blur-sm hover:bg-white"
             />
           </div>
         </div>
@@ -101,13 +101,12 @@ export default function ChangeEmail() {
         <div className="flex justify-center sm:justify-start pt-4">
           <button
             type="submit"
-            className="group relative px-8 py-3 bg-linear-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden"
+            className="group relative px-8 py-3 bg-brand-primary text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 overflow-hidden"
           >
             <span className="relative z-10 flex items-center gap-2">
               <FaSave className="w-5 h-5" />
               {t("saveNewEmail")}
             </span>
-            <div className="absolute inset-0 bg-linear-to-r from-purple-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           </button>
         </div>
       </form>

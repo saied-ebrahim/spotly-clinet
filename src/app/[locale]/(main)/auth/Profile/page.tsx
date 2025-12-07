@@ -25,22 +25,22 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50 to-indigo-50 pt-10 pb-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto h-[calc(100vh-8rem)] mb-8">
-        <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl overflow-hidden border border-white/20 animate-fade-in h-full">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-0 h-full">
-            {/* Sidebar */}
-            <div className="lg:col-span-1 border-b lg:border-b-0 lg:border-r border-gray-200/50 overflow-y-auto h-full">
-              <ProfileSidebar
-                activeSection={activeSection}
-                onSectionChange={setActiveSection}
-              />
-            </div>
+    <div className="min-h-screen bg-slate-50 pt-10 pb-8 px-4 sm:px-6 lg:px-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-[calc(100vh-8rem)]">
+        {/* Sidebar */}
+        <div className="lg:col-span-3 xl:col-span-2">
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden sticky top-24">
+            <ProfileSidebar
+              activeSection={activeSection}
+              onSectionChange={setActiveSection}
+            />
+          </div>
+        </div>
 
-            {/* Main Content */}
-            <div className="lg:col-span-3 p-4 sm:p-6 lg:p-8 overflow-y-auto h-full">
-              <div className="animate-slide-in">{renderSection()}</div>
-            </div>
+        {/* Main Content */}
+        <div className="lg:col-span-9 xl:col-span-10">
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 min-h-full">
+            {renderSection()}
           </div>
         </div>
       </div>
