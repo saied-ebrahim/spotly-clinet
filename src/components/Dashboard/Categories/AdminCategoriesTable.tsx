@@ -6,9 +6,9 @@ import { ColDef, ValueFormatterParams } from "ag-grid-community";
 import { FiTrash2, FiEdit, FiPlus } from "react-icons/fi";
 import ConfirmationModal from "@/components/Custom/ConfirmationModal";
 import { CategoryModal } from "./CategoryModal";
-import { CategoryDocument } from "@/types/categoryInterface";
 import axiosInstance from "@/lib/axios";
 import Image from "next/image";
+import { CategoryDocument } from "@/types/CategoryInterface";
 
 interface AdminCategoriesTableProps {
   initialData: CategoryDocument[];

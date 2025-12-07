@@ -11,11 +11,11 @@ import {
   FiCloud,
 } from "react-icons/fi";
 import axiosInstance from "@/lib/axios";
-import { CategoryDocument } from "@/types/categoryInterface";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Image from "next/image";
 import { toast } from "react-toastify";
+import { CategoryDocument } from "@/types/CategoryInterface";
 
 interface CategoryModalProps {
   isOpen: boolean;

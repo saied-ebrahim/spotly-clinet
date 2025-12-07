@@ -1,3 +1,5 @@
+import { OrderDocument } from "./orderInterface";
+
 export interface Address {
   city: string;
   country: string;
@@ -31,6 +33,6 @@ export interface Order {
 export interface OrderResponse {
   status: string;
   data: {
-    order: Order[];
+    order: OrderDocument[];
   };
 }

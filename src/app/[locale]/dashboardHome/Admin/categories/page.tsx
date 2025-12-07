@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axios";
 import { AdminCategoriesTable } from "@/components/Dashboard/Categories/AdminCategoriesTable";
-import { CategoryDocument } from "@/types/categoryInterface";
+import { CategoryDocument } from "@/types/CategoryInterface";
 
 export default function AdminCategoriesPage() {
   const [categories, setCategories] = useState<CategoryDocument[]>([]);

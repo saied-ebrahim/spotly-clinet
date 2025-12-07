@@ -1,3 +1,5 @@
+import { EventDocument } from "./eventInterface";
+
 export interface Category {
   _id: string;
   name: string;
@@ -10,7 +12,7 @@ export interface CategoryDocument {
   name: string;
   description: string;
   image: string;
-  events: any[];
+  events: EventDocument[];
   createdAt: string;
   updatedAt: string;
   __v: number;

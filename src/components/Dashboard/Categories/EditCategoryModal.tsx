@@ -4,9 +4,10 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { FiX, FiTag, FiFileText } from "react-icons/fi";
 import axiosInstance from "@/lib/axios";
-import { CategoryDocument } from "@/types/categoryInterface";
+
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { CategoryDocument } from "@/types/CategoryInterface";
 
 interface EditCategoryModalProps {
   isOpen: boolean;

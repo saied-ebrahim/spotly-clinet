@@ -6,11 +6,12 @@ import axiosInstance from "@/lib/axios";
 import Cookies from "js-cookie";
 import { decryptData } from "@/shared/encryption";
 import { parseJwt } from "@/shared/jwt";
-import { Order, OrderResponse } from "@/types/order";
+import { OrderResponse } from "@/types/order";
 import { toast } from "react-toastify";
+import { OrderDocument } from "@/types/orderInterface";
 
 export default function OrganizerOrdersPage() {
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<OrderDocument[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
