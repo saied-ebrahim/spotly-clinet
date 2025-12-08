@@ -31,7 +31,9 @@
     "documentation": "Documentation",
     "deployNow": "Deploy Now",
     "next": "Next",
-    "back": "Back"
+    "back": "Back",
+    "event": "Event",
+    "events": "Events"
   },
   "auth": {
     "parentTitle": "Parent Registration",
