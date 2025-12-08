@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import {
   FaTimes,
   FaCloudUploadAlt,
@@ -633,7 +634,7 @@ export function CreateEventModal({
 
             {/* Map Modal Overlay */}
             {isMapModalOpen && (
-              <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+              <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
                 <div className="bg-white rounded-2xl shadow-xl w-full max-w-4xl h-[80vh] overflow-hidden relative">
                   <LocationSelector
                     onClose={() => setIsMapModalOpen(false)}
@@ -698,10 +699,11 @@ export function CreateEventModal({
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                     <div className="relative group aspect-video bg-slate-100 rounded-lg overflow-hidden">
                       {currentMedia.mediaType === "image" ? (
-                        <img
+                        <Image
                           src={currentMedia.mediaUrl}
                           alt="Event Media"
-                          className="w-full h-full object-cover"
+                          fill
+                          className="object-cover"
                         />
                       ) : (
                         <video

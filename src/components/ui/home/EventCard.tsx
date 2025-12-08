@@ -94,7 +94,7 @@ console.log(event)
         {/* Content Section - Responsive Padding */}
         <div className="p-3 sm:p-4 relative flex gap-3 sm:gap-4 flex-1">
           {/* Date Block (Left side) - Responsive Text */}
-          <div className="flex flex-col items-center text-blue-700 shrink-0 min-w-[3rem]">
+          <div className="flex flex-col items-center text-blue-700 shrink-0 min-w-12">
             <span className="text-xs sm:text-sm font-bold uppercase tracking-wide">
               {month}
             </span>
@@ -106,7 +106,7 @@ console.log(event)
           {/* Details Block (Right side) - Flex Grow to fill space */}
           <div className="flex flex-col gap-1 grow font-medium min-w-0 pr-3">
             {/* Title - Responsive Text & Auto Height */}
-            <h3 className="text-base sm:text-lg leading-tight font-bold text-gray-900 line-clamp-2 min-h-[2.5rem]">
+            <h3 className="text-base sm:text-lg leading-tight font-bold text-gray-900 line-clamp-2 min-h-10">
               {event.title}
             </h3>
             
