@@ -1,13 +1,23 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import dynamic from "next/dynamic";
+import Image from "next/image";
 import {
   FaTimes,
   FaCloudUploadAlt,
   FaTrash,
   FaChevronDown,
   FaCheck,
+  FaMapMarkerAlt,
 } from "react-icons/fa";
+
+// Dynamic import for Leaflet map to avoid SSR issues
+const LocationSelector = dynamic(
+  () => import("@/components/ui/MapLocationSelector"),
+  { ssr: false }
+);
+
 import axios from "@/lib/axios";
 import Cookies from "js-cookie";
 import { decryptData } from "@/shared/encryption";
@@ -36,6 +46,7 @@ export function CreateEventModal({
 }: CreateEventModalProps) {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [isMapModalOpen, setIsMapModalOpen] = useState(false);
 
   // Data sources
   const [categories, setCategories] = useState<Category[]>([]);
@@ -489,9 +500,17 @@ export function CreateEventModal({
             {/* Location */}
             {!watch("isonline") && (
               <div className="space-y-4">
-                <h4 className="font-semibold text-slate-800 border-b pb-2">
-                  Location
-                </h4>
+                <div className="flex items-center justify-between border-b pb-2">
+                  <h4 className="font-semibold text-slate-800">Location</h4>
+                  <button
+                    type="button"
+                    onClick={() => setIsMapModalOpen(true)}
+                    className="text-sm text-brand-primary hover:text-brand-primary/80 font-medium flex items-center gap-1"
+                  >
+                    <FaMapMarkerAlt /> Choose on Map
+                  </button>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">
@@ -613,6 +632,39 @@ export function CreateEventModal({
               </div>
             )}
 
+            {/* Map Modal Overlay */}
+            {isMapModalOpen && (
+              <div className="fixed inset-0 z-60 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+                <div className="bg-white rounded-2xl shadow-xl w-full max-w-4xl h-[80vh] overflow-hidden relative">
+                  <LocationSelector
+                    onClose={() => setIsMapModalOpen(false)}
+                    onLocationSelect={(data) => {
+                      setValue("location.country", data.country || "Egypt", {
+                        shouldValidate: true,
+                      });
+                      setValue("location.city", data.city || "", {
+                        shouldValidate: true,
+                      });
+                      setValue("location.district", data.district || "", {
+                        shouldValidate: true,
+                      });
+                      setValue("location.address", data.address || "", {
+                        shouldValidate: true,
+                      });
+                      setValue("location.latitude", data.lat, {
+                        shouldValidate: true,
+                      });
+                      setValue("location.longitude", data.lng, {
+                        shouldValidate: true,
+                      });
+                      setIsMapModalOpen(false);
+                      toast.success("Location updated from map!");
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+
             {/* Media */}
             <div className="space-y-4">
               <h4 className="font-semibold text-slate-800 border-b pb-2">
@@ -647,10 +699,11 @@ export function CreateEventModal({
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                     <div className="relative group aspect-video bg-slate-100 rounded-lg overflow-hidden">
                       {currentMedia.mediaType === "image" ? (
-                        <img
+                        <Image
                           src={currentMedia.mediaUrl}
                           alt="Event Media"
-                          className="w-full h-full object-cover"
+                          fill
+                          className="object-cover"
                         />
                       ) : (
                         <video

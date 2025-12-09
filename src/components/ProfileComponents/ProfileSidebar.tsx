@@ -32,12 +32,12 @@ export default function ProfileSidebar({
   ];
 
   return (
-    <div className="p-4 sm:p-6">
-      <h2 className="text-xl font-bold text-gray-900 mb-6 tracking-tight">
+    <div className="p-4">
+      <h2 className="text-lg font-bold text-slate-800 mb-4 px-2">
         {t("accountSettings")}
       </h2>
 
-      <nav className="space-y-2">
+      <nav className="space-y-1">
         {menuItems.map((item) => {
           const Icon = item.icon;
           const isActive = activeSection === item.id;
@@ -48,43 +48,21 @@ export default function ProfileSidebar({
               type="button"
               onClick={() => onSectionChange(item.id)}
               className={`
-                w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left
-                transition-all duration-300 ease-out group relative overflow-hidden
+                w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+                transition-colors duration-200
                 ${
                   isActive
-                    ? "bg-linear-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-500/50 scale-105"
-                    : "text-gray-700 hover:bg-gray-100 hover:scale-102"
+                    ? "bg-brand-primary/10 text-brand-primary"
+                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                 }
               `}
             >
-              {/* Animated background on hover */}
-              <div
-                className={`
-                  absolute inset-0 bg-linear-to-r from-indigo-600 to-purple-600 
-                  transition-opacity duration-300
-                  ${
-                    isActive
-                      ? "opacity-100"
-                      : "opacity-0 group-hover:opacity-10"
-                  }
-                `}
-              />
-
-              {/* Icon */}
               <Icon
-                className={`
-                  w-4 h-4 transition-transform duration-300
-                  ${isActive ? "scale-110" : "group-hover:scale-110"}
-                `}
+                className={`w-4 h-4 ${
+                  isActive ? "text-brand-primary" : "text-slate-400"
+                }`}
               />
-
-              {/* Label */}
-              <span className="font-medium relative z-10">{item.label}</span>
-
-              {/* Active indicator */}
-              {isActive && (
-                <div className="ml-auto w-2 h-2 rounded-full bg-white animate-pulse" />
-              )}
+              <span>{item.label}</span>
             </button>
           );
         })}

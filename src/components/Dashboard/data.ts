@@ -64,6 +64,15 @@ export const navSections: NavSection[] = [
         allowedRoles: ["Admin"],
       },
       {
+        label: "Categories",
+        icon: FiTag, // Using FiTag or maybe FiGrid/FiList? FiTag is used for Tags. Let's use FiList or FiGrid if available. The user didn't specify. I'll stick to FiTag or reuse an appropriate icon. Since Tags uses FiTag, maybe Categories can use something else or just reuse.
+        // Wait, current file imports FiTag. I should check if other icons are available.
+        // Let's use FiTag for now to be safe with imports, or check imports.
+        key: "categories",
+        link: "categories",
+        allowedRoles: ["Admin"],
+      },
+      {
         label: "Users",
         icon: FiUser,
         key: "users",
@@ -71,10 +80,10 @@ export const navSections: NavSection[] = [
         allowedRoles: ["Admin"],
       },
       {
-        label: "Marketing",
+        label: "Analytics",
         icon: FiTrendingUp,
-        key: "marketing",
-        link: "marketing",
+        key: "analytics",
+        link: "analytics",
       },
       {
         label: "Finance",

@@ -11,7 +11,6 @@ export default function middleware(request: NextRequest) {
   const token = request.cookies.get("token");
   const tokenDecrypted = decryptData(token?.value ?? "") as DecryptedToken;
 
-  console.log(tokenDecrypted);
 
   if (url.pathname.startsWith("/specialist")) {
     if (!token || tokenDecrypted?.kind !== "specialist") {

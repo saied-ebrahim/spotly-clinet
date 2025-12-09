@@ -4,6 +4,9 @@ export interface OrderUser {
   lastName: string;
   email: string;
   phone?: string;
+  gender?: string;
+  createdAt?: string;
+  updatedAt?: string;
   address?: {
     city?: string;
     country?: string;
@@ -11,9 +14,12 @@ export interface OrderUser {
   };
 }
 
+import { EventDocument } from "./eventInterface";
+
 export interface OrderDocument {
   _id: string;
   userID: OrderUser;
+  eventID: EventDocument; // Populated event
   ticketTypeID: string;
   quantity: number;
   discount: number;
