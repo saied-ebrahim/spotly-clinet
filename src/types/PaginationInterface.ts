@@ -63,15 +63,15 @@ export interface PaginationProps extends PaginationEventsProps {
   // Add any other fields your event objects have
 }
 //----------------------------
-export interface PaginationEventsProps1 {
-  itemsPerPage: number;
-  children: React.ReactNode;
-  events: EventDocument[];
-}
+// export interface PaginationEventsProps {
+//   itemsPerPage: number;
+//   children: React.ReactNode;
+//   events: EventDocument[];
+// }
 
-export interface PaginationProps {
-  totalPages: number;
-  currentPage: number;
-  setCurrentPage: Dispatch<SetStateAction<number>>;
-}
+// export interface PaginationProps {
+//   totalPages: number;
+//   currentPage: number;
+//   setCurrentPage: Dispatch<SetStateAction<number>>;
+// }
 //-----------------------------
