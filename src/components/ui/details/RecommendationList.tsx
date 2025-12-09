@@ -20,14 +20,14 @@ const RecommendationList = ({ event }: { event: EventDocument }) => {
   const [recs, setRecs] = useState<EventDocument[]>([]);
   useEffect(() => {
     axiosInstance.get("/events").then((res) => {
-      console.log(res);
+      // console.log(res);
       const myRecs = res.data.data.events.filter((e: EventDocument) => {
         return (
           e.organizer.firstName === event.organizer.firstName &&
           e.organizer.lastName === event.organizer.lastName
         );
       });
-      console.log(myRecs);
+      // console.log(myRecs);
       setRecs(myRecs);
     });
   }, [event.organizer.firstName, event.organizer.lastName]);
@@ -71,7 +71,7 @@ const RecommendationList = ({ event }: { event: EventDocument }) => {
     currentPage * eventsPerPage,
     (currentPage + 1) * eventsPerPage
   );
-  console.log(recs);
+  // console.log(recs);
   return (
     <section className="md:py-16 max-w-7xl mx-auto  sm:px-6 lg:px-8">
       <div className="w-full py-12 pt-0 sm:pb-0">

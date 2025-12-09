@@ -14,8 +14,8 @@ import Link from "next/link";
 const Pagination = ({
   itemsPerPage,
   allEvents,
-  paginate,
   currentPage,
+  paginate,
   nextPage,
   prevPage,
 }: PaginationProps) => {

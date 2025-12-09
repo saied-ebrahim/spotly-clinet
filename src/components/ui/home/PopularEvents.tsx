@@ -8,6 +8,8 @@ import filterEvents from "@/utils/home/filterPopularEvents";
 
 import useGeolocation from "@/hooks/useGeolocation";
 import { EventDocument } from "@/types/eventInterface";
+import { useCityMatcher } from "@/utils/home/useCityMatcher";
+import { useGetGovArEn } from "@/hooks/useGetGovArEn";
 
 // 3. The Main Container Component
 const PopularEvents = () => {
@@ -23,10 +25,15 @@ const PopularEvents = () => {
   // the filter below is for choosing event in the city of the user
   // const filteredEvents = filtered.filter((e) => e.type !== "online" && e.location.district === city);
 
+  // let eventsInCurrentLocation = events.filter((e) => e.location.district === closestCity);
+  // const filtered = filterEvents(eventsInCurrentLocation, currentFilter);
+  // const filteredEvents = filtered.filter((e) => e.type !== "online");
   useEffect(() => {
     axiosInstance
-      .get("/events")
+      .get("/events?limit=100&page=1")
       .then((res) => {
+        console.log("events1111111");
+        console.log(res.data.data.events);
         setEvents(res.data.data.events);
       })
       .catch((err) => console.error(err));
@@ -36,8 +43,7 @@ const PopularEvents = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 font-sans">
         {/* Header */}
         <h2 className="text-3xl font-bold text-gray-900 mb-6">
-          {/* Popular Events in {city || "Your Location"} */}
-          Popular Events
+          Popular Events in {city || "Your Location"}
         </h2>
 
         {/* Filter Buttons */}
@@ -62,8 +68,8 @@ const PopularEvents = () => {
             Browse through our latest events and workshops.
           </p>
         </div>
-        {filteredEvents.length > 0 ? (
-          <PaginationList itemsPerPage={6} allEvents={filteredEvents} /> // this is a COMMON COMPONENT for pagination
+        {/* filteredEvents */events.length > 0 ? (
+          <PaginationList itemsPerPage={6} allEvents={/* filteredEvents */events} /> // this is a COMMON COMPONENT for pagination
         ) : (
           <h1 className="text-center w-full text-xl">No Events Found</h1>
         )}

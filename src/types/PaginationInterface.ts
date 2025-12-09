@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import { EventDocument } from "./eventInterface";
 
 export interface EventObject {
@@ -46,7 +47,7 @@ export interface Analytics {
 //   street: string;
 //   zipCode: string;
 // }
-
+//--------------------------
 export interface PaginationEventsProps {
   itemsPerPage: number;
   allEvents: EventDocument[];
@@ -61,3 +62,16 @@ export interface PaginationProps extends PaginationEventsProps {
 
   // Add any other fields your event objects have
 }
+//----------------------------
+// export interface PaginationEventsProps {
+//   itemsPerPage: number;
+//   children: React.ReactNode;
+//   events: EventDocument[];
+// }
+
+// export interface PaginationProps {
+//   totalPages: number;
+//   currentPage: number;
+//   setCurrentPage: Dispatch<SetStateAction<number>>;
+// }
+//-----------------------------
