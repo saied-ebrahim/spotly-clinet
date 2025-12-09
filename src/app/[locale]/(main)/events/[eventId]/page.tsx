@@ -9,8 +9,6 @@ import {
   FaRegClock,
   FaMapMarkerAlt,
   FaExternalLinkAlt,
-  FaPhone,
-  FaEnvelope,
 } from "react-icons/fa";
 
 import EventMap from "@/components/ui/details/EventMap";
@@ -47,18 +45,23 @@ export default async function EventDetailsPage({
   params: Promise<{ eventId: string }>;
 }) {
   const { eventId } = await params;
- 
-
+  // const getImageUrl = (url?: string) => {
+  //   console.log(url);
+  //   if (!url) return "/no-image.jpg";
+  //   if (url.startsWith("http") || url.startsWith("/")) return url;
+  //   return `https://${url}`;
+  // };
   // console.log(eventId);
 
-
-  const myEvent :EventDocument= await axiosInstance
-    .get(`/events/${eventId}`)
-    .then((res) => res.data.data.event)
+  // const res = await fetch("http://localhost:8080/events");
+  const data = await axiosInstance
+    .get("/events")
+    .then((res) => res.data.data.events)
     .catch((err) => console.error(err));
- 
+  // const data = await res.json();
+  const myEvent:EventDocument | undefined = data.find((e: EventDocument) => String(e._id) === eventId);
   const imageUrl = getImageUrl(myEvent?.media?.mediaUrl);
-  // console.log(myEvent);
+  console.log(myEvent);
 
   // --- Helper Functions ---
 
@@ -186,47 +189,30 @@ export default async function EventDetailsPage({
             {/* Host Info */}
             <section className="space-y-4">
               <h2 className="text-xl font-bold text-gray-900">Hosted by</h2>
-             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 gap-4 bg-gray-50 rounded-xl border border-gray-100 hover:shadow-md transition-shadow duration-300">
-      
-      {/* 1. Organizer Avatar & Name */}
-      <div className="flex items-center gap-4 w-full sm:w-auto">
-        <div className="relative w-12 h-12 shrink-0 rounded-full overflow-hidden border border-gray-200 bg-gray-200">
-          <Image
-            src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=100&h=100"
-            alt={`${myEvent.organizer.firstName} ${myEvent.organizer.lastName}`}
-            fill
-            className="object-cover"
-          />
-        </div>
-        <span className="font-bold text-gray-900 break-words">
-          {`${myEvent.organizer.firstName} ${myEvent.organizer.lastName}`}
-        </span>
-      </div>
-
-      {/* 2. Contact Info Section */}
-      {/* Stacks vertically on mobile (flex-col), goes horizontal on tablet/desktop (sm:flex-row) */}
-      <div className="flex flex-col sm:flex-row w-full sm:w-auto gap-2">
-        
-        {/* Email Badge */}
-        <div className="flex items-center gap-2 px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg hover:bg-white transition-colors w-full sm:w-auto bg-transparent">
-          <FaEnvelope className="text-gray-500 shrink-0" />
-          <span className="truncate max-w-[200px] sm:max-w-xs">
-            {
-            // myEvent.organizer?.user?.email  ||
-              `${myEvent.organizer.firstName}-${myEvent.organizer.lastName}@spotly.com`}
-          </span>
-        </div>
-
-        {/* Phone Badge */}
-        <div className="flex items-center gap-2 px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg hover:bg-white transition-colors w-full sm:w-auto bg-transparent">
-          <FaPhone className="text-gray-500 shrink-0" />
-          <span className="whitespace-nowrap">
-            {/* myEvent.organizer?.user?.phone || */ "010 0000 0000"}
-          </span>
-        </div>
-
-      </div>
-    </div>
+              <div className="p-4 gap-2  bg-gray-50 rounded-xl border border-gray-100 flex flex-wrap items-center justify-between hover:shadow-md transition-shadow duration-300">
+                <div className="flex items-center gap-4 flex-grow sm:flex-nowrap mb-5 sm:mb-0">
+                  <div className="relative w-12 h-12 rounded-full overflow-hidden border border-gray-200 bg-gray-200">
+                    {/* Placeholder Avatar */}
+                    <Image
+                      src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=100&h=100"
+                      alt={myEvent.organizer.firstName + " " + myEvent.organizer.lastName}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <span className="font-bold text-gray-900">
+                    {`${myEvent.organizer.firstName} ${myEvent.organizer.lastName}`}
+                  </span>
+                </div>
+                {/* <div className="flex gap-2 w-full"> */}
+                <button className="w-full sm:w-auto shrink-0 px-4 grow py-1.5 text-sm font-medium border border-gray-300 rounded-lg hover:bg-white transition-colors sm:max-w-[100px]">
+                  Contact
+                </button>
+                <button className="w-full sm:w-auto shrink-0 px-4 grow py-1.5 text-sm font-medium bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors sm:max-w-[100px]">
+                  + Follow
+                </button>
+                {/* </div> */}
+              </div>
             </section>
 
             {/* Description */}

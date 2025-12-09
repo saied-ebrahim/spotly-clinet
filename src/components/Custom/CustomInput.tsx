@@ -79,7 +79,7 @@ export default function CustomInput({
     if (apiUrl && querySearch) {
       setLoadingOptions(true);
       setOptions([]);
-      console.log(triggerApiUrl);
+      // console.log(triggerApiUrl);
       const value = (props?.value as OptionType)?.label || searchValue || "";
       axiosGet<CountryRaw[]>(
         apiUrl +
@@ -100,7 +100,7 @@ export default function CustomInput({
                 value: (item as { id: string }).id,
               })) || [];
             setOptions(options);
-            console.log(data);
+            // console.log(data);
             setConfig({
               page: data?.data?.page || 1,
               limit: data?.data?.limit || 10,
@@ -125,11 +125,11 @@ export default function CustomInput({
     triggerApiUrl,
   ]);
 
-  console.log(
-    options.concat(
-      config.isNext ? [{ label: t("auth.seeMore"), value: "seeMore" }] : []
-    )
-  );
+    // console.log(
+    //   options.concat(
+    //     config.isNext ? [{ label: t("auth.seeMore"), value: "seeMore" }] : []
+    //   )
+    // );
 
   return (
     <>

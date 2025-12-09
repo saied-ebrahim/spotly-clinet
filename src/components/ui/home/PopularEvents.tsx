@@ -20,20 +20,15 @@ const PopularEvents = () => {
   const [events, setEvents] = useState<EventDocument[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("All");
 
-  const closestCity = useCityMatcher().findClosestMatch(city as string);
+  const filtered = filterEvents(events, currentFilter);
+  const filteredEvents = filtered.filter((e) => e.type !== "online");
+  // the filter below is for choosing event in the city of the user
+  // const filteredEvents = filtered.filter((e) => e.type !== "online" && e.location.district === city);
 
   // let eventsInCurrentLocation = events.filter((e) => e.location.district === closestCity);
   // const filtered = filterEvents(eventsInCurrentLocation, currentFilter);
   // const filteredEvents = filtered.filter((e) => e.type !== "online");
   useEffect(() => {
-    // async function fetchEvents() {
- 
-    // let events  = await fetch(`https://spotly-api.vercel.app/api/v1/events`);
-    // let data : {data:{events: EventDocument[]}} = await events.json();
-    // console.log(data.data.events);
-    // setEvents(data.data.events);
-    // }
-    // fetchEvents();
     axiosInstance
       .get("/events?limit=100&page=1")
       .then((res) => {
@@ -48,7 +43,7 @@ const PopularEvents = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 font-sans">
         {/* Header */}
         <h2 className="text-3xl font-bold text-gray-900 mb-6">
-          Popular Events in {closestCity || "Your Location"}
+          Popular Events in {city || "Your Location"}
         </h2>
 
         {/* Filter Buttons */}
