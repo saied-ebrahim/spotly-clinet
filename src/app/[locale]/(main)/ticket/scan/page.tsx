@@ -1,11 +1,14 @@
 
-
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
 import { BrowserMultiFormatReader, NotFoundException } from '@zxing/library';
 import { FaQrcode, FaCheckCircle, FaTimesCircle, FaCamera, FaArrowLeft } from 'react-icons/fa';
 import Link from 'next/link';
+import axiosInstance from '@/lib/axios';
+import Cookies from "js-cookie";
+import { decryptData } from '@/shared/encryption';
+import { toast } from 'react-toastify';
 
 export default function TicketScanPage() {
   const [scanResult, setScanResult] = useState<string | null>(null);
@@ -52,29 +55,58 @@ export default function TicketScanPage() {
   }, [isScanning]);
 
   // 2. Handle the detected QR Code
-  const handleScan = (code: string) => {
+  const handleScan = async (code: string) => {
     // Stop the camera immediately
     setIsScanning(false);
     if (codeReaderRef.current) {
       codeReaderRef.current.reset();
     }
-    
     setScanResult(code);
     validateTicket(code);
   };
+  // let res = await axiosInstance.post('/tickets/verify/:ticketToken', { code })
+  //   .then((res) => {
+  //     console.log(res.data);
+      
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //   })  
+  //   setScanResult(code);
+  //   validateTicket(code);
+  // };
 
   // 3. Mock Backend Validation
   const validateTicket = async (code: string) => {
     setValidationStatus('validating');
-
+console.log("code", code);
     // TODO: REPLACE THIS WITH YOUR REAL API CALL
     // Example: const res = await fetch('/api/validate', { body: JSON.stringify({ code }) })
-    
-    setTimeout(() => {
-      // Logic: For demo, codes starting with "VALID" are valid
-      const isValid = code.toUpperCase().startsWith('VALID'); 
-      setValidationStatus(isValid ? 'valid' : 'invalid');
-    }, 1500); // Fake delay
+     const encrypted = Cookies.get("token");
+const token = encrypted ? (decryptData(encrypted) as any)?.token : null;
+console.log("token", token);
+if (!token) {
+  toast.error("Please login first");
+  return;
+}
+      let res = await axiosInstance.get(`/tickets/verify/${code}`)
+    .then((res) => {
+      console.log(res.data);
+      return res.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    }) 
+    if(res.success){
+      setValidationStatus('valid');
+    }else{
+      setValidationStatus('invalid');
+    }
+    // setTimeout(() => {
+    //   // Logic: For demo, codes starting with "VALID" are valid
+    //   const isValid = code.toUpperCase().startsWith('VALID'); 
+    //   setValidationStatus(isValid ? 'valid' : 'invalid');
+    // }, 1500); // Fake delay
   };
 
   // 4. Reset to scan again
@@ -84,7 +116,7 @@ export default function TicketScanPage() {
     setError(null);
     setIsScanning(true);
   };
-
+validateTicket("125632541");
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col items-center py-10 px-4">
       {/* Header */}
