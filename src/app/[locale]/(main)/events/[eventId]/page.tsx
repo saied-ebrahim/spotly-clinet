@@ -211,7 +211,8 @@ export default async function EventDetailsPage({
         <div className="flex items-center gap-2 px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg hover:bg-white transition-colors w-full sm:w-auto bg-transparent">
           <FaEnvelope className="text-gray-500 shrink-0" />
           <span className="truncate max-w-[200px] sm:max-w-xs">
-            {myEvent.organizer?.user?.email  ||
+            {
+            // myEvent.organizer?.user?.email  ||
               `${myEvent.organizer.firstName}-${myEvent.organizer.lastName}@spotly.com`}
           </span>
         </div>
@@ -220,7 +221,7 @@ export default async function EventDetailsPage({
         <div className="flex items-center gap-2 px-4 py-2 text-sm font-medium border border-gray-300 rounded-lg hover:bg-white transition-colors w-full sm:w-auto bg-transparent">
           <FaPhone className="text-gray-500 shrink-0" />
           <span className="whitespace-nowrap">
-            {myEvent.organizer?.user?.phone || "010 0000 0000"}
+            {/* myEvent.organizer?.user?.phone || */ "010 0000 0000"}
           </span>
         </div>
 
