@@ -190,7 +190,7 @@ export default async function EventDetailsPage({
             <section className="space-y-4">
               <h2 className="text-xl font-bold text-gray-900">Hosted by</h2>
               <div className="p-4 gap-2  bg-gray-50 rounded-xl border border-gray-100 flex flex-wrap items-center justify-between hover:shadow-md transition-shadow duration-300">
-                <div className="flex items-center gap-4 flex-grow sm:flex-nowrap mb-5 sm:mb-0">
+                <div className="flex items-center gap-4 grow sm:flex-nowrap mb-5 sm:mb-0">
                   <div className="relative w-12 h-12 rounded-full overflow-hidden border border-gray-200 bg-gray-200">
                     {/* Placeholder Avatar */}
                     <Image

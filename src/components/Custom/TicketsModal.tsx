@@ -5,10 +5,8 @@ import { createPortal } from "react-dom"; // 1. Import createPortal
 import { RxCross2 } from "react-icons/rx";
 import { AiOutlineMinus, AiOutlinePlus } from "react-icons/ai";
 import { BsChevronRight } from "react-icons/bs";
-import Link from "next/link";
 import { EventDocument } from "@/types/eventInterface";
 import { performCheckout } from "./RedirectToCheckout";
-import { useRouter } from "next/router";
 import { ToastContainer } from "react-toastify";
 
 export default function TicketsModal({
@@ -53,7 +51,7 @@ export default function TicketsModal({
 
   // 4. Wrap the entire JSX in createPortal(JSX, document.body)
   return createPortal(
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-9999 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
       {/* Click outside handler */}
       <div className="absolute inset-0" onClick={onClose}></div>
 
