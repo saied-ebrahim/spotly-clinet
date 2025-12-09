@@ -5,7 +5,7 @@ import EventCard from "./EventCard";
 // import PaginatedEventElement from "@/types/PaginatedEventElement";
 
 import {
-  PaginationEventsProps,
+  PaginationEventsProps1,
   PaginationProps,
 } from "@/types/PaginationInterface";
 import Link from "next/link";
@@ -19,7 +19,7 @@ const PaginatedEvents = ({
   itemsPerPage,
   // 1. Give it a default empty array
   events = [], 
-}: PaginationEventsProps) => {
+}: PaginationEventsProps1) => {
 
   // 2. Add a guard clause
   if (!events) {
