@@ -11,11 +11,14 @@ import { decryptData, encryptData } from "@/shared/encryption";
 import { FaUserCircle, FaChevronDown } from "react-icons/fa";
 import { authService } from "@/services/authService";
 import { parseJwt } from "@/shared/jwt";
+
 export default function Header() {
   const pathname = usePathname();
   const locale = useLocale();
   const [open, setOpen] = useState(false);
-  const [user, setUser] = useState<{ name?: string } | null>(null);
+  const [user, setUser] = useState<{ name?: string; role?: string } | null>(
+    null
+  );
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
@@ -53,7 +56,8 @@ export default function Header() {
             decodedToken.unique_name ||
             decodedToken.email?.split("@")[0] ||
             "User";
-          userData = { ...userData, name };
+          const role = decodedToken.role;
+          userData = { ...userData, name, role };
         }
 
         const currentTime = Date.now() / 1000;
@@ -61,7 +65,7 @@ export default function Header() {
         if (
           decodedToken &&
           decodedToken.exp &&
-          decodedToken.exp - currentTime < 3600 // Refresh if less than 1 hour remains (e.g. after 23h of a 24h token)
+          decodedToken.exp - currentTime < 3600
         ) {
           console.log("Token expired or expiring soon, refreshing...");
           try {
@@ -72,11 +76,12 @@ export default function Header() {
               if (response.token) {
                 const newDecodedToken = parseJwt(response.token);
                 const newUser = {
+                  ...newDecodedToken,
                   name:
                     newDecodedToken?.name?.split(" ")[0] ||
                     newDecodedToken?.email?.split("@")[0] ||
                     "User",
-                  ...newDecodedToken,
+                  role: newDecodedToken?.role,
                 };
                 const encryptedData = encryptData({
                   token: response.token,

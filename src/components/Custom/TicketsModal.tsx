@@ -21,7 +21,6 @@ export default function TicketsModal({
   event: EventDocument;
 }) {
   const [quantity, setQuantity] = useState(1);
-  // const [ticketsLeft, setTicketsLeft] = useState(event.analytics.ticketsAvailable-quantity);
   const [mounted, setMounted] = useState(false); // Track if component is mounted
   const ticketPrice =
     event.ticketType.price -
@@ -31,17 +30,15 @@ export default function TicketsModal({
   const handleDecrement = () => {
     if (quantity > 0) setQuantity((prev) => prev - 1);
   };
-  // console.log("quantity", quantity);
-  // console.log("event.analytics.ticketsAvailable >0", event.analytics.ticketsAvailable >0);
+
   //   . Prevent Hydration Error: Wait until client-side mount
-  console.log("tickets left", (event.analytics.ticketsAvailable) - quantity);
   const handleProceed = async () => {
-    let url = await performCheckout({
+    const url = await performCheckout({
       eventID: event._id,
       quantity: quantity,
       discount: event.ticketType.discount || 0,
     });
-    // console.log("url", url);
+    console.log("url", url);
     if (!url) return;
     window.location.href = url as string;
     
@@ -73,7 +70,7 @@ export default function TicketsModal({
         </div>
 
         {/* Body Content */}
-        <div className="p-4 min-h-[200px] relative">
+        <div className="p-4 min-h-[200px]">
           <div className="flex justify-between text-xs font-semibold text-gray-500 mb-2 px-1">
             <span>Ticket Types</span>
             <span>Quantity</span>
@@ -109,20 +106,14 @@ export default function TicketsModal({
 
               <button
                 onClick={handleIncrement}
-                disabled={quantity === event.ticketType.quantity || (event.analytics.ticketsAvailable) - quantity === 0}
-                className={`rounded-full border p-1.5 transition-colors ${
-                 (event.analytics.ticketsAvailable) - quantity === 0 
-                    ? "border-gray-200 text-gray-300"
-                    : "border-gray-400 text-gray-600 hover:border-gray-600"
-                }`}
+                className="rounded-full border border-gray-400 text-gray-800 p-1.5 hover:border-gray-600 transition-colors"
               >
                 <AiOutlinePlus size={14} />
               </button>
             </div>
-           { (event.analytics.ticketsAvailable) - quantity <15 && <div className="absolute -bottom-15 left-[50%] translate-x-[-50%] text-sm font-semibold  bg-red-100 border border-red-500 p-2 rounded-[10px]">{`${event.analytics.ticketsAvailable-quantity} Tickets Left`} </div>}
           </div>
-
         </div>
+
         {/* Footer */}
         <div className="bg-white p-4 border-t border-gray-100">
           <div className="flex justify-center items-center gap-4 mb-4 text-lg">
@@ -140,9 +131,7 @@ export default function TicketsModal({
           <button
             onClick={handleProceed}
             className="w-full bg-[#2c2e3e] hover:bg-[#232432] text-white py-3.5 rounded-md flex items-center justify-center gap-2 transition-colors font-medium"
-          
-          // disabled={event.analytics.ticketsAvailable-quantity === 195}>
-          disabled={event.analytics.ticketsAvailable >0}>
+          >
             Proceed
             <BsChevronRight strokeWidth={0.5} />
           </button>

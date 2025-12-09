@@ -10,12 +10,37 @@ export default function middleware(request: NextRequest) {
 
   const token = request.cookies.get("token");
   const tokenDecrypted = decryptData(token?.value ?? "") as DecryptedToken;
+  const role = tokenDecrypted?.role;
 
+  const pathname = url.pathname;
+  const pathWithoutLocale = pathname.replace(/^\/[a-z]{2}(\/|$)/, "/");
 
-  if (url.pathname.startsWith("/specialist")) {
-    if (!token || tokenDecrypted?.kind !== "specialist") {
-      url.pathname = "/unauthorized";
+  const isPublic =
+    pathWithoutLocale === "/" ||
+    pathWithoutLocale.startsWith("/events") ||
+    pathWithoutLocale.startsWith("/auth");
+
+  if (!token) {
+    // Guest User
+    if (!isPublic) {
+      url.pathname = "/auth/login";
       return NextResponse.redirect(url);
+    }
+  } else {
+    // Logged in User
+
+    // Block /auth for all logged in users
+    if (pathWithoutLocale.startsWith("/auth")) {
+      url.pathname = "/";
+      return NextResponse.redirect(url);
+    }
+
+    // Role-based Access Control
+    if (role === "user") {
+      if (pathWithoutLocale.startsWith("/dashboardHome/Admin")) {
+        url.pathname = "/unauthorized";
+        return NextResponse.redirect(url);
+      }
     }
   }
 
