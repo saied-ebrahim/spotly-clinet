@@ -39,7 +39,7 @@ export const getCategoryColor = (category: string) => {
 const EventCard = ({ event }: { event: EventDocument }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const { toggleFavorite } = useFavoriteStore();
-console.log(event)
+// console.log(event)
  const handleAddFavorites = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();

@@ -10,7 +10,7 @@ const Categories = () => {
   useEffect(() => {
     axiosInstance.get("/categories").then((res) => {
       // const arr = data.data.categories.slice(0, 7);
-      console.log(res.data.data.categories);
+      // console.log(res.data.data.categories);
       setCategories(res.data.data.categories);
     });
   }, []);

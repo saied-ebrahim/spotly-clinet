@@ -23,7 +23,7 @@ const EventSelector = ({
       .get("/events")
       .then((res) => {
         setEvents(res.data.data.events);
-        console.log(res.data.data.events[0].category[0].name);
+        // console.log(res.data.data.events[0].category[0].name);
         
       })
   }, []);
@@ -53,7 +53,7 @@ const EventSelector = ({
     return matchesLocation && matchesInput;
   });
 
-    console.log(filteredEvents);
+    // console.log(filteredEvents);
   
   return (
     <div

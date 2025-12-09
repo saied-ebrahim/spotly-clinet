@@ -5,7 +5,7 @@ import axiosInstance from '@/lib/axios';
 let getData = async () => {
   // const res = await axiosInstance.get(`/events/${eventId}`);
   const checkout = await axiosInstance.get("/checkout/complete?session_id=cs_test_a1NDJyTIdZxQdzo2zdwxOGfrtAmMhrIbV852cTVa1sqM6yK93pL0ONS3UB");
-  console.log(checkout);
+  // console.log(checkout);
   return checkout;
 }
 

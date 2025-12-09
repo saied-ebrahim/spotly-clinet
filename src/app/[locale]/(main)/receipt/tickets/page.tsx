@@ -52,7 +52,7 @@ export default function TicketListPage() {
 
   // Handler for navigation (In Next.js, use router.push)
   const handleTicketClick = (ticketId:string) => {
-    console.log(`Maps to /tickets/${ticketId}`);
+    // console.log(`Maps to /tickets/${ticketId}`);
     // router.push(`/tickets/${ticketId}`);
   };
 

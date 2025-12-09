@@ -49,7 +49,7 @@ export default async function EventDetailsPage({
   const { eventId } = await params;
  
 
-  console.log(eventId);
+  // console.log(eventId);
 
 
   const myEvent :EventDocument= await axiosInstance
@@ -58,7 +58,7 @@ export default async function EventDetailsPage({
     .catch((err) => console.error(err));
  
   const imageUrl = getImageUrl(myEvent?.media?.mediaUrl);
-  console.log(myEvent);
+  // console.log(myEvent);
 
   // --- Helper Functions ---
 

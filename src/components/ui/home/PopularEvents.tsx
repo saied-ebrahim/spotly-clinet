@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axios";
 
-import PaginationList from "./PaginationList";
+import PaginationList from "./PaginationList1";
 
 import filterEvents from "@/utils/home/filterPopularEvents";
 
@@ -19,26 +19,23 @@ const PopularEvents = () => {
   } = useGeolocation();
   const [events, setEvents] = useState<EventDocument[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("All");
-  // let allLocations = useGetGovArEn();
-  // const closestCity1 = useCityMatcher().findClosestMatch("باب الشرق");
+
   const closestCity = useCityMatcher().findClosestMatch(city as string);
-  // console.log(closestCity1);
 
-  let eventsInCurrentLocation = events.filter((e) => e.location.district === closestCity);
-  // console.log(events);
-  const filtered = filterEvents(eventsInCurrentLocation, currentFilter);
-  const filteredEvents = filtered.filter((e) => e.type !== "online");
-  // let allLocations = filteredEvents.map((e) => e.location.district as string);
-  // the filter below is for choosing event in the city of the user
-  // const filteredEvents = filtered.filter((e) => e.type !== "online" && e.location.district === city);
-
-//  console.log(city);
-//  console.log(allLocations);
-//  console.log(closestCity);
+  // let eventsInCurrentLocation = events.filter((e) => e.location.district === closestCity);
+  // const filtered = filterEvents(eventsInCurrentLocation, currentFilter);
+  // const filteredEvents = filtered.filter((e) => e.type !== "online");
   useEffect(() => {
+    // async function fetchEvents() {
  
+    // let events  = await fetch(`https://spotly-api.vercel.app/api/v1/events`);
+    // let data : {data:{events: EventDocument[]}} = await events.json();
+    // console.log(data.data.events);
+    // setEvents(data.data.events);
+    // }
+    // fetchEvents();
     axiosInstance
-      .get("/events?limit=1000")
+      .get("/events?limit=100&page=1")
       .then((res) => {
         console.log("events1111111");
         console.log(res.data.data.events);
@@ -76,8 +73,8 @@ const PopularEvents = () => {
             Browse through our latest events and workshops.
           </p>
         </div>
-        {filteredEvents.length > 0 ? (
-          <PaginationList itemsPerPage={6} allEvents={filteredEvents} /> // this is a COMMON COMPONENT for pagination
+        {/* filteredEvents */events.length > 0 ? (
+          <PaginationList itemsPerPage={6} allEvents={/* filteredEvents */events} /> // this is a COMMON COMPONENT for pagination
         ) : (
           <h1 className="text-center w-full text-xl">No Events Found</h1>
         )}

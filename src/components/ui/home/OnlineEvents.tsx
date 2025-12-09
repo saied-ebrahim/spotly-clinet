@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axios";
 
-import PaginationList from "./PaginationList";
+import PaginationList from "./PaginationList1";
 
 import { EventDocument } from "@/types/eventInterface";
 
