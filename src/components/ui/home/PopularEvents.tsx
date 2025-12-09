@@ -17,15 +17,13 @@ const PopularEvents = () => {
   } = useGeolocation();
   const [events, setEvents] = useState<EventDocument[]>([]);
   const [currentFilter, setCurrentFilter] = useState<string>("All");
-  console.log(events);
+
   const filtered = filterEvents(events, currentFilter);
   const filteredEvents = filtered.filter((e) => e.type !== "online");
   // the filter below is for choosing event in the city of the user
   // const filteredEvents = filtered.filter((e) => e.type !== "online" && e.location.district === city);
 
-
   useEffect(() => {
- 
     axiosInstance
       .get("/events")
       .then((res) => {

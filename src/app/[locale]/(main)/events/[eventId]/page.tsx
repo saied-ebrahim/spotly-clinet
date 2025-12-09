@@ -51,7 +51,7 @@ export default async function EventDetailsPage({
   //   if (url.startsWith("http") || url.startsWith("/")) return url;
   //   return `https://${url}`;
   // };
-  console.log(eventId);
+  // console.log(eventId);
 
   // const res = await fetch("http://localhost:8080/events");
   const data = await axiosInstance
