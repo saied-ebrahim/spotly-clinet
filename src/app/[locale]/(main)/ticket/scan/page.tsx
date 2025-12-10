@@ -15,7 +15,6 @@ import axiosInstance from "@/lib/axios";
 export default function TicketScanPage() {
   const [scanResult, setScanResult] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState(true);
-  const [responseMessage, setResponseMessage] = useState<string>("");
   const [validationStatus, setValidationStatus] = useState<
     "idle" | "validating" | "valid" | "invalid" 
   >("idle");
@@ -35,15 +34,15 @@ export default function TicketScanPage() {
       const res = await axiosInstance.get(`/tickets/verify/${code}`);
       console.log(res);
       if (res.data?.success === false || res.data?.statusCode === 401) {
-        setResponseMessage(res.data.message);
-        setError(res.data.message);
+        setValidationStatus("invalid");
+        throw new Error(res.data.message);
        
-      }  else if (res.data.ticket?.isVerified === false) {
-        setResponseMessage(res.data.message);
-        setError(res.data.message);
-      } else if (res.data.ticket?.isVerified === true) {
-        setResponseMessage(res.data.message);
-        setError(res.data.message);
+      }  else if (res.data.ticket?.alreadyUsed === true) {
+        setValidationStatus("invalid");
+        throw new Error(res.data.message);
+      } else if (res.data.ticket?.alreadyUsed === false) {
+        setValidationStatus("valid");
+       
       }
       
     } catch (error: any) {
@@ -54,11 +53,6 @@ export default function TicketScanPage() {
     
     
   
-    // setTimeout(() => {
-    //   // Logic: For demo, codes starting with "VALID" are valid
-    //   const isValid = code.toUpperCase().startsWith("VALID");
-    //   setValidationStatus(isValid ? "valid" : "invalid");
-    // }, 1500); // Fake delay
   };
   function handleScan(code: string) {
     // Stop the camera immediately
