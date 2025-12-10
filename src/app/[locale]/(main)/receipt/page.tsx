@@ -1,87 +1,55 @@
 // import axiosInstance from "@/lib/axios";
 // "use client";
 // import { useEffect, useState } from "react";
+"use client";
 import axiosInstance from "@/lib/axios";
-import { FaCreditCard, FaDownload, FaReceipt, FaUsers } from "react-icons/fa";
+import { formatDate } from "@/utils/details/formatting";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { FaCreditCard, FaDownload, FaReceipt, FaTicketAlt, FaUsers } from "react-icons/fa";
 import { FiShare2 } from "react-icons/fi";
 
 // const getData = async () => {
-//   // const res = await axiosInstance.get(`/events/${eventId}`);
+//   // const res = await axiosInstance.get(`/events/LE{eventId}`);
 //   const checkout = await axiosInstance.get(
 //     "/checkout/complete?session_id=cs_test_a1NDJyTIdZxQdzo2zdwxOGfrtAmMhrIbV852cTVa1sqM6yK93pL0ONS3UB"
 //   );
 //   // console.log(checkout);
 //   return checkout;
 // };
-const event = {
-  _id: "evt-992831",
-  title: "Midnight Jazz Festival 2025",
-  description: "Live at the Blue Note Pavilion",
-  time: "20:00",
-  location: {
-    city: "Cairo",
-    country: "Egypt",
-    district: "New Cairo",
-  },
-  organizer: {
-    firstName: "Neon Horizon",
-    lastName: "Events",
-  },
-  ticketType: {
-    ticketID: "vip-tier-1",
-    title: "Standard Ticket",
-    price: 145.0,
-  },
-};
 
-// 2. Receipt Meta Data (The "Order")
-const meta = {
-  receiptNo: "N 842",
-  purchaseDate: "10.24.2025 14:30",
-  orderId: "ORD-992831",
-  purchaserName: "Ahmed Mohamed", // The person who paid
-  fees: 12.5,
-  status: "active",
-};
 
-// 3. The Tickets Array (Linked to this Receipt)
-const tickets = [
-  {
-    id: "tkt-001",
-    attendee: "Ahmed Mohamed",
-    seat: "Row A, Seat 12",
-    type: "Standard Ticket",
-    status: "valid",
-  },
-  {
-    id: "tkt-002",
-    attendee: "Sarah Karim",
-    seat: "Row A, Seat 13",
-    type: "Standard Ticket",
-    status: "valid",
-  },
-];
+const InvoiceCard = () => {
+  const searchParams = useSearchParams();
+  const invoiceId = searchParams.get("invoice_id");
+  // const invoice = await axiosInstance.get(`/invoice/LE{invoiceId}`);
+  console.log(invoiceId);
 
-const InvoiceCard = async ({
-  params
-}: {
-  params: Promise<{ checkoutId: string }>;
-}) => {
-  const { checkoutId } = await params;
-  const checkout = await axiosInstance.get(`/checkout/complete?session_id=${checkoutId}`);
-  console.log(checkout);
-  const discountPerTicket = 0.5;
-  const subtotal = event.ticketType.price * tickets.length;
-  const totalDiscount = discountPerTicket * tickets.length;
-  const total = subtotal + meta.fees - totalDiscount;
 
-  const calculations = { subtotal, discountAmount: totalDiscount, total };
-
-  // useState();
-  // useEffect(() => {
-  //   let res = await axiosInstance.get(`/receipts/${meta.orderId}`);
-  //   console.log(res);
-  // }, []);
+  const [invoiceData, setInvoiceData] = useState({orderId: "", eventTitle: "", totalPrice: 0,quantity: 0,date: "",eventId: "",fees: 0,discount: 0, purchaserName: "" }); 
+  const getData = async () => {
+    let res = await axiosInstance.get(`/tickets/order/${invoiceId}`);
+    console.log(res.data.data);
+    let invoice = {
+      orderId: res.data.data.order.id.slice(5),
+      totalPrice: res.data.data.checkout.totalAmount,
+      quantity: res.data.count,
+      date: res.data.data.checkout.paidAt,
+      eventId: res.data.data.order.eventID.slice(5),
+      eventTitle: res.data.data.tickets[0].event.title,
+      fees: res.data.data?.fees || 100,
+      discount: res.data.data?.discount || 0,
+      purchaserName: res.data.data.tickets[0].user.firstName + " " + res.data.data.tickets[0].user.lastName,
+    };
+    setInvoiceData(invoice);
+  };
+  const formattedDate = formatDate(invoiceData.date);
+  useEffect(() => {
+    getData();
+  }, []);
+  console.log(invoiceData);
+  if (!invoiceData.orderId) return <div>Loading...</div>;
   return (
     <div className="bg-white rounded-3xl shadow-xl w-full max-w-md mx-auto border border-stone-200 p-8 relative my-[50px]">
       {/* Header */}
@@ -90,7 +58,7 @@ const InvoiceCard = async ({
           <FaReceipt size={24} />
         </div>
         <h2 className="text-xl font-bold text-stone-900">Payment Receipt</h2>
-        <p className="text-stone-400 text-sm mt-1">{meta.purchaseDate}</p>
+        <p className="text-stone-400 text-sm mt-1">{formattedDate}</p>
       </div>
 
       {/* Meta Data Table */}
@@ -98,19 +66,19 @@ const InvoiceCard = async ({
         <div className="flex justify-between text-sm">
           <span className="text-stone-500">Order ID</span>
           <span className="font-mono font-bold text-stone-800">
-            {meta.orderId}
+            {invoiceData.orderId}
           </span>
         </div>
         <div className="flex justify-between text-sm">
-          <span className="text-stone-500">Receipt No</span>
+          <span className="text-stone-500">Event ID</span>
           <span className="font-mono font-bold text-stone-800">
-            {meta.receiptNo}
+            {invoiceData.eventId}
           </span>
         </div>
         <div className="flex justify-between text-sm">
           <span className="text-stone-500">Purchaser</span>
           <span className="font-medium text-stone-800">
-            {meta.purchaserName}
+            {invoiceData.purchaserName}
           </span>
         </div>
       </div>
@@ -120,26 +88,26 @@ const InvoiceCard = async ({
         <div className="flex justify-between items-start">
           <div>
             <p className="text-sm font-bold text-stone-900">
-              {event.ticketType.title}
+              {invoiceData.eventTitle}
             </p>
             <div className="flex items-center gap-2 mt-0.5">
               <FaUsers size={12} className="text-stone-400" />
-              <p className="text-xs text-stone-500">Qty: {tickets.length}</p>
+              <p className="text-xs text-stone-500">Qty: {invoiceData.quantity}</p>
             </div>
           </div>
           <p className="text-sm font-bold text-stone-900">
-            ${calculations.subtotal.toFixed(2)}
+            {invoiceData.totalPrice}LE
           </p>
         </div>
 
         <div className="flex justify-between items-center text-sm text-stone-500">
           <span>Service Fees</span>
-          <span>${meta.fees.toFixed(2)}</span>
+          <span>{invoiceData.fees.toFixed(2)}LE</span>
         </div>
 
         <div className="flex justify-between items-center text-sm text-green-600">
           <span>Discount</span>
-          <span>-${calculations.discountAmount.toFixed(2)}</span>
+          <span>-{invoiceData.discount.toFixed(2)}LE</span>
         </div>
       </div>
 
@@ -157,7 +125,7 @@ const InvoiceCard = async ({
           </div>
         </div>
         <span className="text-3xl font-black text-stone-900">
-          ${calculations.total.toFixed(2)}
+          {invoiceData.totalPrice.toFixed(2)}LE
         </span>
       </div>
 
@@ -167,10 +135,12 @@ const InvoiceCard = async ({
           <FaDownload size={16} />
           PDF
         </button>
-        <button className="flex items-center justify-center gap-2 py-3 bg-white border border-stone-200 rounded-xl text-sm font-bold text-stone-600 hover:bg-stone-50 transition-colors">
-          <FiShare2 size={16} />
-          Share
+      <Link className="flex items-center justify-center gap-2 py-3 bg-white border border-stone-200 rounded-xl text-sm font-bold text-stone-600 hover:bg-stone-50 transition-colors" href={`/receipt/tickets?invoice_id=${invoiceId}`}>
+        <button className="flex gap-2">
+          <FaTicketAlt size={16} />
+         see tickets
         </button>
+      </Link>
       </div>
 
       {/* Decor: Zigzag bottom */}

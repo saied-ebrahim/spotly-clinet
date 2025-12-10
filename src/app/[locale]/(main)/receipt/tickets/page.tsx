@@ -1,11 +1,17 @@
 // import React from "react";
 "use client";
-import { useState } from "react";
+import axiosInstance from "@/lib/axios";
+import { Ticket } from "@/types/Tickets/ticketResponseInterfaces";
+import { getMonthDay } from "@/utils/details/formatting";
+import Image from "next/image";
+import { useSearchParams } from "next/navigation";
+import { use, useEffect, useState } from "react";
 import {
   FaCheckCircle,
   FaChevronLeft,
   FaChevronRight,
   FaClock,
+  FaExclamationCircle,
   FaMapPin,
   FaQrcode,
 } from "react-icons/fa";
@@ -154,70 +160,73 @@ import { FaTicket } from "react-icons/fa6";
 //   );
 // }
 //------------------------------
-const event = {
-  _id: "evt-992831",
-  title: "Midnight Jazz Festival 2025",
-  description: "Live at the Blue Note Pavilion",
-  time: "20:00",
-  location: {
-    city: "Cairo",
-    country: "Egypt",
-    district: "New Cairo",
-  },
-  organizer: {
-    firstName: "Neon Horizon",
-    lastName: "Events",
-  },
-  ticketType: {
-    ticketID: "vip-tier-1",
-    title: "Standard Ticket",
-    price: 145.0,
-  },
-};
+interface TicketObj {
+  id: string;
+  eventTitle: string;
+  isValid: boolean;
+  date: string;
+  time: string;
+  address: string;
+  attendee: string;
+  qrCode: string;
+}
 
-// 2. Receipt Meta Data (The "Order")
-const meta = {
-  receiptNo: "N 842",
-  purchaseDate: "10.24.2025 14:30",
-  orderId: "ORD-992831",
-  purchaserName: "Ahmed Mohamed", // The person who paid
-  fees: 12.5,
-  status: "active",
-};
-
-// 3. The Tickets Array (Linked to this Receipt)
-const tickets = [
-  {
-    id: "tkt-001",
-    attendee: "Ahmed Mohamed",
-    seat: "Row A, Seat 12",
-    type: "Standard Ticket",
-    status: "valid",
-  },
-  {
-    id: "tkt-002",
-    attendee: "Sarah Karim",
-    seat: "Row A, Seat 13",
-    type: "Standard Ticket",
-    status: "valid",
-  },
-];
 const TicketCarousel = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const currentTicket = tickets[currentIndex];
+  
+ 
 
+  const [currentIndex, setCurrentIndex] = useState(0);
+  let [receiptTickets, setReceiptTickets] = useState<TicketObj[]>([]);
+  // const currentTicket = invoiceTickets[currentIndex];
+  const currentTicket = receiptTickets[currentIndex];
+  const searchParams = useSearchParams();
+
+  const invoiceId = searchParams.get("invoice_id");
+// const getData = async () => {
+//   let res = await axiosInstance.get(`/tickets/order/${invoiceId}`);
+//   console.log(res.data.data);
+//   setReceiptTickets(res.data.data.tickets);
+// };
+// useEffect(() => {
+//   getData();
+// }, []);
+useEffect(() => {
+  const fetchInvoiceTickets = async () => {
+    let response = await axiosInstance.get(`/tickets/order/${invoiceId}`);
+    const data : Ticket[] = await response.data.data.tickets;
+  
+    console.log(data);
+    let ticketObj : TicketObj[] = data.map((ticket) => {
+      let address = ticket.event.location.address.split(",");
+      console.log(address);
+      return {
+        id: ticket.id,
+        eventTitle:ticket.event.title,
+        isValid: !ticket.isVerified,
+        date: ticket.event.date,
+        time: ticket.event.time,
+        address: `${ticket.event.location.district}, ${ticket.event.location.city}`,
+        attendee: ticket.user.firstName + " " + ticket.user.lastName,
+        qrCode: ticket.qrCode,
+        
+      };
+    });
+    setReceiptTickets(ticketObj);
+  };
+  fetchInvoiceTickets();
+}, []);
   const nextTicket = () => {
-    setCurrentIndex((prev) => (prev + 1) % tickets.length);
+    setCurrentIndex((prev) => (prev + 1) % receiptTickets.length);
   };
 
   const prevTicket = () => {
-    setCurrentIndex((prev) => (prev - 1 + tickets.length) % tickets.length);
+    setCurrentIndex((prev) => (prev - 1 + receiptTickets.length) % receiptTickets.length);
   };
-
+  if (!receiptTickets.length) return <div>Loading...</div>;
   return (
     <div className="w-full max-w-md mx-auto my-[50px]">
       {/* Navigation Controls (Only if multiple tickets) */}
-      {tickets.length > 1 && (
+      {receiptTickets.length > 1 && (
         <div className="flex justify-between items-center mb-4 px-2">
           <button
             onClick={prevTicket}
@@ -226,7 +235,7 @@ const TicketCarousel = () => {
             <FaChevronLeft size={20} />
           </button>
           <span className="text-xs font-bold text-stone-400 uppercase tracking-widest">
-            Ticket {currentIndex + 1} of {tickets.length}
+            Ticket {currentIndex + 1} of {receiptTickets.length}
           </span>
           <button
             onClick={nextTicket}
@@ -251,10 +260,10 @@ const TicketCarousel = () => {
               <FaTicket className="text-stone-400" />
             </div>
             <h2 className="text-2xl font-black leading-tight mb-2">
-              {event.title}
+              {currentTicket.eventTitle}
             </h2>
             <p className="text-stone-400 text-sm font-medium">
-              {event.organizer.firstName} {event.organizer.lastName}
+              ID : {currentTicket.id}
             </p>
           </div>
         </div>
@@ -265,21 +274,22 @@ const TicketCarousel = () => {
           <div className="flex items-center gap-4 mb-6">
             <div className="bg-stone-50 border border-stone-100 rounded-2xl p-3 text-center min-w-20">
               <span className="block text-xs font-bold text-stone-400 uppercase">
-                Nov
+               {getMonthDay(currentTicket.date).month}
               </span>
               <span className="block text-2xl font-black text-stone-900">
-                15
+                {getMonthDay(currentTicket.date).date}
               </span>
             </div>
             <div>
               <div className="flex items-center gap-2 text-stone-600 mb-1">
                 <FaClock size={16} className="text-blue-600" />
-                <span className="text-sm font-bold">{event.time}</span>
+                <span className="text-sm font-bold">{currentTicket.time}</span>
               </div>
               <div className="flex items-center gap-2 text-stone-600">
                 <FaMapPin size={16} className="text-red-500" />
                 <span className="text-xs font-medium">
-                  {event.location.district}, {event.location.city}
+                  {/* {event.location.district}, {event.location.city} */}
+                  {currentTicket.address}
                 </span>
               </div>
             </div>
@@ -288,7 +298,7 @@ const TicketCarousel = () => {
           <div className="border-t border-dashed border-stone-200 my-6"></div>
 
           {/* Seat & Attendee Info (DYNAMIC PER TICKET) */}
-          <div className="grid grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-2 gap-6 mb-8 px-4">
             <div>
               <p className="text-[10px] text-stone-400 uppercase font-bold tracking-wider mb-1">
                 Attendee
@@ -297,27 +307,27 @@ const TicketCarousel = () => {
                 {currentTicket.attendee}
               </p>
             </div>
-            <div>
+            {/* <div>
               <p className="text-[10px] text-stone-400 uppercase font-bold tracking-wider mb-1">
                 Seat Location
               </p>
               <p className="font-bold text-stone-900">{currentTicket.seat}</p>
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               <p className="text-[10px] text-stone-400 uppercase font-bold tracking-wider mb-1">
                 Ticket Type
               </p>
               <p className="font-medium text-sm text-stone-600">
                 {currentTicket.type}
               </p>
-            </div>
+            </div> */}
             <div>
               <p className="text-[10px] text-stone-400 uppercase font-bold tracking-wider mb-1">
                 Status
               </p>
               <div className="inline-flex items-center gap-1.5 text-green-600 bg-green-50 px-2 py-0.5 rounded text-xs font-bold">
-                <FaCheckCircle size={12} />
-                Valid
+               {currentTicket.isValid ? <FaCheckCircle size={12} /> : <FaExclamationCircle size={12} />}
+                {currentTicket.isValid ? "Valid" : "Invalid"}
               </div>
             </div>
           </div>
@@ -325,13 +335,13 @@ const TicketCarousel = () => {
           {/* QR Section (Specific to this ticket ID) */}
           <div className="bg-stone-900 rounded-2xl p-6 text-center text-white relative">
             <div className="bg-white p-3 rounded-xl inline-block mb-3">
-              <FaQrcode size={120} className="text-black" />
+              <Image src={currentTicket.qrCode} alt="QR Code" width={120} height={120} />
             </div>
             <p className="text-[10px] text-stone-400 uppercase tracking-widest font-medium mb-1">
               Scan at entrance
             </p>
             <p className="text-[10px] text-stone-600 font-mono break-all">
-              {meta.orderId}-{currentTicket.id}
+              Ord-{invoiceId}
             </p>
 
             {/* Circles for "Holes" */}
