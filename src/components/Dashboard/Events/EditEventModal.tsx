@@ -4,6 +4,7 @@ import axiosInstance from "@/lib/axios";
 import { EventDocument } from "@/types/eventInterface";
 import { useState, useRef } from "react";
 import { FaTimes, FaCloudUploadAlt, FaTrash } from "react-icons/fa";
+import Image from "next/image";
 import { toast } from "react-toastify";
 
 interface EditEventModalProps {
@@ -171,10 +172,12 @@ export function EditEventModal({
                 {formData.media?.mediaUrl && (
                   <div className="relative group aspect-video bg-slate-100 rounded-lg overflow-hidden w-full max-w-[200px]">
                     {formData.media.mediaType === "image" ? (
-                      <img
+                      <Image
                         src={formData.media.mediaUrl}
                         alt="Event Media"
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        sizes="200px"
                       />
                     ) : (
                       <video
@@ -384,6 +387,28 @@ export function EditEventModal({
                             ticketType: {
                               ...prev.ticketType,
                               price: Number(e.target.value),
+                            },
+                          }
+                        : null
+                    )
+                  }
+                  className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none transition-all"
+                />
+                <label className="block text-sm font-medium text-slate-700 mb-1">
+                  Quantity
+                </label>
+                <input
+                  type="number"
+                  name="quantity"
+                  value={formData.ticketType.quantity}
+                  onChange={(e) =>
+                    setFormData((prev) =>
+                      prev
+                        ? {
+                            ...prev,
+                            ticketType: {
+                              ...prev.ticketType,
+                              quantity: Number(e.target.value),
                             },
                           }
                         : null

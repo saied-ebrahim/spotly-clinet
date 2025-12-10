@@ -122,10 +122,10 @@ const EventCard = ({ event }: { event: EventDocument }) => {
               </p>
               <p className="text-xs text-gray-400 mb-3 truncate">
                 {`${
-                  event.location?.city === "Alexandria"
-                    ? "Alex"
-                    : event.location?.city
-                }/${event.location?.district}`}
+                  event.location?.city ? 
+                      event.location?.city + "/"
+                    : ""
+                }${event.location?.district ? event.location?.district : "Online"}`}
               </p>
             </div>
 

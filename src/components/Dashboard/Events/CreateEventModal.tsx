@@ -62,6 +62,7 @@ export function CreateEventModal({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [organizerName, setOrganizerName] = useState("");
+  const [isFree, setIsFree] = useState(false);
 
   const {
     register,
@@ -252,6 +253,7 @@ export function CreateEventModal({
       onSuccess();
       onClose();
       reset();
+      setIsFree(false);
     } catch (error) {
       console.error("Error creating event:", error);
       toast.error("Failed to create event");
@@ -359,19 +361,44 @@ export function CreateEventModal({
                     {organizerName || "Loading..."}
                   </div>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Price
-                  </label>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-sm font-medium text-slate-700">
+                      Price
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={isFree}
+                        onChange={(e) => {
+                          setIsFree(e.target.checked);
+                          if (e.target.checked) {
+                            setValue("ticketType.price", 0, {
+                              shouldValidate: true,
+                            });
+                          }
+                        }}
+                        className="w-4 h-4 text-brand-primary rounded border-slate-300 focus:ring-brand-primary"
+                      />
+                      <span className="text-sm font-medium text-slate-700">
+                        Free
+                      </span>
+                    </label>
+                  </div>
                   <input
                     {...register("ticketType.price")}
                     type="number"
                     min="0"
+                    readOnly={isFree}
                     className={`w-full px-4 py-2 rounded-lg border ${
                       errors.ticketType?.price
                         ? "border-red-500"
                         : "border-slate-300"
-                    } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none`}
+                    } focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none ${
+                      isFree
+                        ? "bg-slate-100 text-slate-500 cursor-not-allowed"
+                        : ""
+                    }`}
                   />
                   {errors.ticketType?.price && (
                     <span className="text-red-500 text-sm">
