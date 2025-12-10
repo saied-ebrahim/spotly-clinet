@@ -1,4 +1,7 @@
 // import axiosInstance from "@/lib/axios";
+// "use client";
+// import { useEffect, useState } from "react";
+import axiosInstance from "@/lib/axios";
 import { FaCreditCard, FaDownload, FaReceipt, FaUsers } from "react-icons/fa";
 import { FiShare2 } from "react-icons/fi";
 
@@ -58,13 +61,27 @@ const tickets = [
     status: "valid",
   },
 ];
-const InvoiceCard = () => {
+
+const InvoiceCard = async ({
+  params
+}: {
+  params: Promise<{ checkoutId: string }>;
+}) => {
+  const { checkoutId } = await params;
+  const checkout = await axiosInstance.get(`/checkout/complete?session_id=${checkoutId}`);
+  console.log(checkout);
   const discountPerTicket = 0.5;
   const subtotal = event.ticketType.price * tickets.length;
   const totalDiscount = discountPerTicket * tickets.length;
   const total = subtotal + meta.fees - totalDiscount;
 
   const calculations = { subtotal, discountAmount: totalDiscount, total };
+
+  // useState();
+  // useEffect(() => {
+  //   let res = await axiosInstance.get(`/receipts/${meta.orderId}`);
+  //   console.log(res);
+  // }, []);
   return (
     <div className="bg-white rounded-3xl shadow-xl w-full max-w-md mx-auto border border-stone-200 p-8 relative my-[50px]">
       {/* Header */}

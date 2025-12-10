@@ -179,13 +179,16 @@ export default function TicketsModal({
   //   . Prevent Hydration Error: Wait until client-side mount
   console.log("tickets left", event.analytics.ticketsAvailable - quantity);
   const handleProceed = async () => {
+    console.log("handleProceed");
     const url = await performCheckout({
       eventID: event._id,
       quantity: quantity,
       discount: event.ticketType.discount || 0,
     });
-    // console.log("url", url);
+    console.log("url", url);
     if (!url) return;
+    console.log("url", url);
+
     window.location.href = url as string;
   };
   useEffect(() => {
@@ -289,7 +292,7 @@ export default function TicketsModal({
             onClick={handleProceed}
             className="w-full bg-[#2c2e3e] hover:bg-[#232432] text-white py-3.5 rounded-md flex items-center justify-center gap-2 transition-colors font-medium"
             // disabled={event.analytics.ticketsAvailable-quantity === 195}>
-            disabled={event.analytics.ticketsAvailable > 0}
+            disabled={event.analytics.ticketsAvailable <= quantity || event.analytics.ticketsAvailable === 0}
           >
             Proceed
             <BsChevronRight strokeWidth={0.5} />
