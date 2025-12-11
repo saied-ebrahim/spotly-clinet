@@ -19,7 +19,10 @@ import { enUS as enLocale } from "date-fns/locale/en-US";
 import { useLocale, useTranslations } from "next-intl";
 import { axiosGet } from "@/shared/axiosCall";
 import { CountryRaw, PaginatedResponse } from "@/modules/Header/types";
-import { CustomInputProps, OptionType } from "@/types/components/Custom/Inputs/customInput";
+import {
+  CustomInputProps,
+  OptionType,
+} from "@/types/components/Custom/Inputs/customInput";
 
 registerLocale("ar", arLocale);
 registerLocale("en", enLocale);
@@ -27,8 +30,6 @@ const locales = {
   ar,
   en,
 };
-
-
 
 export default function CustomInput({
   type,
@@ -125,11 +126,11 @@ export default function CustomInput({
     triggerApiUrl,
   ]);
 
-    // console.log(
-    //   options.concat(
-    //     config.isNext ? [{ label: t("auth.seeMore"), value: "seeMore" }] : []
-    //   )
-    // );
+  // console.log(
+  //   options.concat(
+  //     config.isNext ? [{ label: t("auth.seeMore"), value: "seeMore" }] : []
+  //   )
+  // );
 
   return (
     <>
@@ -142,18 +143,20 @@ export default function CustomInput({
 
         {type === "select" ? (
           <div className="relative ">
-            <label
-              htmlFor={id}
-              className={`duration-200 z-10 absolute start-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-9 h-9 rounded-md border ${
-                error
-                  ? "bg-red-50 text-red-500 border-red-200"
-                  : focus
-                  ? "bg-[#2B293D]/10 text-[#2B293D] border-[#2B293D]/20"
-                  : "bg-[#2B293D]/5 text-[#2B293D] border-[#2B293D]/20"
-              }`}
-            >
-              {icon}
-            </label>
+            {icon && (
+              <label
+                htmlFor={id}
+                className={`duration-200 z-10 absolute start-3 top-1/2 -translate-y-1/2 flex items-center justify-center w-9 h-9 rounded-md border ${
+                  error
+                    ? "bg-red-50 text-red-500 border-red-200"
+                    : focus
+                    ? "bg-[#2B293D]/10 text-[#2B293D] border-[#2B293D]/20"
+                    : "bg-[#2B293D]/5 text-[#2B293D] border-[#2B293D]/20"
+                }`}
+              >
+                {icon}
+              </label>
+            )}
             <Select
               instanceId={id}
               {...props}

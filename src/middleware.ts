@@ -5,12 +5,19 @@ import type { NextRequest } from "next/server";
 import { decryptData } from "./shared/encryption";
 import { DecryptedToken } from "./types/DecryptedToken";
 
+import { parseJwt } from "./shared/jwt";
+
 export default function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
 
   const token = request.cookies.get("token");
   const tokenDecrypted = decryptData(token?.value ?? "") as DecryptedToken;
-  const role = tokenDecrypted?.role;
+  let role = tokenDecrypted?.role;
+
+  if (!role && tokenDecrypted?.token) {
+    const decoded = parseJwt(tokenDecrypted.token);
+    role = decoded?.role;
+  }
 
   const pathname = url.pathname;
   const pathWithoutLocale = pathname.replace(/^\/[a-z]{2}(\/|$)/, "/");
@@ -30,7 +37,10 @@ export default function middleware(request: NextRequest) {
     // Logged in User
 
     // Block /auth for all logged in users
-    if (pathWithoutLocale.startsWith("/auth")) {
+    if (
+      pathWithoutLocale.startsWith("/auth") &&
+      !pathWithoutLocale.startsWith("/auth/Profile")
+    ) {
       url.pathname = "/";
       return NextResponse.redirect(url);
     }

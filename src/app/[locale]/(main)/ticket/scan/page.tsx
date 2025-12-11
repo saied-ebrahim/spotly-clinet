@@ -11,14 +11,17 @@ import {
 } from "react-icons/fa";
 import Link from "next/link";
 import axiosInstance from "@/lib/axios";
+import { toast } from "react-toastify";
+import { Ticket, TicketResponse } from "@/types/Tickets/ticketResponseInterfaces";
 
 export default function TicketScanPage() {
   const [scanResult, setScanResult] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState(true);
   const [validationStatus, setValidationStatus] = useState<
-    "idle" | "validating" | "valid" | "invalid" 
+    "idle" | "validating" | "valid" | "invalid" | "used"
   >("idle");
   const [error, setError] = useState<string | null>(null);
+  const [tickerData, setTickerData] = useState<TicketResponse>({} as TicketResponse);
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const codeReaderRef = useRef<BrowserMultiFormatReader | null>(null);
@@ -27,32 +30,31 @@ export default function TicketScanPage() {
   const validateTicket = async (code: string) => {
     try {
       setValidationStatus("validating");
-  
+
       // TODO: REPLACE THIS WITH YOUR REAL API CALL
       // Example: const res = await fetch('/api/validate', { body: JSON.stringify({ code }) })
-  
+
       const res = await axiosInstance.get(`/tickets/verify/${code}`);
       console.log(res);
+      setTickerData(res.data.data);
       if (res.data?.success === false || res.data?.statusCode === 401) {
         setValidationStatus("invalid");
-        throw new Error(res.data.message);
-       
-      }  else if (res.data.ticket?.alreadyUsed === true) {
-        setValidationStatus("invalid");
-        throw new Error(res.data.message);
-      } else if (res.data.ticket?.alreadyUsed === false) {
+        toast.error(res.data.message);
+      } else if (res.data.alreadyUsed === true) {
+        setValidationStatus("used");
+        toast.error(res.data.message);
+      } else if (res.data.alreadyUsed === false) {
         setValidationStatus("valid");
-       
+        toast.success(res.data.message);
       }
-      
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.log(error);
-      setError(error?.message);
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("An unexpected error occurred");
+      }
     }
-    
-    
-    
-  
   };
   function handleScan(code: string) {
     // Stop the camera immediately
@@ -60,6 +62,7 @@ export default function TicketScanPage() {
     if (codeReaderRef.current) {
       codeReaderRef.current.reset();
     }
+    console.log(code);
 
     setScanResult(code);
     validateTicket(code);
@@ -168,6 +171,23 @@ validateTicket("125632541");
         {/* State: Validating / Result */}
         {!isScanning && !error && scanResult && (
           <div className="flex-1 flex flex-col items-center justify-center p-8 animate-in fade-in zoom-in duration-300">
+            {validationStatus === "invalid" && (
+              <div className="flex flex-col items-center text-center">
+                <FaTimesCircle className="text-red-500 text-6xl mb-4" />
+                <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                  Invalid Ticket
+                </h2>
+                <p className="text-gray-500 mb-6">
+                  This ticket code is not recognized.
+                </p>
+                <button
+                  onClick={handleReset}
+                  className="w-full py-3 bg-gray-900 text-white rounded-xl font-medium hover:bg-black transition-colors flex items-center justify-center gap-2"
+                >
+                  <FaQrcode /> Scan Again
+                </button>
+              </div>
+            )}
             {validationStatus === "validating" && (
               <div className="flex flex-col items-center">
                 <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mb-4"></div>
@@ -204,14 +224,14 @@ validateTicket("125632541");
               </div>
             )}
 
-            {validationStatus === "invalid" && (
+            {validationStatus === "used" && (
               <div className="flex flex-col items-center text-center">
                 <FaTimesCircle className="text-red-500 text-6xl mb-4" />
                 <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                  Invalid Ticket
+                  Used Ticket
                 </h2>
                 <p className="text-gray-500 mb-6">
-                  This ticket code is not recognized or has already been used.
+                  This ticket has already been used.
                 </p>
 
                 <div className="bg-red-50 p-4 rounded-lg w-full mb-6 border border-red-100">
@@ -219,7 +239,7 @@ validateTicket("125632541");
                     Scanned Code
                   </p>
                   <p className="font-mono text-red-700 break-all">
-                    {scanResult}
+                    {tickerData.ticket.event.title}
                   </p>
                 </div>
 

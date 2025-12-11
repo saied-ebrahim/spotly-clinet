@@ -30,12 +30,12 @@ export interface SignupRequest {
   email: string;
   password: string;
   gender?: string;
-  phone:number,
+  phone: number;
   address: {
     city: string;
     country: string;
     state: string;
-  }
+  };
 }
 
 export interface SignupResponse {
@@ -110,6 +110,51 @@ export const authService = {
       }
     );
     return response.data;
+  },
+
+  forgotPassword: async (email: string) => {
+    try {
+      const response = await axiosInstance.post("/password/forget-password", {
+        email,
+      });
+      return response.data;
+    } catch (error: unknown) {
+      // 1. If it's an Axios error with a response
+      if (axios.isAxiosError(error) && error.response) {
+        const status = error.response.status;
+        const data = error.response.data as { message?: string } | string; // data might be string or object
+
+        // Prefer the backend's message if available
+        let backendMessage = "";
+        if (typeof data === "object" && data !== null && data.message) {
+          backendMessage = data.message;
+        } else if (typeof data === "string") {
+          backendMessage = data;
+        }
+
+        if (backendMessage) {
+          throw new Error(backendMessage);
+        }
+
+        // Fallback based on status code
+        if (status === 404) {
+          throw new Error("User not found");
+        }
+        if (status === 400) {
+          throw new Error("Invalid request");
+        }
+
+        throw new Error("An error occurred while processing your request");
+      }
+
+      // 2. If it's already an Error object (e.g. network error), rethrow it
+      if (error instanceof Error) {
+        throw error;
+      }
+
+      // 3. Last resort
+      throw new Error("An unexpected error occurred");
+    }
   },
 
   getDeviceID,

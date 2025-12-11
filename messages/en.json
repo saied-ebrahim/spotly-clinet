@@ -150,7 +150,13 @@
     "registering": "Registering...",
     "registerError": "Registration Error",
     "registerFailed": "Registration failed. Please try again.",
-    "registerSuccess": "Registration successful!"
+    "registerSuccess": "Registration successful!",
+    "forgotPasswordSuccess": "Password reset link sent to your email",
+    "forgotPasswordError": "Failed to send reset link",
+    "forgotPasswordInstructions": "Enter your email address and we'll send you a link to reset your password.",
+    "emailNotFound": "No account found with this email address",
+    "checkEmail": "Check your email address for a reset link",
+    "resendEmail": "Resend Email"
   },
   "form": {
     "personalInformation": "Personal Information",
@@ -399,6 +405,7 @@
     "contactDetails": "Contact Details",
     "contactDetailsDescription": "These details are private and only used to contact you for ticketing or prizes.",
     "phoneNumber": "Phone Number",
+    "enterPhone": "Enter phone number",
     "address": "Address",
     "cityTown": "City/Town",
     "country": "Country",
@@ -441,6 +448,10 @@
     "passwordNumber": "Include at least one number",
     "updatePassword": "Update Password",
     "passwordsDoNotMatch": "Passwords do not match!",
-    "passwordTooShort": "Password must be at least 8 characters long!"
+    "passwordTooShort": "Password must be at least 8 characters long!",
+    "profileUpdatedSuccess": "Profile updated successfully!",
+    "profileUpdateError": "Failed to update profile. Please try again.",
+    "saving": "Saving...",
+    "imageUploadedSuccess": "Image uploaded successfully"
   }
 }

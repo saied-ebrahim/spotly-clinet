@@ -143,7 +143,13 @@
     "registering": "جاري التسجيل...",
     "registerError": "خطأ في التسجيل",
     "registerFailed": "فشل التسجيل. يرجى المحاولة مرة أخرى.",
-    "registerSuccess": "تم التسجيل بنجاح!"
+    "registerSuccess": "تم التسجيل بنجاح!",
+    "forgotPasswordSuccess": "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني",
+    "forgotPasswordError": "فشل إرسال رابط إعادة التعيين",
+    "forgotPasswordInstructions": "أدخل عنوان بريدك الإلكتروني وسنرسل لك رابطاً لإعادة تعيين كلمة المرور.",
+    "emailNotFound": "لا يوجد حساب مسجل بهذا البريد الإلكتروني",
+    "checkEmail": "تحقق من عنوان بريدك الإلكتروني للحصول على رابط إعادة التعيين",
+    "resendEmail": "إعادة إرسال البريد الإلكتروني"
   },
   "form": {
     "personalInformation": "Personal Information",
@@ -314,6 +320,7 @@
     "contactDetails": "تفاصيل الاتصال",
     "contactDetailsDescription": "هذه التفاصيل خاصة وتستخدم فقط للاتصال بك للتذاكر أو الجوائز",
     "phoneNumber": "رقم الهاتف",
+    "enterPhone": "أدخل رقم الهاتف",
     "address": "العنوان",
     "cityTown": "المدينة/البلدة",
     "country": "الدولة",
@@ -356,6 +363,10 @@
     "passwordNumber": "تتضمن رقمًا واحدًا على الأقل",
     "updatePassword": "تحديث كلمة المرور",
     "passwordsDoNotMatch": "كلمات المرور غير متطابقة!",
-    "passwordTooShort": "يجب أن تكون كلمة المرور 8 أحرف على الأقل!"
+    "passwordTooShort": "يجب أن تكون كلمة المرور 8 أحرف على الأقل!",
+    "profileUpdatedSuccess": "تم تحديث الملف الشخصي بنجاح!",
+    "profileUpdateError": "فشل تحديث الملف الشخصي. يرجى المحاولة مرة أخرى.",
+    "saving": "جاري الحفظ...",
+    "imageUploadedSuccess": "تم تحميل الصورة بنجاح"
   }
 }
