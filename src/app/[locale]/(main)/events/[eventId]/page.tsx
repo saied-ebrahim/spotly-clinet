@@ -214,14 +214,14 @@ export default async function EventDetailsPage({
                     {`${myEvent.organizer.firstName} ${myEvent.organizer.lastName}`}
                   </span>
                 </div>
-                {/* <div className="flex gap-2 w-full"> */}
-                <button className="w-full sm:w-auto shrink-0 px-4 grow py-1.5 text-sm font-medium border border-gray-300 rounded-lg hover:bg-white transition-colors sm:max-w-[100px]">
-                  Contact
-                </button>
-                <button className="w-full sm:w-auto shrink-0 px-4 grow py-1.5 text-sm font-medium bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors sm:max-w-[100px]">
-                  + Follow
-                </button>
-                {/* </div> */}
+                <div className="flex gap-2 flex-wrap">
+                <span className=" shrink-0 px-4 grow  py-1.5 text-sm font-medium border border-gray-300 rounded-lg hover:bg-white transition-colors ">
+                  {myEvent.organizer.firstName + "_" + myEvent.organizer.lastName+"@gmail.com"}
+                </span>
+                <span className=" shrink-0 px-4 grow  py-1.5 text-sm font-medium bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors ">
+                 {"010000000000"}
+                </span>
+                </div>
               </div>
             </section>
 
