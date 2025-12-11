@@ -1,4 +1,8 @@
 export interface DecryptedToken {
-  kind: string;
+  token?: string;
+  deviceID?: string;
+  user?: { name?: string };
+  kind?: string;
+  role?: string;
   [key: string]: unknown;
 }

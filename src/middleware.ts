@@ -5,18 +5,52 @@ import type { NextRequest } from "next/server";
 import { decryptData } from "./shared/encryption";
 import { DecryptedToken } from "./types/DecryptedToken";
 
+import { parseJwt } from "./shared/jwt";
+
 export default function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
 
   const token = request.cookies.get("token");
   const tokenDecrypted = decryptData(token?.value ?? "") as DecryptedToken;
+  let role = tokenDecrypted?.role;
 
-  console.log(tokenDecrypted);
+  if (!role && tokenDecrypted?.token) {
+    const decoded = parseJwt(tokenDecrypted.token);
+    role = decoded?.role;
+  }
 
-  if (url.pathname.startsWith("/specialist")) {
-    if (!token || tokenDecrypted?.kind !== "specialist") {
-      url.pathname = "/unauthorized";
+  const pathname = url.pathname;
+  const pathWithoutLocale = pathname.replace(/^\/[a-z]{2}(\/|$)/, "/");
+
+  const isPublic =
+    pathWithoutLocale === "/" ||
+    pathWithoutLocale.startsWith("/events") ||
+    pathWithoutLocale.startsWith("/auth");
+
+  if (!token) {
+    // Guest User
+    if (!isPublic) {
+      url.pathname = "/auth/login";
       return NextResponse.redirect(url);
+    }
+  } else {
+    // Logged in User
+
+    // Block /auth for all logged in users
+    if (
+      pathWithoutLocale.startsWith("/auth") &&
+      !pathWithoutLocale.startsWith("/auth/Profile")
+    ) {
+      url.pathname = "/";
+      return NextResponse.redirect(url);
+    }
+
+    // Role-based Access Control
+    if (role === "user") {
+      if (pathWithoutLocale.startsWith("/dashboardHome/Admin")) {
+        url.pathname = "/unauthorized";
+        return NextResponse.redirect(url);
+      }
     }
   }
 

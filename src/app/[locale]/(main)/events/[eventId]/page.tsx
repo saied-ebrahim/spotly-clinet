@@ -51,7 +51,7 @@ export default async function EventDetailsPage({
   //   if (url.startsWith("http") || url.startsWith("/")) return url;
   //   return `https://${url}`;
   // };
-  console.log(eventId);
+  // console.log(eventId);
 
   // const res = await fetch("http://localhost:8080/events");
   const data = await axiosInstance
@@ -59,7 +59,9 @@ export default async function EventDetailsPage({
     .then((res) => res.data.data.events)
     .catch((err) => console.error(err));
   // const data = await res.json();
-  const myEvent:EventDocument | undefined = data.find((e: EventDocument) => String(e._id) === eventId);
+  const myEvent: EventDocument | undefined = data.find(
+    (e: EventDocument) => String(e._id) === eventId
+  );
   const imageUrl = getImageUrl(myEvent?.media?.mediaUrl);
   console.log(myEvent);
 
@@ -97,6 +99,7 @@ export default async function EventDetailsPage({
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-105"
             priority
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
           <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent opacity-60"></div>
           <div className="absolute bottom-6 left-6 text-white md:hidden">
@@ -156,7 +159,9 @@ export default async function EventDetailsPage({
                 <FaMapMarkerAlt className="text-gray-400 w-5 h-5 mt-1 shrink-0" />
                 <div>
                   <p className="font-bold">
-                    {myEvent.location.city + ", " +( myEvent.location.country || "Egypt")}
+                    {myEvent.location.city +
+                      ", " +
+                      (myEvent.location.country || "Egypt")}
                   </p>
                   <p className="text-sm text-gray-500 leading-relaxed mt-1">
                     {myEvent.location.district}
@@ -171,7 +176,7 @@ export default async function EventDetailsPage({
                   lng={myEvent.location.longitude}
                 />
 
-                {/* Optional 'Open in Google Maps' Floating Button */}
+              
                 <div className="absolute bottom-3 right-3 z-400">
                   <a
                     href={`https://www.google.com/maps/search/?api=1&query=${myEvent.location.latitude},${myEvent.location.longitude}`}
@@ -190,14 +195,19 @@ export default async function EventDetailsPage({
             <section className="space-y-4">
               <h2 className="text-xl font-bold text-gray-900">Hosted by</h2>
               <div className="p-4 gap-2  bg-gray-50 rounded-xl border border-gray-100 flex flex-wrap items-center justify-between hover:shadow-md transition-shadow duration-300">
-                <div className="flex items-center gap-4 flex-grow sm:flex-nowrap mb-5 sm:mb-0">
+                <div className="flex items-center gap-4 grow sm:flex-nowrap mb-5 sm:mb-0">
                   <div className="relative w-12 h-12 rounded-full overflow-hidden border border-gray-200 bg-gray-200">
                     {/* Placeholder Avatar */}
                     <Image
                       src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=100&h=100"
-                      alt={myEvent.organizer.firstName + " " + myEvent.organizer.lastName}
+                      alt={
+                        myEvent.organizer.firstName +
+                        " " +
+                        myEvent.organizer.lastName
+                      }
                       fill
                       className="object-cover"
+                      sizes="48px"
                     />
                   </div>
                   <span className="font-bold text-gray-900">
@@ -246,7 +256,7 @@ export default async function EventDetailsPage({
           </div>
 
           {/* Right Column (Ticket Sidebar) */}
-         
+
           <TicketSidebar event={myEvent} />
         </div>
 

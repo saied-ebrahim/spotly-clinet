@@ -79,21 +79,28 @@ export default function EgyptTopEventCard({
             alt={event.title}
             fill
             className="rounded-lg w-full object-cover shadow-lg"
+            sizes="(max-width: 1024px) 100vw, 33vw"
           />
         </div>
 
         {/* Content Section */}
         <div className="lg:w-2/3 text-white">
-        <div className="flex flex-wrap gap-2">
-        {event.category.map((category) => (
-          <span key={category._id} className="inline-block bg-white/10 text-white text-xs font-bold px-3 py-1 rounded-full mb-2 uppercase">
-            {category.name}
-          </span>
-        ))}</div>
+          <div className="flex flex-wrap gap-2">
+            {event.category.map((category) => (
+              <span
+                key={category._id}
+                className="inline-block bg-white/10 text-white text-xs font-bold px-3 py-1 rounded-full mb-2 uppercase"
+              >
+                {category.name}
+              </span>
+            ))}
+          </div>
 
           <h3 className="text-3xl font-extrabold mb-3">{event.title}</h3>
 
-          <p className="mb-4 text-emerald-100 line-clamp-2">{event.description}</p>
+          <p className="mb-4 text-emerald-100 line-clamp-2">
+            {event.description}
+          </p>
 
           <div className="flex text-left items-center space-x-6 text-sm">
             <span className="flex gap-2 items-center font-medium">
@@ -103,7 +110,10 @@ export default function EgyptTopEventCard({
 
             <span className="flex gap-2 items-center font-medium">
               <FiUsers />
-              <span>{registered}{event.analytics.ticketsSold > 1000 ? "+" : ""} Registered</span>
+              <span>
+                {registered}
+                {event.analytics.ticketsSold > 1000 ? "+" : ""} Registered
+              </span>
             </span>
           </div>
         </div>

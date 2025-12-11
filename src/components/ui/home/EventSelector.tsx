@@ -19,13 +19,9 @@ const EventSelector = ({
 
   // Close dropdown if clicking outside
   useEffect(() => {
-    axiosInstance
-      .get("/events")
-      .then((res) => {
-        setEvents(res.data.data.events);
-        console.log(res.data.data.events[0].category[0].name);
-        
-      })
+    axiosInstance.get("/events").then((res) => {
+      setEvents(res.data.data.events);
+    });
   }, []);
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -53,8 +49,8 @@ const EventSelector = ({
     return matchesLocation && matchesInput;
   });
 
-    console.log(filteredEvents);
-  
+  /* console.log(filteredEvents); */
+
   return (
     <div
       ref={wrapperRef}
@@ -102,14 +98,22 @@ const EventSelector = ({
                   {event.title}
                 </div>
                 <div className="text-xs text-gray-500 flex justify-between mt-1">
-                  <span className="text-left">{`${event.location.city=== "Alexandria" ? "Alex" : event.location.city}/${event.location.district}`}</span>
+                  <span className="text-left">{`${
+                    event.location.city === "Alexandria"
+                      ? "Alex"
+                      : event.location.city
+                  }/${event.location.district}`}</span>
                   <div className="flex gap-3">
-                  {event.category.length > 0 && event.category.map((category) => (
-                    <span className="bg-gray-100 px-2 py-0.5 rounded text-gray-600 group-hover:bg-indigo-100 group-hover:text-indigo-600">
-                      {category.name}
-                    </span>
-                  ))}
-                </div>
+                    {event.category.length > 0 &&
+                      event.category.map((category) => (
+                        <span
+                          key={category.name}
+                          className="bg-gray-100 px-2 py-0.5 rounded text-gray-600 group-hover:bg-indigo-100 group-hover:text-indigo-600"
+                        >
+                          {category.name}
+                        </span>
+                      ))}
+                  </div>
                 </div>
               </li>
             ))
