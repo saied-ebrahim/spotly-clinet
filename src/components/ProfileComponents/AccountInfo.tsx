@@ -295,7 +295,7 @@ export default function AccountInfo() {
                     <option value="male">Male</option>
                     <option value="female">Female</option>
                   </select>
-                  <div className="absolute right-4 top-[3.25rem] -translate-y-1/2 pointer-events-none text-gray-500">
+                  <div className="absolute right-4 top-13 -translate-y-1/2 pointer-events-none text-gray-500">
                     <svg
                       className="w-4 h-4"
                       fill="none"

@@ -51,3 +51,9 @@ export interface Ticket {
   isVerified: boolean;
   createdAt: string; // ISO Date string
 }
+export interface TicketResponse {
+  alreadyUsed:boolean,
+  message:string,
+  success:boolean,
+  ticket: Ticket;
+}
