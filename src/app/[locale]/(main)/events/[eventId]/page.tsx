@@ -176,7 +176,7 @@ export default async function EventDetailsPage({
                   lng={myEvent.location.longitude}
                 />
 
-                {/* Optional 'Open in Google Maps' Floating Button */}
+              
                 <div className="absolute bottom-3 right-3 z-400">
                   <a
                     href={`https://www.google.com/maps/search/?api=1&query=${myEvent.location.latitude},${myEvent.location.longitude}`}
