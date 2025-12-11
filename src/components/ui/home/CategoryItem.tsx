@@ -133,7 +133,9 @@ export const CategoryItem = ({
   // const [imgSrc, setImgSrc] = useState(category.imageUrl);
 
   const handleClick = () => {
-    router.push(`/${locale}/events?category=${encodeURIComponent(category.name)}`);
+    router.push(
+      `/${locale}/events?category=${encodeURIComponent(category.name)}`
+    );
   };
 
   return (
@@ -156,6 +158,8 @@ export const CategoryItem = ({
           src={category.image}
           alt={category.name}
           fill
+          className="object-cover"
+          sizes="(max-width: 640px) 100px, (max-width: 1024px) 120px, 140px"
           // onError={(e) => {
           //   const target = e.target as HTMLImageElement;
           //   target.onerror = null;

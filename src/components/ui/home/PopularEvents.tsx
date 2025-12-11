@@ -32,8 +32,8 @@ const PopularEvents = () => {
     axiosInstance
       .get("/events?limit=100&page=1")
       .then((res) => {
-        console.log("events1111111");
-        console.log(res.data.data.events);
+        // console.log("events1111111");
+        // console.log(res.data.data.events);
         setEvents(res.data.data.events);
       })
       .catch((err) => console.error(err));

@@ -68,6 +68,7 @@ const EventCard = ({ event }: { event: EventDocument }) => {
           {/* Replaced Next.js Image with standard img tag */}
           <Image
             src={imageUrl}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             alt={event.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
             fill

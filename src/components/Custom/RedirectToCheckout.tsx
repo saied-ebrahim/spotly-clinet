@@ -22,6 +22,7 @@ import { CheckoutPayload, CheckoutResponse } from "@/types/components/Checkout/c
 export async function performCheckout(
   payload: CheckoutPayload
 ): Promise<string | null> {
+  console.log("performCheckout");
   // Since your axiosInstance baseURL is '/api/v1', we just append the specific endpoint.
   // Resulting URL: /api/v1/checkout/
  // const url = "/checkoaut/";

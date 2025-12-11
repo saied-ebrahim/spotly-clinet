@@ -46,7 +46,7 @@ export default function LoginForm() {
         response.accessToken;
 
       if (token) {
-        const decodedToken = parseJwt(token);
+        // const decodedToken = parseJwt(token);
         const encryptedData = encryptData({
           token: token,
           deviceID,
