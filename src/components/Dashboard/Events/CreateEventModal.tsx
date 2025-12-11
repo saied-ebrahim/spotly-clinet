@@ -10,6 +10,7 @@ import {
   FaChevronDown,
   FaCheck,
   FaMapMarkerAlt,
+  FaMagic,
 } from "react-icons/fa";
 
 // Dynamic import for Leaflet map to avoid SSR issues
@@ -32,6 +33,7 @@ import { useClickOutside } from "@/hooks/useClickOutside";
 import { toast } from "react-toastify";
 
 import { category as Category, tags as Tag } from "@/types/eventInterface";
+import AIPromptModal from "./AIPromptModal";
 
 interface CreateEventModalProps {
   isOpen: boolean;
@@ -47,6 +49,7 @@ export function CreateEventModal({
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
+  const [isAIModalOpen, setIsAIModalOpen] = useState(false);
 
   // Data sources
   const [categories, setCategories] = useState<Category[]>([]);
@@ -167,6 +170,46 @@ export function CreateEventModal({
     }
   }, [isOpen, fetchCategories, fetchTags, fetchOrganizerInfo]);
 
+  const handleAIGeneratedData = (data: Partial<CreateEventSchema>) => {
+    // Populate form fields
+    if (data.title) setValue("title", data.title);
+    if (data.description) setValue("description", data.description);
+    if (data.date) setValue("date", data.date);
+    if (data.time) setValue("time", data.time);
+
+    if (data.location) {
+      if (data.location.country)
+        setValue("location.country", data.location.country);
+      if (data.location.city) setValue("location.city", data.location.city);
+      if (data.location.district)
+        setValue("location.district", data.location.district);
+      if (data.location.address)
+        setValue("location.address", data.location.address);
+      if (data.location.latitude)
+        setValue("location.latitude", data.location.latitude);
+      if (data.location.longitude)
+        setValue("location.longitude", data.location.longitude);
+    }
+
+    if (data.ticketType) {
+      setValue("ticketType.price", data.ticketType.price || 0);
+      setValue("ticketType.quantity", data.ticketType.quantity || 0);
+      if (data.ticketType.price === 0) setIsFree(true);
+    }
+
+    if (data.category && Array.isArray(data.category)) {
+      setValue("category", data.category);
+    }
+
+    if (data.tags && Array.isArray(data.tags)) {
+      setValue("tags", data.tags);
+    }
+
+    if (data.isonline !== undefined) {
+      setValue("isonline", data.isonline);
+    }
+  };
+
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -236,6 +279,12 @@ export function CreateEventModal({
     }
   };
 
+  const handleClose = () => {
+    reset();
+    setIsFree(false);
+    onClose();
+  };
+
   const onSubmit = async (data: CreateEventSchema) => {
     setLoading(true);
     try {
@@ -251,9 +300,7 @@ export function CreateEventModal({
       await axios.post("/events", payload);
       toast.success("Event created successfully");
       onSuccess();
-      onClose();
-      reset();
-      setIsFree(false);
+      handleClose();
     } catch (error) {
       console.error("Error creating event:", error);
       toast.error("Failed to create event");
@@ -268,9 +315,21 @@ export function CreateEventModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 overflow-y-auto">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-4xl my-8 overflow-hidden flex flex-col max-h-[90vh]">
         <div className="flex items-center justify-between p-6 border-b border-slate-100 bg-white sticky top-0 z-10">
-          <h3 className="text-xl font-bold text-slate-900">Create New Event</h3>
+          <div className="flex items-center gap-4">
+            <h3 className="text-xl font-bold text-slate-900">
+              Create New Event
+            </h3>
+            <button
+              type="button"
+              onClick={() => setIsAIModalOpen(true)}
+              className="flex items-center gap-2 px-3 py-1.5 text-sm bg-linear-to-r from-brand-primary/10 to-brand-secondary/10 text-brand-primary rounded-lg hover:from-brand-primary/20 hover:to-brand-secondary/20 transition-all font-medium border border-brand-primary/20"
+            >
+              <FaMagic size={12} />
+              Auto-Fill with AI
+            </button>
+          </div>
           <button
-            onClick={onClose}
+            onClick={handleClose}
             className="text-slate-400 hover:text-slate-600 transition-colors"
           >
             <FaTimes size={20} />
@@ -279,6 +338,14 @@ export function CreateEventModal({
 
         <div className="overflow-y-auto p-6">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            <AIPromptModal
+              isOpen={isAIModalOpen}
+              onClose={() => setIsAIModalOpen(false)}
+              onGenerate={handleAIGeneratedData}
+              categories={categories}
+              tags={availableTags}
+            />
+
             {/* Basic Info */}
             <div className="space-y-4">
               <h4 className="font-semibold text-slate-800 border-b pb-2">
@@ -838,7 +905,7 @@ export function CreateEventModal({
         <div className="p-6 border-t border-slate-100 bg-white flex justify-end gap-3">
           <button
             type="button"
-            onClick={onClose}
+            onClick={handleClose}
             className="px-6 py-2 rounded-lg text-slate-600 hover:bg-slate-50 font-medium transition-colors"
           >
             Cancel
