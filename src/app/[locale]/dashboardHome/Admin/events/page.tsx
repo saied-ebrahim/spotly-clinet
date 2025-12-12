@@ -51,7 +51,9 @@ export default function AdminEventsPage() {
         ? `/events?search=${searchTerm}`
         : `/events?page=${page}&limit=10`;
 
-      const response = await axiosInstance.get<EventsResponse>(query);
+      const response = await axiosInstance.get<EventsResponse>(query, {
+        skipGlobalLoading: true,
+      });
 
       if (response.data.status === "success" && response.data.data?.events) {
         setEvents(response.data.data.events);

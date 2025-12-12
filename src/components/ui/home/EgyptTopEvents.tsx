@@ -1,23 +1,19 @@
+import useEventStore from "@/store/useEventStore";
+import { EventDocument } from "@/types/eventInterface";
 import { EgyptTopEventInterace } from "@/types/EgyptTopEventInterface";
-
 import { useEffect, useState } from "react";
 import TopEventCard from "./EgyptTopEventCard";
-import axiosInstance from "@/lib/axios";
-
-
 
 export default function EgyptTopEvents() {
   const [expanded, setExpanded] = useState(false);
-  const [topEvents, setTopEvents] = useState([] as EgyptTopEventInterace[]);
+  const { events: allEvents, fetchEvents } = useEventStore();
 
   useEffect(() => {
-    axiosInstance
-      .get("/events")
-      .then((res) => {
-        setTopEvents(res.data.data.events);
-      })
-      .catch((err) => console.error(err));
-  }, []);
+    fetchEvents();
+  }, [fetchEvents]);
+
+  // Use allEvents from store instead of local state fetching
+  const topEvents = allEvents as unknown as EgyptTopEventInterace[];
 
   // 1. Filter for Online Events in Egypt
   // 1. Parsing Helper
@@ -84,7 +80,7 @@ export default function EgyptTopEvents() {
       );
     }
   );
-// ---------------
+  // ---------------
   // 3. SPLIT THE DATA instead of slicing one array
   // We keep the first 3 separate so they are always visible
   const initialEvents = sortedEvents.slice(0, 3);
@@ -99,17 +95,14 @@ export default function EgyptTopEvents() {
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 px-4 sm:px-6 lg:px-8">
             Top Events In Egypt
           </h2>
-       
         </div>
 
-       
         <div className="px-4 sm:px-6 lg:px-8">
           {initialEvents.map((event) => (
             <TopEventCard key={event._id} event={event} />
           ))}
         </div>
 
-     
         <div
           className={`grid transition-[grid-template-rows] duration-500 ease-in-out ${
             expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"

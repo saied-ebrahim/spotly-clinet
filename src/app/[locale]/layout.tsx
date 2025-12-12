@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 import "./globals.css";
 import { NextIntlClientProvider } from "next-intl";
-import RenderInProvider from "@/components/Global/RenderInProvider";
+import HomeApp from "@/components/Global/HomeApp";
 import ProgressBar from "@/components/Global/ProgressBar";
 import "react-phone-number-input/style.css";
 import "react-datepicker/dist/react-datepicker.css";
@@ -40,7 +40,7 @@ export default async function RootLayout({
           theme="light"
         />
         <NextIntlClientProvider>
-          <RenderInProvider>{children}</RenderInProvider>
+          <HomeApp>{children}</HomeApp>
         </NextIntlClientProvider>
       </body>
     </html>

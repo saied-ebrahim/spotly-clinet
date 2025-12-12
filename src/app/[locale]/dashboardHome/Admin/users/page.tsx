@@ -33,7 +33,9 @@ export default function AdminUsersPage() {
       const query = searchTerm
         ? `/auth/users?page=${page}&search=${searchTerm}`
         : `/auth/users?page=${page}`;
-      const response = await axiosInstance.get<UsersResponse>(query);
+      const response = await axiosInstance.get<UsersResponse>(query, {
+        skipGlobalLoading: true,
+      });
 
       if (response.data.status === "success") {
         setUsers(response.data.data.users);

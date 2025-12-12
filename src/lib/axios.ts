@@ -2,6 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { decryptData, encryptData } from "@/shared/encryption";
 import { getDeviceID } from "@/shared/device";
+import { useLoaderStore } from "@/store/useLoaderStore";
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "/api/v1",
@@ -9,6 +10,13 @@ const axiosInstance = axios.create({
     "Content-Type": "application/json",
   },
 });
+
+// Extend AxiosRequestConfig to include our custom property
+declare module "axios" {
+  export interface AxiosRequestConfig {
+    skipGlobalLoading?: boolean;
+  }
+}
 
 axiosInstance.interceptors.request.use(
   (config) => {
@@ -22,14 +30,58 @@ axiosInstance.interceptors.request.use(
         config.headers.Authorization = `Bearer ${decrypted.token}`;
       }
     }
+    if (!config.skipGlobalLoading) {
+      if (typeof window !== "undefined") {
+        const path = window.location.pathname.toLowerCase();
+        if (
+          !path.includes("/dashboardhome") &&
+          !path.includes("/admin") &&
+          !path.includes("/organizer")
+        ) {
+          useLoaderStore.getState().startLoading();
+        }
+      } else {
+        useLoaderStore.getState().startLoading();
+      }
+    }
     return config;
   },
   (error) => Promise.reject(error)
 );
 
 axiosInstance.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    if (!response.config.skipGlobalLoading) {
+      if (typeof window !== "undefined") {
+        const path = window.location.pathname.toLowerCase();
+        if (
+          !path.includes("/dashboardhome") &&
+          !path.includes("/admin") &&
+          !path.includes("/organizer")
+        ) {
+          useLoaderStore.getState().stopLoading();
+        }
+      } else {
+        useLoaderStore.getState().stopLoading();
+      }
+    }
+    return response;
+  },
   async (error) => {
+    if (!error.config?.skipGlobalLoading) {
+      if (typeof window !== "undefined") {
+        const path = window.location.pathname.toLowerCase();
+        if (
+          !path.includes("/dashboardhome") &&
+          !path.includes("/admin") &&
+          !path.includes("/organizer")
+        ) {
+          useLoaderStore.getState().stopLoading();
+        }
+      } else {
+        useLoaderStore.getState().stopLoading();
+      }
+    }
     const originalRequest = error.config;
 
     if (

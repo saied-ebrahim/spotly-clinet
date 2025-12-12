@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import axiosInstance from "@/lib/axios";
+import useEventStore from "@/store/useEventStore";
 
 import PaginationList from "./PaginationList";
 
@@ -8,8 +8,6 @@ import filterEvents from "@/utils/home/filterPopularEvents";
 
 import useGeolocation from "@/hooks/useGeolocation";
 import { EventDocument } from "@/types/eventInterface";
-import { useCityMatcher } from "@/utils/home/useCityMatcher";
-import { useGetGovArEn } from "@/hooks/useGetGovArEn";
 
 // 3. The Main Container Component
 const PopularEvents = () => {
@@ -17,27 +15,16 @@ const PopularEvents = () => {
   const {
     location: { city },
   } = useGeolocation();
-  const [events, setEvents] = useState<EventDocument[]>([]);
+  const { events, fetchEvents } = useEventStore();
+
+  useEffect(() => {
+    fetchEvents();
+  }, [fetchEvents]);
+
   const [currentFilter, setCurrentFilter] = useState<string>("All");
 
   const filtered = filterEvents(events, currentFilter);
   const filteredEvents = filtered.filter((e) => e.type !== "online");
-  // the filter below is for choosing event in the city of the user
-  // const filteredEvents = filtered.filter((e) => e.type !== "online" && e.location.district === city);
-
-  // let eventsInCurrentLocation = events.filter((e) => e.location.district === closestCity);
-  // const filtered = filterEvents(eventsInCurrentLocation, currentFilter);
-  // const filteredEvents = filtered.filter((e) => e.type !== "online");
-  useEffect(() => {
-    axiosInstance
-      .get("/events?limit=100&page=1")
-      .then((res) => {
-        // console.log("events1111111");
-        // console.log(res.data.data.events);
-        setEvents(res.data.data.events);
-      })
-      .catch((err) => console.error(err));
-  }, []);
   return (
     <section className="py-16 pb-0 pt-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 font-sans">
@@ -68,11 +55,16 @@ const PopularEvents = () => {
             Browse through our latest events and workshops.
           </p>
         </div>
-        {/* filteredEvents */events.length > 0 ? (
-          <PaginationList itemsPerPage={6} allEvents={/* filteredEvents */events} /> // this is a COMMON COMPONENT for pagination
-        ) : (
-          <h1 className="text-center w-full text-xl">No Events Found</h1>
-        )}
+        {
+          /* filteredEvents */ events.length > 0 ? (
+            <PaginationList
+              itemsPerPage={6}
+              allEvents={/* filteredEvents */ events}
+            /> // this is a COMMON COMPONENT for pagination
+          ) : (
+            <h1 className="text-center w-full text-xl">No Events Found</h1>
+          )
+        }
       </div>
     </section>
   );
