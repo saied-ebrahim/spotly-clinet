@@ -11,6 +11,9 @@ import { EventDocument } from "@/types/eventInterface";
 export default function TicketSidebar({ event }: { event: EventDocument }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   console.log(event);
+  console.log(event.analytics?.ticketsAvailable);
+  console.log(event.ticketType.quantity);
+  
   return (
     <div className="lg:col-span-1">
       <div className="sticky top-8 space-y-6">

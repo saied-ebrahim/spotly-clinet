@@ -79,7 +79,7 @@ const EventCard = ({ event }: { event: EventDocument }) => {
           >
             {event.type}
           </span>
-          <div className="absolute flex gap-1 bottom-3 left-3">
+          <div className="absolute flex gap-1 bottom-3 left-3 flex-wrap">
             {event.category.length > 0 &&
               event.category.map((category) => (
                 <span
