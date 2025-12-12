@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
 import Cookies from "js-cookie";
 import { decryptData } from "./encryption";
+import { useLoaderStore } from "@/store/useLoaderStore";
 
 interface ApiResponse<T> {
   data?: T;
@@ -23,6 +24,7 @@ export const axiosGet = async <T>(
 ): Promise<ApiResponse<T>> => {
   const authToken = Cookies.get("token") ?? "";
   const tokenDecrypted = decryptData(authToken) as DecryptedToken;
+  useLoaderStore.getState().startLoading();
 
   try {
     const header: AxiosRequestConfig = {
@@ -35,14 +37,12 @@ export const axiosGet = async <T>(
     if (close) {
       delete header.headers?.Authorization;
     }
-    const fetchData = await axios.get<T>(
-      `${url}`,
-      header
-    );
+    const fetchData = await axios.get<T>(`${url}`, header);
 
-
+    useLoaderStore.getState().stopLoading();
     return { data: fetchData.data, status: true };
   } catch (err) {
+    useLoaderStore.getState().stopLoading();
     return {
       data: (err as AxiosError)?.response?.data as T,
       status: false,
@@ -75,6 +75,8 @@ export const axiosPost = async <T>(
     delete headerToken.Authorization;
   }
 
+  useLoaderStore.getState().startLoading();
+
   try {
     const fetchData = await axios.post<T>(
       `${process.env.BASE_URL}/${url}`,
@@ -88,8 +90,10 @@ export const axiosPost = async <T>(
       }
     );
 
+    useLoaderStore.getState().stopLoading();
     return { data: fetchData.data, status: true };
   } catch (err) {
+    useLoaderStore.getState().stopLoading();
     return {
       data: (err as AxiosError)?.response?.data as T,
       status: false,

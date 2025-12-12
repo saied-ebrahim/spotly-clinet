@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useMemo } from "react";
 import DataTable from "@/components/Custom/DataTable";
 import { ColDef, ValueGetterParams } from "ag-grid-community";
@@ -47,7 +48,7 @@ export function AdminEventsTable({
     setIsDeleteModalOpen(true);
   };
 
-  const handleSaveEvent = (_updatedEvent: EventDocument): void => {
+  const handleSaveEvent = (): void => {
     // Optimistic update handled by parent refresh usually, but here we can't easily update parent state without callback
     // Ideally we assume parent fetches new data or we just close modal.
     // Given the props flow, we might need a refresh callback prop, but for now strict UI update locally or just close.
@@ -91,10 +92,13 @@ export function AdminEventsTable({
           return (
             <div className="flex items-center justify-center h-full">
               {imageUrl ? (
-                <img
+                <Image
                   src={imageUrl}
                   alt={params.data.title}
-                  className="w-10 h-10 rounded-lg object-cover"
+                  width={40}
+                  height={40}
+                  className="rounded-lg object-cover"
+                  unoptimized
                 />
               ) : (
                 <div className="w-10 h-10 rounded-lg bg-slate-100 flex items-center justify-center text-xs text-slate-400">

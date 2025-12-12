@@ -11,24 +11,14 @@ import {
   FaExternalLinkAlt,
 } from "react-icons/fa";
 
-import EventMap from "@/components/ui/details/EventMap";
 import { formatDate } from "@/utils/details/formatting";
 import TicketSidebar from "@/components/ui/details/TicketSidebar";
 import RecommendationList from "@/components/ui/details/RecommendationList";
 import AddToCalendarButton from "@/components/ui/details/AddToCallender";
-import axiosInstance from "@/lib/axios";
 import { EventDocument } from "@/types/eventInterface";
 import { getImageUrl } from "@/utils/general";
 
-// --- 1. Dynamic Import for Map (Disables SSR) ---
-// const EventMap = dynamic(() => import("@/components/ui/details/EventMap"), {
-//   ssr: false,
-//   loading: () => (
-//     <div className="w-full h-64 bg-gray-100 animate-pulse flex items-center justify-center text-gray-400 rounded-xl">
-//       Loading Map...
-//     </div>
-//   ),
-// });
+import EventMapWrapper from "@/components/ui/details/EventMapWrapper";
 // async function getEvents() {
 //   const res = await fetch("http://localhost:8080/events");
 
@@ -54,10 +44,25 @@ export default async function EventDetailsPage({
   // console.log(eventId);
 
   // const res = await fetch("http://localhost:8080/events");
-  const data = await axiosInstance
-    .get("/events")
-    .then((res) => res.data.data.events)
-    .catch((err) => console.error(err));
+  // Fetch events using native fetch to avoid axios url.parse deprecation
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api/v1";
+  const url = baseUrl.startsWith("http")
+    ? `${baseUrl}/events`
+    : `http://localhost:8000${baseUrl}/events`;
+
+  let data: EventDocument[] = [];
+  try {
+    const res = await fetch(url, { cache: "no-store" });
+    if (res.ok) {
+      const json = await res.json();
+      data = json.data?.events || [];
+    } else {
+      console.error("Failed to fetch events:", res.status, res.statusText);
+    }
+  } catch (err) {
+    console.error("Error fetching events:", err);
+  }
   // const data = await res.json();
   const myEvent: EventDocument | undefined = data.find(
     (e: EventDocument) => String(e._id) === eventId
@@ -171,12 +176,11 @@ export default async function EventDetailsPage({
 
               {/* --- MAP COMPONENT --- */}
               <div className="relative w-full h-64 bg-gray-100 rounded-xl overflow-hidden mt-4 border border-gray-200 shadow-sm z-0">
-                <EventMap
+                <EventMapWrapper
                   lat={myEvent.location.latitude}
                   lng={myEvent.location.longitude}
                 />
 
-              
                 <div className="absolute bottom-3 right-3 z-400">
                   <a
                     href={`https://www.google.com/maps/search/?api=1&query=${myEvent.location.latitude},${myEvent.location.longitude}`}
