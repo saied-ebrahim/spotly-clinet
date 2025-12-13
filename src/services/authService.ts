@@ -114,7 +114,7 @@ export const authService = {
 
   forgotPassword: async (email: string) => {
     try {
-      const response = await axiosInstance.post("/password/forget-password", {
+      const response = await axiosInstance.post("/password/forgot-password", {
         email,
       });
       return response.data;
