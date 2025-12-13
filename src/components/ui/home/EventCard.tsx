@@ -49,14 +49,14 @@ const EventCard = ({ event }: { event: EventDocument }) => {
       return () => clearTimeout(timer);
     }
   }, [isAnimating]);
-  const { month, date: dayDate } = getMonthDay(event.date);
-  const imageUrl = getImageUrl(event.media?.mediaUrl);
-  const interested = event.analytics?.likes || 0;
-
   const isFavorite = useFavoriteStore((state) =>
     state.favorites.includes(event)
-  );
+);
 
+
+const interested = event.analytics?.likes || 0;
+const { month, date: dayDate } = getMonthDay(event.date);
+const imageUrl = getImageUrl(event.media?.mediaUrl);
   return (
     <div className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 font-sans relative flex flex-col h-full w-full max-w-sm mx-auto">
       <Link

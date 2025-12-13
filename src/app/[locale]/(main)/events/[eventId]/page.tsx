@@ -19,59 +19,32 @@ import { EventDocument } from "@/types/eventInterface";
 import { getImageUrl } from "@/utils/general";
 
 import EventMapWrapper from "@/components/ui/details/EventMapWrapper";
-// async function getEvents() {
-//   const res = await fetch("http://localhost:8080/events");
+import axiosInstance from "@/lib/axios";
+import useFavoriteStore from "@/hooks/useFavorateStore";
+import FavoriteBtn from "@/components/ui/details/FavoriteBtn";
+import OrganizerAvatar from "@/components/ui/details/OrganizerAvatar";
 
-//   if (!res.ok) {
-//     // This will activate the closest `error.js` Error Boundary
-//     throw new Error("Failed to fetch data");
-//   }
-
-//   return res.json();
-// }
 export default async function EventDetailsPage({
   params,
 }: {
   params: Promise<{ eventId: string }>;
 }) {
   const { eventId } = await params;
-  // const getImageUrl = (url?: string) => {
-  //   console.log(url);
-  //   if (!url) return "/no-image.jpg";
-  //   if (url.startsWith("http") || url.startsWith("/")) return url;
-  //   return `https://${url}`;
-  // };
-  // console.log(eventId);
 
-  // const res = await fetch("http://localhost:8080/events");
-  // Fetch events using native fetch to avoid axios url.parse deprecation
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api/v1";
-  const url = baseUrl.startsWith("http")
-    ? `${baseUrl}/events`
-    : `http://localhost:8000${baseUrl}/events`;
+ let myEvent: EventDocument | null = await axiosInstance.get(`/events/${eventId}`)
+    .then((response) => {
+      console.log(response.data);
+      return response.data.data.event;
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 
-  let data: EventDocument[] = [];
-  try {
-    const res = await fetch(url, { cache: "no-store" });
-    if (res.ok) {
-      const json = await res.json();
-      data = json.data?.events || [];
-    } else {
-      console.error("Failed to fetch events:", res.status, res.statusText);
-    }
-  } catch (err) {
-    console.error("Error fetching events:", err);
-  }
-  // const data = await res.json();
-  const myEvent: EventDocument | undefined = data.find(
-    (e: EventDocument) => String(e._id) === eventId
-  );
   const imageUrl = getImageUrl(myEvent?.media?.mediaUrl);
-  console.log(myEvent);
 
-  // --- Helper Functions ---
-
+    // let {favorites, toggleFavorite} = useFavoriteStore();
+    // let isLiked = favorites.some((favorite) => favorite._id === eventId);
+console.log(myEvent);
   if (!myEvent) {
     return (
       <div className="min-h-screen flex flex-col gap-4 items-center justify-center text-gray-500 bg-white">
@@ -118,17 +91,17 @@ export default async function EventDetailsPage({
             {myEvent.title}
           </h1>
           <div className="flex gap-3">
-            <button
-              // onClick={() => setIsLiked(!isLiked)}
+            {/* <button
+              onClick={() => toggleFavorite(myEvent)}
               className="p-3 rounded-full hover:bg-gray-100 transition-all active:scale-95 border border-gray-200"
             >
               <FaRegStar
                 className={`w-5 h-5 ${
-                  ""
-                  // isLiked ? "text-yellow-500 fill-yellow-500" : "text-gray-600"
+                  isLiked ? "text-yellow-500 fill-yellow-500" : "text-gray-600"
                 }`}
               />
-            </button>
+            </button> */}
+            <FavoriteBtn event={myEvent} />
             <button className="p-3 rounded-full hover:bg-gray-100 transition-all active:scale-95 border border-gray-200">
               <FaShareAlt className="w-5 h-5 text-gray-600" />
             </button>
@@ -196,39 +169,7 @@ export default async function EventDetailsPage({
             </section>
 
             {/* Host Info */}
-            <section className="space-y-4">
-              <h2 className="text-xl font-bold text-gray-900">Hosted by</h2>
-              <div className="p-4 gap-2  bg-gray-50 rounded-xl border border-gray-100 flex flex-wrap items-center justify-between hover:shadow-md transition-shadow duration-300">
-                <div className="flex items-center gap-4 grow sm:flex-nowrap mb-5 sm:mb-0">
-                  <div className="relative w-12 h-12 rounded-full overflow-hidden border border-gray-200 bg-gray-200">
-                    {/* Placeholder Avatar */}
-                    <Image
-                      src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=100&h=100"
-                      alt={
-                        myEvent.organizer.firstName +
-                        " " +
-                        myEvent.organizer.lastName
-                      }
-                      fill
-                      className="object-cover"
-                      sizes="48px"
-                    />
-                  </div>
-                  <span className="font-bold text-gray-900">
-                    {`${myEvent.organizer.firstName} ${myEvent.organizer.lastName}`}
-                  </span>
-                </div>
-                <div className="flex gap-2 flex-wrap">
-                <span className=" shrink-0 px-4 grow  py-1.5 text-sm font-medium border border-gray-300 rounded-lg hover:bg-white transition-colors ">
-                  {myEvent.organizer.firstName + "_" + myEvent.organizer.lastName+"@gmail.com"}
-                </span>
-                <span className=" shrink-0 px-4 grow  py-1.5 text-sm font-medium bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors ">
-                 {"010000000000"}
-                </span>
-                </div>
-              </div>
-            </section>
-
+                      <OrganizerAvatar event={myEvent} />
             {/* Description */}
             <section className="space-y-4">
               <h2 className="text-xl font-bold text-gray-900">

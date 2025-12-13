@@ -281,18 +281,30 @@ export default function TicketsModal({
               Qty: <span className="font-semibold">{quantity}</span>
             </div>
             <div className="font-medium text-gray-800">
-              Total:{" "}
+              Total:{" "}{ticketPrice === 0 ?<span className="font-bold text-green-700">Free</span> : 
               <span className="font-bold text-green-700">
                 EGP {quantity * ticketPrice}
-              </span>
+              </span>}
             </div>
           </div>
 
-          <button
+          {/* <button
             onClick={handleProceed}
-            className="w-full bg-[#2c2e3e] hover:bg-[#232432] text-white py-3.5 rounded-md flex items-center justify-center gap-2 transition-colors font-medium"
+            className={`w-full text-white py-3.5 rounded-md flex items-center justify-center gap-2 transition-colors font-medium ${quantity === 0 ? "bg-gray-400 cursor-not-allowed" : ""}`}  
             // disabled={event.analytics.ticketsAvailable-quantity === 195}>
-            disabled={event.analytics.ticketsAvailable <= quantity || event.analytics.ticketsAvailable === 0}
+            // disabled={event.analytics.ticketsAvailable <= quantity-1 || event.analytics.ticketsAvailable-1 === 0}
+            disabled={quantity === 0}
+          >
+            Proceed
+            <BsChevronRight strokeWidth={0.5} />
+          </button> */}
+        <button
+            onClick={handleProceed}
+            disabled={quantity === 0}
+            className={`
+              w-full text-white py-3.5 rounded-md flex items-center justify-center gap-2 transition-colors font-medium
+            ${quantity == 0 ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}
+            `}
           >
             Proceed
             <BsChevronRight strokeWidth={0.5} />
