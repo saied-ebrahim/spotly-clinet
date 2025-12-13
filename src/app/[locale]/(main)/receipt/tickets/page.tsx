@@ -166,61 +166,69 @@ interface TicketObj {
   isValid: boolean;
   date: string;
   time: string;
-  address: string;
+  address?: string;
   attendee: string;
   qrCode: string;
 }
 
 const TicketCarousel = () => {
-  
- 
-
   const [currentIndex, setCurrentIndex] = useState(0);
-  let [receiptTickets, setReceiptTickets] = useState<TicketObj[]>([]);
+  const [receiptTickets, setReceiptTickets] = useState<TicketObj[]>([]);
   // const currentTicket = invoiceTickets[currentIndex];
   const currentTicket = receiptTickets[currentIndex];
   const searchParams = useSearchParams();
 
   const invoiceId = searchParams.get("invoice_id");
-// const getData = async () => {
-//   let res = await axiosInstance.get(`/tickets/order/${invoiceId}`);
-//   console.log(res.data.data);
-//   setReceiptTickets(res.data.data.tickets);
-// };
-// useEffect(() => {
-//   getData();
-// }, []);
-useEffect(() => {
-  const fetchInvoiceTickets = async () => {
-    let response = await axiosInstance.get(`/tickets/order/${invoiceId}`);
-    const data : Ticket[] = await response.data.data.tickets;
-  
-    console.log(data);
-    let ticketObj : TicketObj[] = data.map((ticket) => {
-      let address = ticket.event.location.address.split(",");
-      console.log(address);
-      return {
-        id: ticket.id,
-        eventTitle:ticket.event.title,
-        isValid: !ticket.isVerified,
-        date: ticket.event.date,
-        time: ticket.event.time,
-        address: `${ticket.event.location.district}, ${ticket.event.location.city}`,
-        attendee: ticket.user.firstName + " " + ticket.user.lastName,
-        qrCode: ticket.qrCode,
-        
-      };
-    });
-    setReceiptTickets(ticketObj);
-  };
-  fetchInvoiceTickets();
-}, []);
+  // const getData = async () => {
+  //   let res = await axiosInstance.get(`/tickets/order/${invoiceId}`);
+  //   console.log(res.data.data);
+  //   setReceiptTickets(res.data.data.tickets);
+  // };
+  // useEffect(() => {
+  //   getData();
+  // }, []);
+  useEffect(() => {
+    const fetchInvoiceTickets = async () => {
+      const response = await axiosInstance.get(`/tickets/order/${invoiceId}`);
+      const data: Ticket[] = await response.data.data.tickets;
+
+      console.log(data);
+      const ticketObj: TicketObj[] = data.map((ticket, index) => {
+        try {
+          const address =
+            (ticket.event.location?.address as string) || "online";
+          console.log("Processed Address:", address);
+          return {
+            id: ticket.id,
+            eventTitle: ticket.event.title,
+            isValid: !ticket.isVerified,
+            date: ticket.event.date,
+            time: ticket.event.time,
+            address: address,
+            attendee: ticket.user.firstName + " " + ticket.user.lastName,
+            qrCode: ticket.qrCode,
+          };
+        } catch (error) {
+          console.error(
+            `CRITICAL ERROR mapping ticket at index ${index}`,
+            ticket
+          );
+          console.error(error);
+          throw error;
+        }
+      });
+      setReceiptTickets(ticketObj);
+    };
+    fetchInvoiceTickets();
+  }, []);
   const nextTicket = () => {
     setCurrentIndex((prev) => (prev + 1) % receiptTickets.length);
   };
 
   const prevTicket = () => {
-    setCurrentIndex((prev) => (prev - 1 + receiptTickets.length) % receiptTickets.length);
+    setCurrentIndex(
+      (prev) => (prev - 1 + receiptTickets.length) % receiptTickets.length
+    );
   };
   if (!receiptTickets.length) return <div>Loading...</div>;
   return (
@@ -274,7 +282,7 @@ useEffect(() => {
           <div className="flex items-center gap-4 mb-6">
             <div className="bg-stone-50 border border-stone-100 rounded-2xl p-3 text-center min-w-20">
               <span className="block text-xs font-bold text-stone-400 uppercase">
-               {getMonthDay(currentTicket.date).month}
+                {getMonthDay(currentTicket.date).month}
               </span>
               <span className="block text-2xl font-black text-stone-900">
                 {getMonthDay(currentTicket.date).date}
@@ -289,7 +297,7 @@ useEffect(() => {
                 <FaMapPin size={16} className="text-red-500" />
                 <span className="text-xs font-medium">
                   {/* {event.location.district}, {event.location.city} */}
-                  {currentTicket.address}
+                  {currentTicket.address ? currentTicket.address : "online"}
                 </span>
               </div>
             </div>
@@ -326,7 +334,11 @@ useEffect(() => {
                 Status
               </p>
               <div className="inline-flex items-center gap-1.5 text-green-600 bg-green-50 px-2 py-0.5 rounded text-xs font-bold">
-               {currentTicket.isValid ? <FaCheckCircle size={12} /> : <FaExclamationCircle size={12} />}
+                {currentTicket.isValid ? (
+                  <FaCheckCircle size={12} />
+                ) : (
+                  <FaExclamationCircle size={12} />
+                )}
                 {currentTicket.isValid ? "Valid" : "Invalid"}
               </div>
             </div>
@@ -335,7 +347,12 @@ useEffect(() => {
           {/* QR Section (Specific to this ticket ID) */}
           <div className="bg-stone-900 rounded-2xl p-6 text-center text-white relative">
             <div className="bg-white p-3 rounded-xl inline-block mb-3">
-              <Image src={currentTicket.qrCode} alt="QR Code" width={120} height={120} />
+              <Image
+                src={currentTicket.qrCode}
+                alt="QR Code"
+                width={120}
+                height={120}
+              />
             </div>
             <p className="text-[10px] text-stone-400 uppercase tracking-widest font-medium mb-1">
               Scan at entrance
