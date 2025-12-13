@@ -1,26 +1,19 @@
 "use client";
-import { useEffect, useState } from "react";
-import axiosInstance from "@/lib/axios";
+import { useEffect } from "react";
+import useEventStore from "@/store/useEventStore";
 
 import PaginationList from "./PaginationList";
 
 import { EventDocument } from "@/types/eventInterface";
 
 const OnlineEvents = () => {
-  const [events, setEvents] = useState<EventDocument[]>([]);
+  const { events: allEvents, fetchEvents } = useEventStore();
 
   useEffect(() => {
-    axiosInstance
-      .get("/events")
-      .then((res) => {
-        const events = res.data.data.events;
-        const onlineEvents = events.filter(
-          (e: EventDocument) => e.type === "online"
-        );
-        setEvents(onlineEvents);
-      })
-      .catch((err) => console.error(err));
-  }, []);
+    fetchEvents();
+  }, [fetchEvents]);
+
+  const events = allEvents.filter((e) => e.type === "online");
   return (
     <section className="py-16 pt-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 font-sans">

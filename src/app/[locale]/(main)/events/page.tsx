@@ -5,11 +5,10 @@ import { EventFilters } from "@/components/Dashboard/Events/EventFilters";
 import { EventCard } from "@/components/Dashboard/Events/EventCard";
 import { DateSelectionModal } from "@/components/Dashboard/Events/DateSelectionModal";
 import { FiChevronDown } from "react-icons/fi";
-import axiosInstance from "@/lib/axios";
 
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { EventDocument } from "@/types/eventInterface";
+import useEventStore from "@/store/useEventStore";
 
 const EventsPage = () => {
   const searchParams = useSearchParams();
@@ -27,26 +26,13 @@ const EventsPage = () => {
     }
     return initialFilters;
   });
+  const { events, isLoading, fetchEvents } = useEventStore();
   const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [customDate, setCustomDate] = useState<string | null>(null);
-  const [events, setEvents] = useState<EventDocument[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const fetchEvents = async () => {
-      setIsLoading(true);
-      try {
-        const res = await axiosInstance.get("/events?limit=30");
-        setEvents(res.data.data.events);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchEvents();
-  }, []);
+  }, [fetchEvents]);
 
   const handleFilterChange = (
     category: string,
