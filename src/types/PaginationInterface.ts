@@ -58,8 +58,8 @@ export interface PaginationEventsProps {
 export interface PaginationProps extends Omit<PaginationEventsProps, 'smoothScroll'> {
   currentPage: number;
   paginate: (pageNumber: number) => void;
-  nextPage: () => void;
-  prevPage: () => void;
+  nextPage: (noScroll?: boolean) => void;
+  prevPage: (noScroll?: boolean) => void;
 }
 //----------------------------
 // export interface PaginationEventsProps {
