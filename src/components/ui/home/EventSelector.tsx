@@ -1,9 +1,8 @@
 "use client";
-import { EventObject } from "@/types/PaginationInterface";
-import axiosInstance from "@/lib/axios";
 import { useState, useEffect, useRef } from "react";
 import { FiSearch } from "react-icons/fi";
 import { EventDocument } from "@/types/eventInterface";
+import useEventStore from "@/store/useEventStore";
 
 const EventSelector = ({
   locationQuery,
@@ -14,15 +13,14 @@ const EventSelector = ({
 }) => {
   const [input, setInput] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [events, setEvents] = useState<EventDocument[]>([]);
+  /* const [events, setEvents] = useState<EventDocument[]>([]); */
+  const { events, fetchEvents } = useEventStore();
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown if clicking outside
   useEffect(() => {
-    axiosInstance.get("/events").then((res) => {
-      setEvents(res.data.data.events);
-    });
-  }, []);
+    fetchEvents();
+  }, [fetchEvents]);
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (

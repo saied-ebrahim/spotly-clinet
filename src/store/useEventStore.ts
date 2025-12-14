@@ -14,9 +14,8 @@ const useEventStore = create<EventState>((set) => ({
   isLoading: false, // Start false, or true if you want immediate loading? Usually false until fetch is called.
   error: null,
   fetchEvents: async () => {
-    // Simple caching: if events exist, don't refetch automatically.
-    // NOTE: In a real app, you might want a forceRefresh param or TTL.
-    if (Date.now() - 0 > 0 && useEventStore.getState().events.length > 0) {
+    const { events, isLoading } = useEventStore.getState();
+    if (isLoading || events.length > 0) {
       return;
     }
 
