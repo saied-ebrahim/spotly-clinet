@@ -5,7 +5,7 @@ import { Ticket } from "@/types/Tickets/ticketResponseInterfaces";
 import { getMonthDay } from "@/utils/details/formatting";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FaCheckCircle,
   FaChevronLeft,
@@ -13,7 +13,7 @@ import {
   FaClock,
   FaExclamationCircle,
   FaMapPin,
-  FaQrcode,
+  
 } from "react-icons/fa";
 import { FaTicket } from "react-icons/fa6";
 

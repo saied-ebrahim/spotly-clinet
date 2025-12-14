@@ -30,7 +30,7 @@ export default function AttendeeRegisterForm() {
         email: data.email,
         password: data.password,
         gender: data.gender.value,
-        phone:data.phone,
+        phone: data.phone,
         address: {
           city: data.city.label,
           country: data.country.label,
@@ -70,7 +70,7 @@ export default function AttendeeRegisterForm() {
     defaultValues: {
       firstName: "",
       lastName: "",
-      phone: 0 ,
+      phone: 0,
       email: "",
       gender: null as unknown as { label: string; value: string },
       country: null as unknown as { label: string; value: string },
@@ -210,6 +210,7 @@ export default function AttendeeRegisterForm() {
             id="country"
             icon={<FaMapLocationDot />}
             label={t("auth.country")}
+            skipGlobalLoading={true}
             reset={() => {
               setValue(
                 "state",
@@ -238,6 +239,7 @@ export default function AttendeeRegisterForm() {
             triggerApiUrl={`countryId=${country?.value || ""}`}
             querySearch={"search"}
             placeholder={t("auth.selectState")}
+            skipGlobalLoading={true}
             reset={() => {
               setValue(
                 "city",
@@ -265,6 +267,7 @@ export default function AttendeeRegisterForm() {
             querySearch={"search"}
             placeholder={t("auth.selectCity")}
             id="city"
+            skipGlobalLoading={true}
             icon={<RiUserLocationLine />}
             label={t("auth.city")}
             error={errors.city?.message}

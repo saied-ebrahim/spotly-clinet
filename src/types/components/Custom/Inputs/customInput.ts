@@ -18,6 +18,7 @@ export interface CustomInputProps {
   querySearch?: string;
   triggerApiUrl?: string;
   reset?: () => void;
+  skipGlobalLoading?: boolean;
   rows?: number;
   [key: string]: unknown;
 }

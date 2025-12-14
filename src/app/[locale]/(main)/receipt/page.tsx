@@ -7,8 +7,13 @@ import { formatDate } from "@/utils/details/formatting";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { FaCreditCard, FaDownload, FaReceipt, FaTicketAlt, FaUsers } from "react-icons/fa";
-import { FiShare2 } from "react-icons/fi";
+import {
+  FaCreditCard,
+  FaDownload,
+  FaReceipt,
+  FaTicketAlt,
+  FaUsers,
+} from "react-icons/fa";
 
 // const getData = async () => {
 //   // const res = await axiosInstance.get(`/events/LE{eventId}`);
@@ -19,35 +24,53 @@ import { FiShare2 } from "react-icons/fi";
 //   return checkout;
 // };
 
-
 const InvoiceCard = () => {
   const searchParams = useSearchParams();
   const invoiceId = searchParams.get("invoice_id");
   // const invoice = await axiosInstance.get(`/invoice/LE{invoiceId}`);
   console.log(invoiceId);
 
-
-  const [invoiceData, setInvoiceData] = useState({orderId: "", eventTitle: "", totalPrice: 0,quantity: 0,date: "",eventId: "",fees: 0,discount: 0, purchaserName: "" }); 
-  const getData = async () => {
-    let res = await axiosInstance.get(`/tickets/order/${invoiceId}`);
-    console.log(res.data.data);
-    let invoice = {
-      orderId: res.data.data.order.id.slice(5),
-      totalPrice: res.data.data.checkout.totalAmount,
-      quantity: res.data.count,
-      date: res.data.data.checkout.paidAt,
-      eventId: res.data.data.order.eventID.slice(5),
-      eventTitle: res.data.data.tickets[0].event.title,
-      fees: res.data.data?.fees || 100,
-      discount: res.data.data?.discount || 0,
-      purchaserName: res.data.data.tickets[0].user.firstName + " " + res.data.data.tickets[0].user.lastName,
-    };
-    setInvoiceData(invoice);
-  };
-  const formattedDate = formatDate(invoiceData.date);
+  const [invoiceData, setInvoiceData] = useState({
+    orderId: "",
+    eventTitle: "",
+    totalPrice: 0,
+    quantity: 0,
+    date: "",
+    eventId: "",
+    fees: 0,
+    discount: 0,
+    purchaserName: "",
+  });
   useEffect(() => {
+    const getData = async () => {
+      if (!invoiceId) return;
+      try {
+        const res = await axiosInstance.get(`/tickets/order/${invoiceId}`);
+        console.log(res.data.data);
+        const invoice = {
+          orderId: res.data.data.order.id.slice(5),
+          totalPrice: res.data.data.checkout.totalAmount,
+          quantity: res.data.count,
+          date: res.data.data.checkout.paidAt,
+          eventId: res.data.data.order.eventID.slice(5),
+          eventTitle: res.data.data.tickets[0].event.title,
+          fees: res.data.data?.fees || 100,
+          discount: res.data.data?.discount || 0,
+          purchaserName:
+            res.data.data.tickets[0].user.firstName +
+            " " +
+            res.data.data.tickets[0].user.lastName,
+        };
+        setInvoiceData(invoice);
+      } catch (error) {
+        console.error("Failed to fetch invoice data:", error);
+      }
+    };
     getData();
-  }, []);
+  }, [invoiceId]);
+
+  const formattedDate = formatDate(invoiceData.date);
+
   console.log(invoiceData);
   if (!invoiceData.orderId) return <div>Loading...</div>;
   return (
@@ -92,7 +115,9 @@ const InvoiceCard = () => {
             </p>
             <div className="flex items-center gap-2 mt-0.5">
               <FaUsers size={12} className="text-stone-400" />
-              <p className="text-xs text-stone-500">Qty: {invoiceData.quantity}</p>
+              <p className="text-xs text-stone-500">
+                Qty: {invoiceData.quantity}
+              </p>
             </div>
           </div>
           <p className="text-sm font-bold text-stone-900">
@@ -135,12 +160,15 @@ const InvoiceCard = () => {
           <FaDownload size={16} />
           PDF
         </button>
-      <Link className="flex items-center justify-center gap-2 py-3 bg-white border border-stone-200 rounded-xl text-sm font-bold text-stone-600 hover:bg-stone-50 transition-colors" href={`/receipt/tickets?invoice_id=${invoiceId}`}>
-        <button className="flex gap-2">
-          <FaTicketAlt size={16} />
-         see tickets
-        </button>
-      </Link>
+        <Link
+          className="flex items-center justify-center gap-2 py-3 bg-white border border-stone-200 rounded-xl text-sm font-bold text-stone-600 hover:bg-stone-50 transition-colors"
+          href={`/receipt/tickets?invoice_id=${invoiceId}`}
+        >
+          <button className="flex gap-2">
+            <FaTicketAlt size={16} />
+            see tickets
+          </button>
+        </Link>
       </div>
 
       {/* Decor: Zigzag bottom */}

@@ -103,7 +103,7 @@ export default function AIPromptModal({
             <textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="e.g., 'I want to host a Yoga Workshop in Maadi next Friday at 10 AM. Price is 200 EGP. It's for beginners.'"
+              placeholder="e.g., 'I want to host a Yoga Workshop in Maadi next Friday at 10 AM. Price is 200 EGP and quantity is 50. It's for beginners.'"
               className="w-full h-40 p-4 rounded-xl border border-slate-200 focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all resize-none outline-none text-slate-700 placeholder:text-slate-400 leading-relaxed"
             />
           </div>

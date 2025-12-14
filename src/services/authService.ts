@@ -74,6 +74,7 @@ export const authService = {
 
   logout: async (deviceID: string) => {
     try {
+      Cookies.remove("token");
       await axiosInstance.post("/auth/logout", { deviceID });
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
@@ -154,6 +155,35 @@ export const authService = {
 
       // 3. Last resort
       throw new Error("An unexpected error occurred");
+    }
+  },
+
+  changePassword: async (data: {
+    oldPassword: string;
+    newPassword: string;
+  }) => {
+    try {
+      const response = await axiosInstance.post(
+        "/password/change-password",
+        data
+      );
+      return response.data;
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response) {
+        const data = error.response.data as { message?: string } | string;
+        let backendMessage = "";
+        if (typeof data === "object" && data !== null && data.message) {
+          backendMessage = data.message;
+        } else if (typeof data === "string") {
+          backendMessage = data;
+        }
+
+        if (backendMessage) {
+          throw new Error(backendMessage);
+        }
+        throw new Error("An error occurred while changing password");
+      }
+      throw error;
     }
   },
 
