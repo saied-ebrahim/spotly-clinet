@@ -42,6 +42,7 @@ export const navSections: NavSection[] = [
         icon: FiCalendar,
         key: "events",
         link: "events",
+
       },
       {
         label: "Orders",
@@ -61,7 +62,7 @@ export const navSections: NavSection[] = [
         icon: FiTag,
         key: "tags",
         link: "tags",
-        allowedRoles: ["Admin"],
+        allowedRoles: ["admin"],
       },
       {
         label: "Categories",
@@ -70,7 +71,7 @@ export const navSections: NavSection[] = [
         // Let's use FiTag for now to be safe with imports, or check imports.
         key: "categories",
         link: "categories",
-        allowedRoles: ["Admin"],
+        allowedRoles: ["admin"],
       },
       {
         label: "Users",

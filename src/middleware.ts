@@ -47,7 +47,7 @@ export default function middleware(request: NextRequest) {
 
     // Role-based Access Control
     if (role === "user") {
-      if (pathWithoutLocale.startsWith("/dashboardHome/Admin")) {
+      if (pathWithoutLocale.startsWith("/dashboard/admin")) {
         url.pathname = "/unauthorized";
         return NextResponse.redirect(url);
       }

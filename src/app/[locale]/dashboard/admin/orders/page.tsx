@@ -6,7 +6,7 @@ import { OrderDocument } from "@/types/orderInterface";
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<OrderDocument[]>([]);
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     axiosInstance
       .get("/orders")
@@ -17,12 +17,14 @@ export default function AdminOrdersPage() {
       })
       .catch((err) => {
         console.error("Failed to fetch orders:", err);
+      }).finally(() => {
+        setLoading(false);
       });
   }, []);
 
   return (
     <div className="h-full space-y-6">
-      <AdminOrdersTable initialData={orders} />
+      <AdminOrdersTable initialData={orders} loading={loading} />
     </div>
   );
 }
