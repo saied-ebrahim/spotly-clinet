@@ -120,12 +120,16 @@ function transformTicketsToDisplayData(tickets: Ticket[]): TicketDisplayData[] {
   return tickets.map((ticket) => {
     // Format date on server side to avoid hydration mismatches
     const dateInfo = getMonthDay(ticket.event.date);
+    const date = new Date(ticket.event.date);
     return {
       id: ticket.id,
       eventTitle: ticket.event.title,
       isValid: !ticket.isVerified,
       date: ticket.event.date, // Keep original date for reference
-      formattedDate: dateInfo, // Pre-formatted date info
+      formattedDate: {
+        ...dateInfo,
+        year: date.getFullYear(),
+      }, // Pre-formatted date info with year
       time: ticket.event.time,
       address: `${ticket.event.location.district}, ${ticket.event.location.city}`,
       attendee: `${ticket.user.firstName} ${ticket.user.lastName}`,
