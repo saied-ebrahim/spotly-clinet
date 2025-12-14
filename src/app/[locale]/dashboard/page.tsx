@@ -3,8 +3,8 @@ import { cookies } from "next/headers";
 import { decryptData } from "@/shared/encryption";
 import { DecryptedToken } from "@/types/DecryptedToken";
 
-export default function EventsDashboard() {
-  const cookieStore = cookies();
+export default async function EventsDashboard() {
+  const cookieStore = await cookies();
   const token = cookieStore.get("token");
 
   if (!token?.value) {
