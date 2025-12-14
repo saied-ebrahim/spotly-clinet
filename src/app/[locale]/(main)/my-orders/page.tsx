@@ -11,7 +11,7 @@ import { toast } from "react-toastify";
 import { OrderDocument } from "@/types/orderInterface";
 
 function Page() {
-const [orders, setOrders] = useState<OrderDocument[]>([]);
+  const [orders, setOrders] = useState<OrderDocument[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const [orders, setOrders] = useState<OrderDocument[]>([]);
       try {
         setLoading(true);
         // Get user ID from cookie
-        const cookie = Cookies.get("token");
+        const cookie = Cookies.get("sub");
         if (!cookie) {
           throw new Error("No auth token found");
         }
@@ -74,5 +74,4 @@ const [orders, setOrders] = useState<OrderDocument[]>([]);
   );
 }
 
-
-export default Page
+export default Page;

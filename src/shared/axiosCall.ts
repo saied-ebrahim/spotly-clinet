@@ -23,7 +23,7 @@ export const axiosGet = async <T>(
   close?: boolean,
   skipGlobalLoading?: boolean
 ): Promise<ApiResponse<T>> => {
-  const authToken = Cookies.get("token") ?? "";
+  const authToken = Cookies.get("sub") ?? "";
   const tokenDecrypted = decryptData(authToken) as DecryptedToken;
 
   if (!skipGlobalLoading) {
@@ -72,7 +72,7 @@ export const axiosPost = async <T>(
   file?: boolean,
   close?: boolean
 ) => {
-  const authToken = Cookies.get("token") ?? "";
+  const authToken = Cookies.get("sub") ?? "";
   const tokenDecrypted = decryptData(authToken) as DecryptedToken;
   const HeaderImg = { "Content-Type": "multipart/form-data" };
 

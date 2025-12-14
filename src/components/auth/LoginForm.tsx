@@ -8,16 +8,16 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema, LoginSchema } from "@/schemas/loginSchema";
 import { useTranslations } from "next-intl";
 import { authService } from "@/services/authService";
-import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import { encryptData } from "@/shared/encryption";
-import { parseJwt } from "@/shared/jwt";
+import { useLoaderStore } from "@/store/useLoaderStore";
+
+
 
 export default function LoginForm() {
   const t = useTranslations();
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -30,13 +30,18 @@ export default function LoginForm() {
 
   const onSubmit = async (data: LoginSchema) => {
     setIsLoading(true);
+    useLoaderStore.getState().startLoading();
     try {
       const deviceID = await authService.getDeviceID();
-      const response = await authService.login({
-        email: data.email,
-        password: data.password,
-        deviceID,
-      });
+      const response = await authService.login(
+        {
+          email: data.email,
+          password: data.password,
+          deviceID,
+        },
+        { skipGlobalLoading: true }
+      );
+
 
       // Try to find token in various places
       const token =
@@ -53,7 +58,7 @@ export default function LoginForm() {
         });
 
         // Store in a separate cookie that is NOT HttpOnly so client can read it
-        Cookies.set("token", encryptedData, {
+        Cookies.set("sub", encryptedData, {
           path: "/",
           expires: 1,
           secure: false,
@@ -63,9 +68,11 @@ export default function LoginForm() {
         toast.success("Login successful");
         window.location.href = "/";
       } else {
+        useLoaderStore.getState().stopLoading();
         toast.error("Login failed");
       }
     } catch (error) {
+      useLoaderStore.getState().stopLoading();
       console.error("Login error:", error);
       toast.error(t("auth.loginError") || "An error occurred during login");
     } finally {

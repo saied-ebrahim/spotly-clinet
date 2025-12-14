@@ -10,7 +10,7 @@ import { parseJwt } from "./shared/jwt";
 export default function middleware(request: NextRequest) {
   const url = request.nextUrl.clone();
 
-  const token = request.cookies.get("token");
+  const token = request.cookies.get("sub");
   const tokenDecrypted = decryptData(token?.value ?? "") as DecryptedToken;
   let role = tokenDecrypted?.role;
 

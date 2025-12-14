@@ -5,7 +5,7 @@ import { DecryptedToken } from "@/types/DecryptedToken";
 
 export default async function EventsDashboard() {
   const cookieStore = await cookies();
-  const token = cookieStore.get("token");
+  const token = cookieStore.get("sub");
 
   if (!token?.value) {
     redirect("/");

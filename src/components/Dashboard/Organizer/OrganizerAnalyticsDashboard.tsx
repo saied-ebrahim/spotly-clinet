@@ -66,7 +66,7 @@ export default function OrganizerAnalyticsDashboard() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const cookie = Cookies.get("token");
+        const cookie = Cookies.get("sub");
         if (!cookie) {
           setLoading(false);
           return;

@@ -1,8 +1,7 @@
 import axiosInstance from "@/lib/axios";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { getDeviceID } from "@/shared/device";
 import Cookies from "js-cookie";
-import { decryptData } from "@/shared/encryption";
 
 const API_URL = "/auth/login";
 const SIGNUP_URL = "/auth/signup";
@@ -45,9 +44,16 @@ export interface SignupResponse {
 }
 
 export const authService = {
-  login: async (data: LoginRequest): Promise<LoginResponse> => {
+  login: async (
+    data: LoginRequest,
+    config?: AxiosRequestConfig
+  ): Promise<LoginResponse> => {
     try {
-      const response = await axiosInstance.post<LoginResponse>(API_URL, data);
+      const response = await axiosInstance.post<LoginResponse>(
+        API_URL,
+        data,
+        config
+      );
       return response.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
@@ -74,7 +80,7 @@ export const authService = {
 
   logout: async (deviceID: string) => {
     try {
-      Cookies.remove("token");
+      Cookies.remove("sub");
       await axiosInstance.post("/auth/logout", { deviceID });
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 401) {
@@ -86,28 +92,14 @@ export const authService = {
   },
 
   refreshToken: async (deviceID: string) => {
-    // Use direct axios to avoid interceptor loop/redirects
-    const cookie = Cookies.get("token");
-    let token = "";
-    if (cookie) {
-      try {
-        const decrypted = decryptData(cookie) as { token?: string };
-        token = decrypted?.token || "";
-      } catch (e) {
-        console.error("Failed to decrypt token for refresh", e);
-      }
-    }
-
-    const response = await axios.post(
-      "/api/v1/auth/refreshToken",
+    const response = await axiosInstance.post(
+      "/auth/refreshToken",
       {
         deviceID,
       },
       {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        withCredentials: true,
+        skipGlobalLoading: true,
       }
     );
     return response.data;

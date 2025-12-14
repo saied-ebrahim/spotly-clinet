@@ -15,7 +15,6 @@ const EventsPage = () => {
   const categoryFromUrl = searchParams.get("category");
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [location, setLocation] = useState("");
   const [selectedFilters, setSelectedFilters] = useState<
     Record<string, string[]>
   >(() => {
@@ -91,7 +90,7 @@ const EventsPage = () => {
     selectedPrices: string[] | undefined
   ): boolean => {
     if (!selectedPrices || selectedPrices.length === 0) return true;
-    const isFree = eventPrice.toLowerCase() === "free";
+    const isFree = eventPrice.toLowerCase() === "free" || eventPrice === "0";
     const isPaid = !isFree;
 
     return selectedPrices.some((price) => {
@@ -160,12 +159,6 @@ const EventsPage = () => {
       (event.title &&
         event.title.toLowerCase().includes(searchQuery.toLowerCase()));
 
-    // Location Filter
-    const matchesLocation =
-      location === "" ||
-      (event.location?.city &&
-        event.location.city.toLowerCase().includes(location.toLowerCase()));
-
     // Price Filter
     const matchesPrice = checkPriceFilter(
       String(event.ticketType.price),
@@ -211,27 +204,25 @@ const EventsPage = () => {
       }
     );
 
-    return (
-      matchesSearch &&
-      matchesLocation &&
-      matchesPrice &&
-      matchesDate &&
-      matchesOtherFilters
-    );
+    return matchesSearch && matchesPrice && matchesDate && matchesOtherFilters;
   });
+
+  const handleReset = () => {
+    setSelectedFilters({});
+    setSearchQuery("");
+    setCustomDate(null);
+  };
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <EventSearchSection
-        onSearchChange={setSearchQuery}
-        onLocationChange={setLocation}
-      />
+      <EventSearchSection onSearchChange={setSearchQuery} />
 
       <div className="flex flex-col lg:flex-row mt-12 gap-8">
         {/* Sidebar Filters */}
         <EventFilters
           onFilterChange={handleFilterChange}
           selectedFilters={selectedFilters}
+          onReset={handleReset}
         />
 
         {/* Main Content */}
