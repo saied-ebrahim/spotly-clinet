@@ -357,7 +357,7 @@ export default function LocationSelector({
         )}
       </div>
 
-      <div className="relative flex-grow w-full rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-gray-200 min-h-[400px]">
+      <div className="relative grow w-full rounded-xl overflow-hidden shadow-lg border border-gray-200 bg-gray-200 min-h-[400px]">
         {!isLeafletLoaded && (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-gray-500 z-50 bg-gray-100">
             <IconLoader className="w-10 h-10 animate-spin mb-2 text-blue-500" />

@@ -37,7 +37,10 @@ export function DashboardSidebar() {
                     : `/dashboard/${role}/${item.link}`;
 
                 const isActive =
-                  pathname === linkPath || pathname.startsWith(linkPath + "/");
+                  item.link === ""
+                    ? pathname === linkPath
+                    : pathname === linkPath ||
+                      pathname.startsWith(linkPath + "/");
 
                 return (
                   <LinkTo
