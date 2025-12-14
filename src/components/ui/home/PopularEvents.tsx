@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useEventStore from "@/store/useEventStore";
 
 import PaginationList from "./PaginationList";
@@ -10,23 +10,33 @@ import useGeolocation from "@/hooks/useGeolocation";
 import { EventDocument } from "@/types/eventInterface";
 
 // 3. The Main Container Component
-const PopularEvents = () => {
-  const filters = ["All", "Today", "Tomorrow", "This Week", "Hybrid", "Free"];
+const PopularEvents = ({events}: {events: EventDocument[]}) => {
+  console.log(events);
+  const filters = ["All", "Today", "Tomorrow", "This Week", "Free"];
+  const ref = useRef<HTMLDivElement>(null);
   const {
     location: { city },
   } = useGeolocation();
-  const { events, fetchEvents } = useEventStore();
+  // const { events, fetchEvents } = useEventStore();
 
-  useEffect(() => {
-    fetchEvents();
-  }, [fetchEvents]);
-
+  // useEffect(() => {
+  //   fetchEvents();
+  // }, [fetchEvents]);
+const smoothScroll = () => {
+  console.log("smoothScroll");
+  if (ref.current) {
+    ref.current.scrollIntoView({ 
+      behavior: "smooth",
+      block: "start" // This aligns the top of the element with the top of the screen
+    });
+  }
+};
   const [currentFilter, setCurrentFilter] = useState<string>("All");
 
   const filtered = filterEvents(events, currentFilter);
   const filteredEvents = filtered.filter((e) => e.type !== "online");
   return (
-    <section className="py-16 pb-0 pt-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section ref={ref} className="py-16 pb-0 pt-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-y-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 font-sans">
         {/* Header */}
         <h2 className="text-3xl font-bold text-gray-900 mb-6">
@@ -50,16 +60,17 @@ const PopularEvents = () => {
           ))}
         </div>
         <div className="mb-8 text-center sm:text-left">
-          <h2 className="text-3xl font-bold text-gray-900">Upcoming Events</h2>
+          <h3 className="text-2xl font-bold text-gray-900">Upcoming Events</h3>
           <p className="text-gray-500 mt-2">
             Browse through our latest events and workshops.
           </p>
         </div>
         {
-          /* filteredEvents */ events.length > 0 ? (
+          filteredEvents.length > 0 ? (
             <PaginationList
               itemsPerPage={6}
-              allEvents={/* filteredEvents */ events}
+              allEvents={filteredEvents}
+              smoothScroll={smoothScroll}
             /> // this is a COMMON COMPONENT for pagination
           ) : (
             <h1 className="text-center w-full text-xl">No Events Found</h1>
