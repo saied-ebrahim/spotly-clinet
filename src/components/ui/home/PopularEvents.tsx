@@ -45,7 +45,7 @@ const { findClosestMatch } = useCityMatcher();
       }
     }
   }, [city, findClosestMatch]); 
-
+console.log(findClosestMatch("Al-Sayyida Zeinab"));
   return (
     <section ref={ref} className="py-16 pb-0 pt-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-y-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 font-sans">
