@@ -60,12 +60,10 @@ export default function LoginForm() {
           sameSite: "Lax",
         });
 
-        toast.success(t("auth.loginSuccess") || "Login successful");
+        toast.success("Login successful");
         window.location.href = "/";
       } else {
-        toast.error(
-          response.message || t("auth.loginFailed") || "Login failed"
-        );
+        toast.error("Login failed");
       }
     } catch (error) {
       console.error("Login error:", error);
