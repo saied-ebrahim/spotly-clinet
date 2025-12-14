@@ -12,7 +12,6 @@ import { OrderDocument } from "@/types/orderInterface";
 import { useTranslations } from "next-intl";
 
 function Page() {
-  const t = useTranslations("myOrders");
   const [orders, setOrders] = useState<OrderDocument[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -21,7 +20,7 @@ function Page() {
       try {
         setLoading(true);
         // Get user ID from cookie
-        const cookie = Cookies.get("token");
+        const cookie = Cookies.get("sub");
         if (!cookie) {
           throw new Error("No auth token found");
         }
@@ -55,7 +54,7 @@ function Page() {
         }
       } catch (error) {
         console.error("Error fetching orders:", error);
-        toast.error(t("failedToLoad"));
+        toast.error("failedToLoad");
       } finally {
         setLoading(false);
       }
@@ -67,8 +66,8 @@ function Page() {
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-800">{t("title")}</h1>
-        <p className="text-slate-500">{t("subtitle")}</p>
+        <h1 className="text-2xl font-bold text-slate-800">"title"</h1>
+        <p className="text-slate-500">"subtitle"</p>
       </div>
 
       <OrganizerOrdersTable rowData={orders} loading={loading} />
@@ -76,5 +75,4 @@ function Page() {
   );
 }
 
-
-export default Page
+export default Page;

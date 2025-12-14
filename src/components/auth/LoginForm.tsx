@@ -8,17 +8,16 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema, LoginSchema } from "@/schemas/loginSchema";
 import { useTranslations } from "next-intl";
 import { authService } from "@/services/authService";
-import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import { encryptData } from "@/shared/encryption";
-import { parseJwt } from "@/shared/jwt";
+import { useLoaderStore } from "@/store/useLoaderStore";
+
+
 
 export default function LoginForm() {
-  const t = useTranslations("auth.login");
-  const tAuth = useTranslations("auth");
-  const router = useRouter();
+  const t = useTranslations();
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -26,18 +25,23 @@ export default function LoginForm() {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginSchema>({
-    resolver: yupResolver(loginSchema(tAuth)),
+    resolver: yupResolver(loginSchema(t)),
   });
 
   const onSubmit = async (data: LoginSchema) => {
     setIsLoading(true);
+    useLoaderStore.getState().startLoading();
     try {
       const deviceID = await authService.getDeviceID();
-      const response = await authService.login({
-        email: data.email,
-        password: data.password,
-        deviceID,
-      });
+      const response = await authService.login(
+        {
+          email: data.email,
+          password: data.password,
+          deviceID,
+        },
+        { skipGlobalLoading: true }
+      );
+
 
       // Try to find token in various places
       const token =
@@ -54,7 +58,7 @@ export default function LoginForm() {
         });
 
         // Store in a separate cookie that is NOT HttpOnly so client can read it
-        Cookies.set("token", encryptedData, {
+        Cookies.set("sub", encryptedData, {
           path: "/",
           expires: 1,
           secure: false,
@@ -64,9 +68,11 @@ export default function LoginForm() {
         toast.success(t("loginSuccessful"));
         window.location.href = "/";
       } else {
-        toast.error(t("loginFailed"));
+        useLoaderStore.getState().stopLoading();
+        toast.error("Login failed");
       }
     } catch (error) {
+      useLoaderStore.getState().stopLoading();
       console.error("Login error:", error);
       toast.error(t("loginError"));
     } finally {
