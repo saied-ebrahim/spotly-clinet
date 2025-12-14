@@ -14,17 +14,18 @@ const RecommendationList = ({ event }: { event: EventDocument }) => {
   const [recs, setRecs] = useState<EventDocument[]>([]);
  
   useEffect(() => {
-  // Guard clause: ensure event and categories exist before fetching
+  // Guard clause: ensure event and categories exist
   if (!event || !event.category) return;
 
   axiosInstance.get("/events").then((res) => {
     const myRecs = res.data.data.events.filter((e: EventDocument) => {
-      
+      // 1. Exclude the current event
       if (e._id === event._id) return false;
 
-      
-      const hasMatchingCategory = e.category.some((cat) => 
-        event.category.includes(cat)
+      // 2. Compare IDs:
+      // Check if ANY category in the fetched event (e) matches ANY category in the current event
+      const hasMatchingCategory = e.category.some((fetchedCat) => 
+        event.category.some((currentCat) => currentCat._id === fetchedCat._id)
       );
 
       return hasMatchingCategory;
@@ -32,7 +33,8 @@ const RecommendationList = ({ event }: { event: EventDocument }) => {
 
     setRecs(myRecs);
   });
-// Update dependency array to listen for category changes
+  
+  // Update dependency to watch the ID specifically, or the category array length
 }, [event._id, event.category]);
 
   useEffect(() => {
