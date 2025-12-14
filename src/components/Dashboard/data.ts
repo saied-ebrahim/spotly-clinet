@@ -3,8 +3,6 @@ import {
   FiHome,
   FiCalendar,
   FiShoppingBag,
-  FiDollarSign,
-  FiSettings,
   FiTag,
   FiUser,
   FiPackage,

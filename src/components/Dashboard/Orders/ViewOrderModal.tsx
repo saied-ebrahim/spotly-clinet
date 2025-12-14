@@ -162,17 +162,6 @@ export function ViewOrderModal({
                     </span>
                   </div>
                 </div>
-
-                <div className="pt-4 border-t border-slate-200">
-                  <div className="flex flex-col gap-1">
-                    <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                      Ticket Type ID
-                    </span>
-                    <code className="text-xs bg-white px-2 py-1 rounded border border-slate-200 w-fit text-slate-600">
-                      {order.ticketTypeID}
-                    </code>
-                  </div>
-                </div>
               </div>
             </div>
 
