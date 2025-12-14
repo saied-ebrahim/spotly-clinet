@@ -8,6 +8,7 @@ import {
   FiCalendar,
 } from "react-icons/fi";
 import { OrderDocument } from "@/types/orderInterface";
+import { useRouter } from "next/navigation";
 
 interface ViewOrderModalProps {
   isOpen: boolean;
@@ -20,6 +21,7 @@ export function ViewOrderModal({
   onClose,
   order,
 }: ViewOrderModalProps) {
+  const router = useRouter();
   if (!isOpen || !order) return null;
 
   const formatDate = (dateString: string) => {
@@ -226,10 +228,18 @@ export function ViewOrderModal({
 
           <div className="p-6 border-t border-slate-100 flex justify-end">
             <button
-              onClick={onClose}
+              onClick={() => onClose()}
               className="px-6 py-2 bg-slate-100 text-slate-700 font-medium rounded-lg hover:bg-slate-200 transition-colors"
             >
               Close
+            </button>
+            <button
+              onClick={() => {
+                router.push(`/my-orders/receipt?invoice_id=${order._id}`);
+              }}
+              className="ml-2 px-6 py-2 bg-brand-primary text-white font-medium rounded-lg hover:bg-brand-primary/90 transition-colors"
+            >
+              Show Invoice
             </button>
           </div>
         </div>

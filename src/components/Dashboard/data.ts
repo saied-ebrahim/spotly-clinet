@@ -42,7 +42,6 @@ export const navSections: NavSection[] = [
         icon: FiCalendar,
         key: "events",
         link: "events",
-
       },
       {
         label: "Orders",
@@ -51,11 +50,11 @@ export const navSections: NavSection[] = [
         link: "orders",
       },
       {
-        label: "Sold Products",
+        label: "Sold Events",
         icon: FiPackage,
         key: "sold-products",
         link: "sold-products",
-        allowedRoles: ["Organizer"],
+        allowedRoles: ["organizer"],
       },
       {
         label: "Tags",
@@ -78,18 +77,7 @@ export const navSections: NavSection[] = [
         link: "users",
         allowedRoles: ["Admin"],
       },
-      {
-        label: "Finance",
-        icon: FiDollarSign,
-        key: "finance",
-        link: "finance",
-      },
-      {
-        label: "Settings",
-        icon: FiSettings,
-        key: "settings",
-        link: "settings",
-      },
+    
     ],
   },
 ];

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import DataTable from "@/components/Custom/DataTable";
+import { FiX } from "react-icons/fi";
 import {
   ColDef,
   ValueFormatterParams,
@@ -12,25 +13,40 @@ import { SoldProduct } from "@/types/soldProduct";
 interface SoldProductsTableProps {
   rowData: SoldProduct[];
   loading?: boolean;
+  onSearch?: (query: string) => void;
 }
 
 export function SoldProductsTable({
   rowData,
   loading = false,
+  onSearch,
 }: SoldProductsTableProps) {
   const [searchTerm, setSearchTerm] = useState("");
 
+  useEffect(() => {
+    if (onSearch) {
+      const delayDebounceFn = setTimeout(() => {
+        onSearch(searchTerm);
+      }, 500);
+
+      return () => clearTimeout(delayDebounceFn);
+    }
+  }, [searchTerm, onSearch]);
+
   const filteredData = useMemo(() => {
+    if (onSearch) return rowData; // Bypass client-side filtering if onSearch is provided
     if (!searchTerm) return rowData;
     const lowerTerm = searchTerm.toLowerCase();
     return rowData.filter((order) => {
       // Search by ID, Ticket Type ID, or User Name
       const userName =
         `${order.userID?.firstName} ${order.userID?.lastName}`.toLowerCase();
+      const eventTitle = order.eventID?.title?.toLowerCase() || "";
       return (
         order._id.toLowerCase().includes(lowerTerm) ||
         order.ticketTypeID.toLowerCase().includes(lowerTerm) ||
-        userName.includes(lowerTerm)
+        userName.includes(lowerTerm) ||
+        eventTitle.includes(lowerTerm)
       );
     });
   }, [rowData, searchTerm]);
@@ -52,6 +68,16 @@ export function SoldProductsTable({
           return `${params.data.userID.firstName} ${params.data.userID.lastName}`;
         },
         width: 220,
+        sortable: true,
+        filter: true,
+      },
+      {
+        headerName: "Event Title",
+        valueGetter: (params: ValueGetterParams<SoldProduct>) => {
+          return params.data?.eventID?.title || "N/A";
+        },
+        flex: 1,
+        minWidth: 150,
         sortable: true,
         filter: true,
       },
@@ -95,15 +121,23 @@ export function SoldProductsTable({
   return (
     <div className="w-full bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
       <div className="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h2 className="text-lg font-bold text-slate-800">Sold Products</h2>
-        <div className="w-full sm:w-64">
+        <h2 className="text-lg font-bold text-slate-800">Sold Events</h2>
+        <div className="w-full sm:w-64 relative">
           <input
             type="text"
-            placeholder="Search by Order ID, User..."
+            placeholder="Search by Event Title..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="px-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary w-full"
+            className="px-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary w-full pr-8"
           />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm("")}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+            >
+              <FiX size={16} />
+            </button>
+          )}
         </div>
       </div>
 
