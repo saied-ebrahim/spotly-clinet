@@ -34,7 +34,7 @@ axiosInstance.interceptors.request.use(
       if (typeof window !== "undefined") {
         const path = window.location.pathname.toLowerCase();
         if (
-          !path.includes("/dashboardhome") &&
+          !path.includes("/dashboard") &&
           !path.includes("/admin") &&
           !path.includes("/organizer")
         ) {
@@ -55,7 +55,7 @@ axiosInstance.interceptors.response.use(
       if (typeof window !== "undefined") {
         const path = window.location.pathname.toLowerCase();
         if (
-          !path.includes("/dashboardhome") &&
+          !path.includes("/dashboard") &&
           !path.includes("/admin") &&
           !path.includes("/organizer")
         ) {
@@ -72,7 +72,7 @@ axiosInstance.interceptors.response.use(
       if (typeof window !== "undefined") {
         const path = window.location.pathname.toLowerCase();
         if (
-          !path.includes("/dashboardhome") &&
+          !path.includes("/dashboard") &&
           !path.includes("/admin") &&
           !path.includes("/organizer")
         ) {

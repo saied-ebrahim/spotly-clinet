@@ -18,13 +18,13 @@ export function DashboardSidebar() {
             )}
             <div className="flex flex-col gap-2">
               {section.items.map((item) => {
-                // Determine the role from the pathname (e.g., /dashboardHome/Admin/...)
+                // Determine the role from the pathname (e.g., /dashboard/admin/...)
                 const pathSegments = pathname.split("/");
-                const dashboardIndex = pathSegments.indexOf("dashboardHome");
+                const dashboardIndex = pathSegments.indexOf("dashboard");
                 const role =
                   dashboardIndex !== -1 && pathSegments[dashboardIndex + 1]
                     ? pathSegments[dashboardIndex + 1]
-                    : "Admin"; // Default to Admin if not found, though redirect should handle this
+                    : "admin"; // Default to admin if not found, though redirect should handle this
 
                 if (item.allowedRoles && !item.allowedRoles.includes(role)) {
                   return null;
@@ -33,8 +33,8 @@ export function DashboardSidebar() {
                 // Construct the link based on the role
                 const linkPath =
                   item.link === ""
-                    ? `/dashboardHome/${role}`
-                    : `/dashboardHome/${role}/${item.link}`;
+                    ? `/dashboard/${role}`
+                    : `/dashboard/${role}/${item.link}`;
 
                 const isActive =
                   pathname === linkPath || pathname.startsWith(linkPath + "/");

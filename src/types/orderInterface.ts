@@ -1,4 +1,5 @@
 export interface OrderUser {
+
   _id: string;
   firstName: string;
   lastName: string;
@@ -11,7 +12,9 @@ export interface OrderUser {
     city?: string;
     country?: string;
     state?: string;
+
   };
+
 }
 
 import { EventDocument } from "./eventInterface";
@@ -27,4 +30,5 @@ export interface OrderDocument {
   createdAt: string;
   updatedAt: string;
   __v?: number;
+  loading?: boolean;
 }

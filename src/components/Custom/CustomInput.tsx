@@ -46,6 +46,7 @@ export default function CustomInput({
   querySearch,
   triggerApiUrl = "",
   reset,
+  skipGlobalLoading,
   ...props
 }: CustomInputProps) {
   const [focus, setFocus] = useState<boolean>(false);
@@ -87,7 +88,11 @@ export default function CustomInput({
           `?${querySearch}=${value}&page=${page}${
             triggerApiUrl ? `&${triggerApiUrl}` : ""
           }`,
-        locale
+        locale,
+        undefined,
+        undefined,
+        undefined,
+        skipGlobalLoading
       )
         .then((res) => {
           if (res.status && res.data) {
@@ -124,6 +129,7 @@ export default function CustomInput({
     searchValue,
     page,
     triggerApiUrl,
+    skipGlobalLoading,
   ]);
 
   // console.log(
