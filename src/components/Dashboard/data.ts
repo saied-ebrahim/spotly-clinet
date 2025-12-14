@@ -42,6 +42,7 @@ export const navSections: NavSection[] = [
         icon: FiCalendar,
         key: "events",
         link: "events",
+
       },
       {
         label: "Orders",
@@ -61,14 +62,14 @@ export const navSections: NavSection[] = [
         icon: FiTag,
         key: "tags",
         link: "tags",
-        allowedRoles: ["Admin"],
+        allowedRoles: ["admin"],
       },
       {
         label: "Categories",
         icon: FiGrid,
         key: "categories",
         link: "categories",
-        allowedRoles: ["Admin"],
+        allowedRoles: ["admin"],
       },
       {
         label: "Users",

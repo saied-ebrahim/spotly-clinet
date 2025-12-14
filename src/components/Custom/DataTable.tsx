@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocale } from "next-intl";
 import { AgGridReact } from "ag-grid-react";
 import {
@@ -37,9 +37,12 @@ export default function DataTable<T extends object>({
   defaultColDef,
   onRowClicked,
   className = "",
+  installLoading = true,
   locale: propLocale,
 }: DataTableProps<T>) {
   const nextIntlLocale = useLocale();
+  const [installLoadingState, setInstallLoadingState] =
+    useState(installLoading);
   const locale = propLocale || nextIntlLocale || "en";
   const isRTL = locale === "ar";
 
@@ -51,11 +54,8 @@ export default function DataTable<T extends object>({
       headerName: "#",
       valueGetter: (params) => {
         if (!params.node) return "";
-        const pageSize =
-          params.api?.paginationGetPageSize() || paginationPageSize;
-        const currentPage = params.api?.paginationGetCurrentPage() || 0;
-        const displayedRowIndex = params.node.rowIndex ?? 0;
-        return currentPage * pageSize + displayedRowIndex + 1;
+        return (params.node.rowIndex ?? 0) + 1;
+
       },
       sortable: false,
       width: 70,
@@ -96,8 +96,23 @@ export default function DataTable<T extends object>({
 
   const borderDirection = isRTL ? "left" : "right";
 
+  useEffect(() => {
+    setTimeout(() => {
+      setInstallLoadingState(false);
+    }, 500);
+  }, []);
+
   return (
-    <div className={`w-full ${className}`} dir={isRTL ? "rtl" : "ltr"}>
+    <div className={`w-full relative ${className}`} dir={isRTL ? "rtl" : "ltr"}>
+      {installLoadingState && (
+        <div className="absolute inset-0 bg-white overflow-hidden z-10 flex items-center justify-center loading-overlay">
+          <div className="w-[calc(100%-3px)] z-10 h-[calc(100%-3px)] bg-white absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]"></div>
+          <div className="blob"></div>
+          <div className="z-20">
+            <Loader />
+          </div>
+        </div>
+      )}
       <style
         dangerouslySetInnerHTML={{
           __html: `
@@ -240,19 +255,17 @@ export default function DataTable<T extends object>({
             font-size: 11px;
           }
           
-          ${
-            mobileHeight
+          ${mobileHeight
               ? `
           .ag-theme-alpine {
-            height: ${
-              typeof mobileHeight === "number"
+            height: ${typeof mobileHeight === "number"
                 ? `${mobileHeight}px`
                 : mobileHeight
-            } !important;
+              } !important;
           }
           `
               : ""
-          }
+            }
         }
         
         .ag-theme-alpine .ag-header {
@@ -357,9 +370,47 @@ export default function DataTable<T extends object>({
           color: #3b82f6;
         }
         
-        ${
-          isRTL
-            ? `
+        .loading-overlay {
+          border-radius: 12px;
+        }
+        
+        .blob {
+          position: absolute;
+          width: 300px;
+          height: 300px;
+          background: linear-gradient(
+            45deg,
+            #0F5C3B,
+            #94bc73,
+            #0F5C3B
+          );
+          border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+          animation: blob-animation 8s ease-in-out infinite;
+          opacity: 0.1;
+          filter: blur(40px);
+        }
+        
+        @keyframes blob-animation {
+          0%, 100% {
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            transform: translate(0, 0) scale(1);
+          }
+          25% {
+            border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%;
+            transform: translate(20px, -20px) scale(1.1);
+          }
+          50% {
+            border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%;
+            transform: translate(-20px, 20px) scale(0.9);
+          }
+          75% {
+            border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%;
+            transform: translate(10px, 10px) scale(1.05);
+          }
+        }
+        
+        ${isRTL
+              ? `
         .ag-theme-alpine .ag-header-cell-text {
           text-align: right;
         }
@@ -370,12 +421,11 @@ export default function DataTable<T extends object>({
           flex-direction: row-reverse;
         }
         `
-            : ""
-        }
+              : ""
+            }
         
         @media (max-width: 640px) {
-          ${
-            isRTL
+          ${isRTL
               ? `
           .ag-theme-alpine .ag-paging-panel {
             flex-direction: column-reverse;
@@ -386,7 +436,7 @@ export default function DataTable<T extends object>({
             flex-direction: column;
           }
           `
-          }
+            }
         }
       `,
         }}
@@ -397,14 +447,14 @@ export default function DataTable<T extends object>({
           style={{
             ...(height === "auto" || !height
               ? {
-                  // Calculate height for paginationPageSize rows
-                  // Header (48px) + (paginationPageSize rows * ~52px per row) + Pagination (~60px)
-                  height: `${48 + paginationPageSize * 52 + 60}px`,
-                  minHeight: "400px",
-                }
+                // Calculate height for paginationPageSize rows
+                // Header (48px) + (paginationPageSize rows * ~52px per row) + Pagination (~60px)
+                height: `${48 + paginationPageSize * 52 + 60}px`,
+                minHeight: "400px",
+              }
               : {
-                  height: typeof height === "number" ? `${height}px` : height,
-                }),
+                height: typeof height === "number" ? `${height}px` : height,
+              }),
             minWidth: "100%",
           }}
         >
@@ -421,7 +471,7 @@ export default function DataTable<T extends object>({
             suppressRowClickSelection={rowSelection === false}
             suppressMenuHide={true}
             loading={loading}
-       
+
             loadingOverlayComponent={() => (
               <div className="flex justify-center items-center h-full">
                 <Loader />

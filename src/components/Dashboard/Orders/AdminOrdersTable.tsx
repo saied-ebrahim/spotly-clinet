@@ -10,14 +10,14 @@ import {
 import { FiTrash2, FiEye } from "react-icons/fi";
 import ConfirmationModal from "@/components/Custom/ConfirmationModal";
 import { OrderDocument } from "@/types/orderInterface";
-// import axiosInstance from "@/lib/axios";
 import { ViewOrderModal } from "./ViewOrderModal";
 
 interface AdminOrdersTableProps {
   initialData: OrderDocument[];
+  loading?: boolean;
 }
 
-export function AdminOrdersTable({ initialData }: AdminOrdersTableProps) {
+export function AdminOrdersTable({ initialData, loading }: AdminOrdersTableProps) {
   const [rowData, setRowData] = useState<OrderDocument[]>(initialData);
   const [searchTerm, setSearchTerm] = useState("");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -99,19 +99,19 @@ export function AdminOrdersTable({ initialData }: AdminOrdersTableProps) {
       {
         field: "quantity",
         headerName: "Qty",
-        width: 100,
+        width: 80,
         sortable: true,
         filter: true,
       },
       {
         field: "totalAfterDiscount",
         headerName: "Total",
-        width: 120,
+        width: 100,
         sortable: true,
         valueFormatter: (
           params: ValueFormatterParams<OrderDocument, number>
         ) => {
-          return params.value != null ? `$${params.value.toFixed(2)}` : "";
+          return params.value != null && params.value > 0 ? `$${params.value}` : "Free";
         },
       },
       {
@@ -187,6 +187,7 @@ export function AdminOrdersTable({ initialData }: AdminOrdersTableProps) {
           pagination={true}
           paginationPageSize={10}
           height={600}
+          installLoading={loading}
         />
       </div>
 
