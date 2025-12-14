@@ -22,6 +22,7 @@ interface LocationOption {
 interface ProfileFormData {
   firstName: string;
   lastName: string;
+  email: string;
   phoneNumber: string;
   avatar?: string;
   gender: string;
@@ -46,6 +47,7 @@ export default function AccountInfo() {
     defaultValues: {
       firstName: "",
       lastName: "",
+      email: "",
       phoneNumber: "",
       avatar: "",
       gender: "",
@@ -71,6 +73,7 @@ export default function AccountInfo() {
         reset({
           firstName: user.firstName || "",
           lastName: user.lastName || "",
+          email: user.email || "",
           phoneNumber: user.phone || "",
           avatar: user.avatar || "",
           gender: user.gender || "",
@@ -134,6 +137,7 @@ export default function AccountInfo() {
       const payload = {
         firstName: data.firstName,
         lastName: data.lastName,
+        email: data.email,
         phone: data.phoneNumber,
         avatar: data.avatar,
         gender: data.gender,
@@ -239,6 +243,21 @@ export default function AccountInfo() {
                   value={value}
                   onChange={onChange}
                   error={errors.lastName?.message}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="email"
+              render={({ field: { value, onChange } }) => (
+                <CustomInput
+                  type="email"
+                  id="email"
+                  label={t("email")} // Ensure this key exists or use "Email"
+                  placeholder={t("enterEmail")} // Ensure this key exists
+                  value={value}
+                  onChange={onChange}
+                  error={errors.email?.message}
                 />
               )}
             />

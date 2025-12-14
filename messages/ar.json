@@ -367,6 +367,8 @@
     "profileUpdatedSuccess": "تم تحديث الملف الشخصي بنجاح!",
     "profileUpdateError": "فشل تحديث الملف الشخصي. يرجى المحاولة مرة أخرى.",
     "saving": "جاري الحفظ...",
-    "imageUploadedSuccess": "تم تحميل الصورة بنجاح"
+    "imageUploadedSuccess": "تم تحميل الصورة بنجاح",
+    "email": "البريد الإلكتروني",
+    "enterEmail": "أدخل البريد الإلكتروني"
   }
 }

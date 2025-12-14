@@ -452,6 +452,10 @@
     "profileUpdatedSuccess": "Profile updated successfully!",
     "profileUpdateError": "Failed to update profile. Please try again.",
     "saving": "Saving...",
-    "imageUploadedSuccess": "Image uploaded successfully"
+    "imageUploadedSuccess": "Image uploaded successfully",
+    "passwordChangedSuccess": "Password changed successfully",
+    "passwordChangeError": "Failed to change password",
+    "email": "Email",
+    "enterEmail": "Enter email"
   }
 }

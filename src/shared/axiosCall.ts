@@ -20,11 +20,15 @@ export const axiosGet = async <T>(
   locale: string,
   token?: string,
   params?: Record<string, unknown>,
-  close?: boolean
+  close?: boolean,
+  skipGlobalLoading?: boolean
 ): Promise<ApiResponse<T>> => {
   const authToken = Cookies.get("token") ?? "";
   const tokenDecrypted = decryptData(authToken) as DecryptedToken;
-  useLoaderStore.getState().startLoading();
+
+  if (!skipGlobalLoading) {
+    useLoaderStore.getState().startLoading();
+  }
 
   try {
     const header: AxiosRequestConfig = {
@@ -39,10 +43,14 @@ export const axiosGet = async <T>(
     }
     const fetchData = await axios.get<T>(`${url}`, header);
 
-    useLoaderStore.getState().stopLoading();
+    if (!skipGlobalLoading) {
+      useLoaderStore.getState().stopLoading();
+    }
     return { data: fetchData.data, status: true };
   } catch (err) {
-    useLoaderStore.getState().stopLoading();
+    if (!skipGlobalLoading) {
+      useLoaderStore.getState().stopLoading();
+    }
     return {
       data: (err as AxiosError)?.response?.data as T,
       status: false,

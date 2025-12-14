@@ -20,11 +20,6 @@ export default function ProfileSidebar({
       icon: FaUser,
     },
     {
-      id: "change-email" as ProfileSection,
-      label: t("changeEmail"),
-      icon: FaEnvelope,
-    },
-    {
       id: "change-password" as ProfileSection,
       label: t("password"),
       icon: FaLock,
