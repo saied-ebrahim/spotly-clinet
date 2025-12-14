@@ -3,7 +3,6 @@
 import { useState } from "react";
 import ProfileSidebar from "../../../../../components/ProfileComponents/ProfileSidebar";
 import AccountInfo from "../../../../../components/ProfileComponents/AccountInfo";
-import ChangeEmail from "../../../../../components/ProfileComponents/ChangeEmail";
 import ChangePassword from "../../../../../components/ProfileComponents/ChangePassword";
 import { ProfileSection } from "../../../../../types/Profileinterfaces";
 
@@ -15,8 +14,6 @@ export default function ProfilePage() {
     switch (activeSection) {
       case "account-info":
         return <AccountInfo />;
-      case "change-email":
-        return <ChangeEmail />;
       case "change-password":
         return <ChangePassword />;
       default:

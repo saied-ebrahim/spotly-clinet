@@ -15,4 +15,5 @@ export interface DataTableProps<T extends object> {
   className?: string;
   locale?: string;
   loading?: boolean;
+  installLoading?: boolean;
 }
