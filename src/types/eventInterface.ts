@@ -38,6 +38,7 @@ interface organizer {
   _id: string;
   firstName: string;
   lastName: string;
+  avatar?: string;
 }
 
 interface ticket {
