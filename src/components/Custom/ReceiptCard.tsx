@@ -134,7 +134,7 @@ export default function ReceiptCard({ invoiceData, invoiceId }: ReceiptCardProps
           />
           <Link
             className="flex items-center justify-center gap-2 py-3 bg-white border border-stone-200 rounded-xl text-sm font-bold text-stone-600 hover:bg-stone-50 transition-colors"
-            href={`/receipt/tickets?invoice_id=${invoiceId}`}
+            href={`/my-orders/receipt/tickets?invoice_id=${invoiceId}`}
           >
             <FaTicketAlt size={16} />
             see tickets

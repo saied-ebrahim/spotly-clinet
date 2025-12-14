@@ -241,7 +241,7 @@ export default function TicketCarousel({
           className="w-full"
         />
         <Link
-          href={`/receipt?invoice_id=${invoiceId}`}
+          href={`/my-orders/receipt?invoice_id=${invoiceId}`}
           className="w-full flex items-center justify-center gap-2 bg-stone-100 text-stone-900 py-3 rounded-xl font-semibold border border-stone-300 hover:bg-stone-200 transition"
         >
           Go Back to Invoice Page
