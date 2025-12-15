@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import EventSelector from "./EventSelector";
 import LocationSelector from "./LocationSelector";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export default function SearchEvent() {
   const router = useRouter(); // Initialize the router
+  const t = useTranslations("homePage.searchEvent");
   const [query, setQuery] = useState("");
   const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
 
@@ -13,7 +15,7 @@ export default function SearchEvent() {
       // Navigate to the dynamic event page
       router.push(`/events/${selectedEventId}`);
     } else {
-      alert("Please select a specific event from the list first.");
+      alert(t("selectEventFirst"));
     }
   };
   return (
@@ -24,7 +26,7 @@ export default function SearchEvent() {
         onClick={handleSearch}
         className="bg-indigo-600 grow hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl sm:rounded-r-lg shadow-lg transition duration-200 w-full sm:w-auto shrink-0"
       >
-        Search
+        {t("searchButton")}
       </button>
     </div>
   );

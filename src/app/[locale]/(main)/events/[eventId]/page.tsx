@@ -1,15 +1,17 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 import {
   FaArrowLeft,
-  FaRegStar,
-  FaShareAlt,
   FaRegCalendarAlt,
   FaRegClock,
   FaMapMarkerAlt,
   FaExternalLinkAlt,
-  FaCopy,
 } from "react-icons/fa";
 
 import { formatDate } from "@/utils/details/formatting";
@@ -21,39 +23,52 @@ import { getImageUrl } from "@/utils/general";
 
 import EventMapWrapper from "@/components/ui/details/EventMapWrapper";
 import axiosInstance from "@/lib/axios";
-import useFavoriteStore from "@/hooks/useFavorateStore";
 import FavoriteBtn from "@/components/ui/details/FavoriteBtn";
 import OrganizerAvatar from "@/components/ui/details/OrganizerAvatar";
-import CopyButton from "@/components/ui/details/CopyBtn";
 import CopyBtn from "@/components/ui/details/CopyBtn";
 
-export default async function EventDetailsPage({
-  params,
-}: {
-  params: Promise<{ eventId: string }>;
-}) {
-  const { eventId } = await params;
+export default function EventDetailsPage() {
+  const params = useParams();
+  const eventId = params.eventId as string;
+  const t = useTranslations("eventDetails");
+  const [myEvent, setMyEvent] = useState<EventDocument | null>(null);
+  const [loading, setLoading] = useState(true);
 
- let myEvent: EventDocument | null = await axiosInstance.get(`/events/${eventId}`)
-    .then((response) => {
-      console.log(response.data);
-      return response.data.data.event;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+  useEffect(() => {
+    const fetchEvent = async () => {
+      try {
+        const response = await axiosInstance.get(`/events/${eventId}`);
+        console.log(response.data);
+        setMyEvent(response.data.data.event);
+      } catch (error) {
+        console.error(error);
+        setMyEvent(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (eventId) {
+      fetchEvent();
+    }
+  }, [eventId]);
 
   const imageUrl = getImageUrl(myEvent?.media?.mediaUrl);
 
-    // let {favorites, toggleFavorite} = useFavoriteStore();
-    // let isLiked = favorites.some((favorite) => favorite._id === eventId);
-console.log(myEvent);
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-gray-500 bg-white">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
   if (!myEvent) {
     return (
       <div className="min-h-screen flex flex-col gap-4 items-center justify-center text-gray-500 bg-white">
-        <h2 className="text-xl font-bold">Event not found</h2>
+        <h2 className="text-xl font-bold">{t("eventNotFound")}</h2>
         <Link href="/" className="text-blue-500 hover:underline">
-          Go back home
+          {t("goBackHome")}
         </Link>
       </div>
     );
@@ -109,7 +124,7 @@ console.log(myEvent);
           <div className="lg:col-span-2 space-y-10">
             {/* Date & Time */}
             <section className="space-y-4">
-              <h2 className="text-xl font-bold text-gray-900">Date and Time</h2>
+              <h2 className="text-xl font-bold text-gray-900">{t("dateAndTime")}</h2>
               <div className="space-y-3">
                 <div className="flex items-center gap-3 text-gray-700">
                   <FaRegCalendarAlt className="text-gray-400 w-5 h-5" />
@@ -127,40 +142,54 @@ console.log(myEvent);
 
             {/* Location & Map */}
             <section className="space-y-4">
-              <h2 className="text-xl font-bold text-gray-900">Location</h2>
-              <div className="flex gap-3 text-gray-700">
-                <FaMapMarkerAlt className="text-gray-400 w-5 h-5 mt-1 shrink-0" />
-                <div>
-                  <p className="font-bold">
-                    {myEvent.location.city +
-                      ", " +
-                      (myEvent.location.country || "Egypt")}
-                  </p>
-                  <p className="text-sm text-gray-500 leading-relaxed mt-1">
-                    {myEvent.location.district}
-                  </p>
+              <h2 className="text-xl font-bold text-gray-900">{t("location")}</h2>
+              {myEvent.type === "online" ? (
+                <div className="flex gap-3 text-gray-700">
+                  <FaMapMarkerAlt className="text-gray-400 w-5 h-5 mt-1 shrink-0" />
+                  <div>
+                    <p className="font-bold">{t("onlineEvent")}</p>
+                    <p className="text-sm text-gray-500 leading-relaxed mt-1">
+                      {t("onlineEventDescription")}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <>
+                  <div className="flex gap-3 text-gray-700">
+                    <FaMapMarkerAlt className="text-gray-400 w-5 h-5 mt-1 shrink-0" />
+                    <div>
+                      <p className="font-bold">
+                        {myEvent.location.city +
+                          ", " +
+                          (myEvent.location.country || "Egypt")}
+                      </p>
+                      <p className="text-sm text-gray-500 leading-relaxed mt-1">
+                        {myEvent.location.district}
+                      </p>
+                    </div>
+                  </div>
 
-              {/* --- MAP COMPONENT --- */}
-              <div className="relative w-full h-64 bg-gray-100 rounded-xl overflow-hidden mt-4 border border-gray-200 shadow-sm z-0">
-                <EventMapWrapper
-                  lat={myEvent.location.latitude}
-                  lng={myEvent.location.longitude}
-                />
+                  {/* --- MAP COMPONENT --- */}
+                  <div className="relative w-full h-64 bg-gray-100 rounded-xl overflow-hidden mt-4 border border-gray-200 shadow-sm z-0">
+                    <EventMapWrapper
+                      lat={myEvent.location.latitude}
+                      lng={myEvent.location.longitude}
+                    />
 
-                <div className="absolute bottom-3 right-3 z-400">
-                  <a
-                    href={`https://www.google.com/maps/search/?api=1&query=${myEvent.location.latitude},${myEvent.location.longitude}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg shadow-md text-xs font-bold text-gray-700 hover:text-blue-600 hover:scale-105 transition-all flex items-center gap-2"
-                  >
-                    Open in Google Maps{" "}
-                    <FaExternalLinkAlt className="w-3 h-3" />
-                  </a>
-                </div>
-              </div>
+                    <div className="absolute bottom-3 right-3 z-400">
+                      <a
+                        href={`https://www.google.com/maps/search/?api=1&query=${myEvent.location.latitude},${myEvent.location.longitude}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-lg shadow-md text-xs font-bold text-gray-700 hover:text-blue-600 hover:scale-105 transition-all flex items-center gap-2"
+                      >
+                        {t("openInGoogleMaps")}{" "}
+                        <FaExternalLinkAlt className="w-3 h-3" />
+                      </a>
+                    </div>
+                  </div>
+                </>
+              )}
             </section>
 
             {/* Host Info */}
@@ -168,7 +197,7 @@ console.log(myEvent);
             {/* Description */}
             <section className="space-y-4">
               <h2 className="text-xl font-bold text-gray-900">
-                Event Description
+                {t("eventDescription")}
               </h2>
               <div className="prose prose-gray max-w-none text-gray-600 leading-relaxed whitespace-pre-wrap">
                 <p>{myEvent.description}</p>
@@ -177,7 +206,7 @@ console.log(myEvent);
 
             {/* Tags */}
             <section className="space-y-4">
-              <h2 className="text-xl font-bold text-gray-900">Tags</h2>
+              <h2 className="text-xl font-bold text-gray-900">{t("tags")}</h2>
               <div className="flex flex-wrap gap-2">
                 {myEvent.tags && myEvent.tags.length > 0 ? (
                   myEvent.tags.map((tag: { name: string }) => (
@@ -189,7 +218,7 @@ console.log(myEvent);
                     </span>
                   ))
                 ) : (
-                  <span className="text-gray-400 text-sm">No tags</span>
+                  <span className="text-gray-400 text-sm">{t("noTags")}</span>
                 )}
               </div>
             </section>

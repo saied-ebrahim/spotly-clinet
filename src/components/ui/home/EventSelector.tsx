@@ -4,7 +4,13 @@ import axiosInstance from "@/lib/axios";
 import { useState, useEffect, useRef } from "react";
 import { FiSearch } from "react-icons/fi";
 import { EventDocument } from "@/types/eventInterface";
-
+import useEventStore from "@/store/useEventStore";
+import { useCityMatcher } from "@/utils/home/useCityMatcher";
+import { useTranslations } from "next-intl";
+const longCity =(city:string)=> {
+    if (city === "Alexandria") return "Alex";
+    else if (city === "Kafr Al Sheikh") return "KFS";
+    else return city};
 const EventSelector = ({
   locationQuery,
   onSelect,
@@ -12,17 +18,23 @@ const EventSelector = ({
   locationQuery?: string | null;
   onSelect?: (eventId: string | null) => void;
 }) => {
+  const t = useTranslations("homePage.eventSelector");
   const [input, setInput] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const [events, setEvents] = useState<EventDocument[]>([]);
+  // const [events, setEvents] = useState<EventDocument[]>([]);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   // Close dropdown if clicking outside
-  useEffect(() => {
-    axiosInstance.get("/events").then((res) => {
-      setEvents(res.data.data.events);
-    });
-  }, []);
+  // useEffect(() => {
+  //   axiosInstance.get("/events").then((res) => {
+  //     setEvents(res.data.data.events);
+  //   });
+  // }, []);
+    const { events, fetchEvents } = useEventStore();
+    console.log(events);
+    useEffect(() => {
+        fetchEvents();
+    }, [fetchEvents]);
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (
@@ -37,18 +49,40 @@ const EventSelector = ({
   }, []);
 
   // --- CORE LOGIC CHANGE HERE ---
-  const filteredEvents = events.filter((item) => {
-    // 1. If a location is selected in the parent, the event MUST match that location
-    const matchesLocation = locationQuery
-      ? item.location.district?.toLowerCase() === locationQuery.toLowerCase()
-      : true; // If no location selected, show all locations
+  //------------------
+  // const filteredEvents = events.filter((item) => {
+  //   // 1. If a location is selected in the parent, the event MUST match that location
+  //   const matchesLocation = locationQuery
+  //     ? item.location.district?.toLowerCase() === locationQuery.toLowerCase() && item.type !== "online"
+  //     : true; // If no location selected, show all locations
 
-    // 2. The event title must match what the user types in THIS input
-    const matchesInput = item.title.toLowerCase().includes(input.toLowerCase());
+  //   // 2. The event title must match what the user types in THIS input
+  //   const matchesInput = item.title.toLowerCase().includes(input.toLowerCase());
 
-    return matchesLocation && matchesInput;
-  });
+  //   return matchesLocation && matchesInput;
+  // });
+//-----------------------
+const { findClosestMatch } = useCityMatcher();
+const filteredEvents = events.filter((item) => {
+  // 1. GLOBAL RULE: The event must strictly NOT be online
+  const isNotOnline = item.type !== "online";
 
+  // 2. If a location is selected, match it. 
+  // (We removed the 'online' check from here because we handle it globally now)
+  // const matchesLocation = locationQuery
+  //   ? item.location.district?.toLowerCase() === locationQuery.toLowerCase()
+  //   : true;
+  const matchesLocation = locationQuery
+    ? findClosestMatch(item.location.district)?.toLowerCase() === locationQuery.toLowerCase()
+    : true;
+
+  // 3. The event title must match the input
+  const matchesInput = item.title.toLowerCase().includes(input.toLowerCase());
+
+  // Return true only if ALL conditions are met
+  return isNotOnline && matchesLocation && matchesInput;
+});
+//-----------------------
   /* console.log(filteredEvents); */
 
   return (
@@ -67,7 +101,7 @@ const EventSelector = ({
             if (onSelect) onSelect(null);
           }}
           onFocus={() => setIsOpen(true)}
-          placeholder="Search events..."
+          placeholder={t("placeholder")}
           className="w-full h-full bg-gray-50 text-gray-900 text-sm font-medium rounded-xl border-0 px-4 py-3 pl-10 shadow-sm placeholder-gray-400 ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 transition-all outline-none"
         />
         {!input && (
@@ -99,11 +133,9 @@ const EventSelector = ({
                 </div>
                 <div className="text-xs text-gray-500 flex justify-between mt-1">
                   <span className="text-left">{`${
-                    event.location.city === "Alexandria"
-                      ? "Alex"
-                      : event.location.city
+                    longCity(event.location.city)
                   }/${event.location.district}`}</span>
-                  <div className="flex gap-3">
+                  {/* <div className="flex gap-3">
                     {event.category.length > 0 &&
                       event.category.map((category) => (
                         <span
@@ -113,15 +145,15 @@ const EventSelector = ({
                           {category.name}
                         </span>
                       ))}
-                  </div>
+                  </div> */}
                 </div>
               </li>
             ))
           ) : (
             <li className="px-4 py-6 text-sm text-gray-500 text-center">
               {locationQuery
-                ? `No events found in ${locationQuery}`
-                : "No events found"}
+                ? t("noEventsInLocation", { location: locationQuery })
+                : t("noEventsFound")}
             </li>
           )}
         </ul>

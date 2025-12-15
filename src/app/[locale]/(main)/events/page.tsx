@@ -9,8 +9,10 @@ import { FiChevronDown } from "react-icons/fi";
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import useEventStore from "@/store/useEventStore";
+import { useTranslations } from "next-intl";
 
 const EventsPage = () => {
+  const t = useTranslations("events");
   const searchParams = useSearchParams();
   const categoryFromUrl = searchParams.get("category");
 
@@ -22,7 +24,7 @@ const EventsPage = () => {
     // Initialize with category from URL
     const initialFilters: Record<string, string[]> = {};
     if (categoryFromUrl) {
-      initialFilters.Category = [categoryFromUrl];
+      initialFilters["Category"] = [categoryFromUrl];
     }
     return initialFilters;
   });
@@ -91,7 +93,7 @@ const EventsPage = () => {
     selectedPrices: string[] | undefined
   ): boolean => {
     if (!selectedPrices || selectedPrices.length === 0) return true;
-    const isFree = eventPrice.toLowerCase() === "free";
+    const isFree = eventPrice.toLowerCase() === "free" || eventPrice === "0";
     const isPaid = !isFree;
 
     return selectedPrices.some((price) => {
@@ -237,11 +239,11 @@ const EventsPage = () => {
         {/* Main Content */}
         <div className="flex-1">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold text-slate-900">Events</h1>
+            <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-slate-500">Sort by:</span>
+              <span className="text-sm text-slate-500">{t("sortBy")}</span>
               <button className="flex items-center gap-1 text-sm font-medium text-slate-900 border border-slate-300 rounded px-3 py-1.5 bg-white">
-                Relevance <FiChevronDown />
+                {t("relevance")} <FiChevronDown />
               </button>
             </div>
           </div>
@@ -259,7 +261,7 @@ const EventsPage = () => {
                     ></div>
                   </div>
                   <p className="text-slate-600 font-medium">
-                    Loading events...
+                    {t("loading")}
                   </p>
                 </div>
               </div>
@@ -269,7 +271,7 @@ const EventsPage = () => {
               ))
             ) : (
               <div className="col-span-2 text-center py-12 text-slate-500">
-                No events found matching your criteria.
+                {t("noEventsFound")}
               </div>
             )}
           </div>

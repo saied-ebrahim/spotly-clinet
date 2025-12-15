@@ -1,8 +1,30 @@
 import { useCallback, useMemo } from 'react';
-// Import your existing hook here
-import { useGetGovArEn } from '@/hooks/useGetGovArEn'; 
+import { useGetGovArEn } from '@/hooks/useGetGovArEn'; // Keep your path
 
-// --- Helper Functions (Keep these outside the hook for performance) ---
+// --- 1. Stronger Normalization for Egyptian Names ---
+const normalizeText = (text: string): string => {
+  if (!text) return "";
+  
+  return text
+    .toLowerCase()
+    // Remove Gov/City words
+    .replace(/(?:governorate|city|محافظة|مدينة|center|مركز|قسم)/gi, "")
+    
+    // REMOVE Egyptian Articles (The Magic Fix)
+    // Converts "Kafr Ash Sheyakh" -> "Kafr Sheyakh"
+    // Converts "Kafr El Sheikh" -> "Kafr Sheikh"
+    .replace(/\b(el|al|ash|ad|az|as|at|an|ar)\s+/g, "") 
+    
+    // Common mappings
+    .replace(/kh/g, "k") 
+    .replace(/iy/g, "i")
+    
+    // Arabic Normalization
+    .replace(/[أإآ]/g, "ا") 
+    .replace(/ة$/g, "ه")    
+    .replace(/[ىي]$/g, "ي") 
+    .trim();
+};
 
 const levenshteinDistance = (a: string, b: string): number => {
   const matrix = Array.from({ length: b.length + 1 }, (_, i) => [i]);
@@ -23,37 +45,25 @@ const levenshteinDistance = (a: string, b: string): number => {
   return matrix[b.length][a.length];
 };
 
-const normalizeText = (text: string): string => {
-  if (!text) return "";
-  return text
-    .toLowerCase()
-    // Remove labels (English & Arabic)
-    .replace(/(?:governorate|city|محافظة|مدينة|center|مركز|قسم)/gi, "")
-    // Arabic Normalization
-    .replace(/[أإآ]/g, "ا")  // Alef
-    .replace(/ة$/g, "ه")     // Taa Marbuta
-    .replace(/[ىي]$/g, "ي")  // Yaa
-    .trim();
-};
-
-// --- The Main Hook ---
-
 export const useCityMatcher = () => {
-  // 1. Get the data automatically inside the hook
   const locationsEn = useGetGovArEn("en");
   const locationsAr = useGetGovArEn("ar");
 
-  // 2. Combine the lists once (memoized for performance)
+  // Combine lists
   const allCandidates = useMemo(() => {
     return [...(locationsEn || []), ...(locationsAr || [])];
   }, [locationsEn, locationsAr]);
 
-  // 3. Create the search function
   const findClosestMatch = useCallback((targetCity: string): string | null => {
-    if (!targetCity) return null;
+    if (!targetCity || allCandidates.length === 0) return null;
 
     const normalizedTarget = normalizeText(targetCity);
-    const MAX_ALLOWED_DISTANCE = 3; 
+    
+    // --- 2. Dynamic Tolerance ---
+    // Allow more typos for longer words
+    // "Kafr Sheikh" (11 chars) -> Allows ~4 typos
+    // "Qena" (4 chars) -> Allows 2 typos
+    const allowedDistance = Math.max(2, Math.floor(normalizedTarget.length * 0.4));
 
     let bestMatch: string | null = null;
     let lowestDistance = Infinity;
@@ -61,10 +71,8 @@ export const useCityMatcher = () => {
     for (const city of allCandidates) {
       const normalizedCity = normalizeText(city);
 
-      // Exact match - return immediately
-      if (normalizedCity === normalizedTarget) {
-        return city;
-      }
+      // Exact match check
+      if (normalizedCity === normalizedTarget) return city;
 
       const distance = levenshteinDistance(normalizedTarget, normalizedCity);
 
@@ -74,9 +82,11 @@ export const useCityMatcher = () => {
       }
     }
 
-    return lowestDistance <= MAX_ALLOWED_DISTANCE ? bestMatch : null;
+    // DEBUGGING: Uncomment this to see why it fails/succeeds in your console
+    // console.log(`Checking: ${normalizedTarget} | Found: ${bestMatch} | Dist: ${lowestDistance} | Allowed: ${allowedDistance}`);
+
+    return lowestDistance <= allowedDistance ? bestMatch : null;
   }, [allCandidates]);
 
-  // Return the function to the component
   return { findClosestMatch };
 };
