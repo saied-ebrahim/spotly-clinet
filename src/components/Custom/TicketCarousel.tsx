@@ -169,7 +169,7 @@ export default function TicketCarousel({
                 <div className="flex items-center gap-2 text-stone-600">
                   <FaMapPin size={16} className="text-red-500" />
                   <span className="text-xs font-medium">
-                    {currentTicket.address}
+                    {currentTicket.address == "undefined, undefined" ? "online" : currentTicket.address}
                   </span>
                 </div>
               </div>
