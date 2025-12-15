@@ -1,7 +1,6 @@
 import CryptoJS from "crypto-js";
 
 export const encryptData = (data: unknown): string => {
-  console.log(process.env.NEXT_PUBLIC_ENCRYPTION_KEY);
   const jsonString = JSON.stringify(data);
   const key = (process.env.NEXT_PUBLIC_ENCRYPTION_KEY as string) || "secretkey";
   const encrypted = CryptoJS.AES.encrypt(jsonString, key);

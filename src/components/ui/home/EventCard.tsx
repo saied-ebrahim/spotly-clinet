@@ -1,3 +1,5 @@
+
+//--------------------
 import Image from "next/image";
 import { FiStar, FiTag } from "react-icons/fi";
 
@@ -7,6 +9,9 @@ import { EventDocument } from "@/types/eventInterface";
 import useFavoriteStore from "@/hooks/useFavorateStore";
 import { useEffect, useState } from "react";
 import { getImageUrl } from "@/utils/general";
+// import useEventStore from "@/store/useEventStore";
+import axiosInstance from "@/lib/axios";
+// import { useDataStore } from "@/store/useEventStore";
 
 const colors = [
   "bg-red-500 text-white",
@@ -42,6 +47,11 @@ const EventCard = ({ event }: { event: EventDocument }) => {
     setIsAnimating(true);
     toggleFavorite(event);
   };
+  const longCity =(city:string)=> {
+    if (city === "Alexandria") return "Alex";
+    else if (city === "Kafr Al Sheikh") return "KFS";
+    else return city};
+
 
   useEffect(() => {
     if (isAnimating) {
@@ -49,14 +59,14 @@ const EventCard = ({ event }: { event: EventDocument }) => {
       return () => clearTimeout(timer);
     }
   }, [isAnimating]);
-  const { month, date: dayDate } = getMonthDay(event.date);
-  const imageUrl = getImageUrl(event.media?.mediaUrl);
-  const interested = event.analytics?.likes || 0;
-
   const isFavorite = useFavoriteStore((state) =>
     state.favorites.includes(event)
-  );
+);
 
+
+const interested = event.analytics?.likes || 0;
+const { month, date: dayDate } = getMonthDay(event.date);
+const imageUrl = getImageUrl(event.media?.mediaUrl);
   return (
     <div className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 border border-gray-100 font-sans relative flex flex-col h-full w-full max-w-sm mx-auto">
       <Link
@@ -79,7 +89,7 @@ const EventCard = ({ event }: { event: EventDocument }) => {
           >
             {event.type}
           </span>
-          <div className="absolute flex gap-1 bottom-3 left-3">
+          <div className="absolute flex gap-1 bottom-3 left-3 flex-wrap">
             {event.category.length > 0 &&
               event.category.map((category) => (
                 <span
@@ -122,8 +132,7 @@ const EventCard = ({ event }: { event: EventDocument }) => {
               </p>
               <p className="text-xs text-gray-400 mb-3 truncate">
                 {`${
-                  event.location?.city ? 
-                      event.location?.city + "/"
+                  event.location?.city ? longCity(event.location?.city) + "/"
                     : ""
                 }${event.location?.district ? event.location?.district : "Online"}`}
               </p>
@@ -155,20 +164,6 @@ const EventCard = ({ event }: { event: EventDocument }) => {
                 </span>
               </div>
 
-              {/* Interest Section */}
-              {event.analytics.likes > 0 ? (
-                <div className="flex items-center gap-1 text-[10px] sm:text-xs text-gray-500 font-semibold ml-2">
-                  <FiStar
-                    size={12}
-                    className="text-blue-600 fill-blue-600 shrink-0 sm:w-[14px] sm:h-[14px]"
-                  />
-                  <span className="whitespace-nowrap">
-                    {interested} interested
-                  </span>
-                </div>
-              ) : (
-                <span></span>
-              )}
             </div>
           </div>
         </div>
@@ -203,3 +198,4 @@ const EventCard = ({ event }: { event: EventDocument }) => {
   );
 };
 export default EventCard;
+

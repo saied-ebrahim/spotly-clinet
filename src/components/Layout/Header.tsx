@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import SpotlyLogo from "@/components/Layout/SpotlyLogo";
 import LanguageSwitcher from "@/components/LanguageSwitcher";

@@ -72,7 +72,6 @@ export async function GET(request: NextRequest) {
     // Apply search filter if provided
     if (search.trim()) {
       const searchLower = search.toLowerCase().trim();
-      // console.log(searchLower);
       allCountries = allCountries.filter((country) => {
         const nameEn = (country.name_en || "").toLowerCase();
         const nameAr = (country.name_ar || "").toLowerCase();

@@ -7,7 +7,8 @@ import { EventCard } from "@/components/Dashboard/Events/EventCard";
 import Link from "next/link";
 
 export default function FavoritesList() {
-  const t = useTranslations("common");
+  const t = useTranslations("favorites");
+  const tCommon = useTranslations("common");
   const { favorites } = useFavoriteStore();
 
   return (
@@ -16,11 +17,11 @@ export default function FavoritesList() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-900 flex items-center gap-3">
           <FiHeart className="text-red-500 fill-red-500" />
-          My Favorites
+          {t("myFavorites")}
         </h1>
         <p className="text-slate-600 mt-2">
-          {favorites.length} {favorites.length === 1 ? t("event") : t("events")}{" "}
-          saved
+          {favorites.length} {favorites.length === 1 ? tCommon("event") : tCommon("events")}{" "}
+          {t("saved")}
         </p>
       </div>
 
@@ -36,17 +37,16 @@ export default function FavoritesList() {
             <FiHeart className="w-10 h-10 text-slate-300" />
           </div>
           <h3 className="text-xl font-bold text-slate-900 mb-2">
-            No favorites yet
+            {t("noFavorites")}
           </h3>
           <p className="text-slate-500 mb-8 text-center max-w-sm">
-            You haven&apos;t saved any events yet. Browse our events and click
-            the heart icon to save them for later.
+            {t("noFavoritesDescription")}
           </p>
           <Link
             href="/events"
             className="px-6 py-3 bg-brand-primary text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-105"
           >
-            Browse Events
+            {t("browseEvents")}
           </Link>
         </div>
       )}

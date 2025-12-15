@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { IoArrowBack, IoHome, IoWarningOutline } from "react-icons/io5";
+import { useTranslations } from "next-intl";
 
 export default function NotFoundCatchAll() {
   const router = useRouter();
+  const t = useTranslations("notFound");
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center bg-white relative overflow-hidden font-sans selection:bg-emerald-500/30">
@@ -29,16 +31,15 @@ export default function NotFoundCatchAll() {
 
           {/* Typography */}
           <h1 className="text-8xl md:text-9xl font-black text-transparent bg-clip-text bg-linear-to-r from-emerald-500 via-teal-500 to-cyan-500 mb-4 tracking-tighter">
-            404
+            {t("title")}
           </h1>
 
           <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4 tracking-tight">
-            Page Not Found
+            {t("heading")}
           </h2>
 
           <p className="text-lg text-gray-600 mb-10 max-w-lg mx-auto leading-relaxed">
-            Sorry, we couldn&apos;t find the page you&apos;re looking for. It
-            might have been moved, deleted, or never existed.
+            {t("description")}
           </p>
 
           {/* Actions */}
@@ -48,7 +49,7 @@ export default function NotFoundCatchAll() {
               className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-900 font-medium border border-gray-200 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 group/btn"
             >
               <IoArrowBack className="group-hover/btn:-translate-x-1 transition-transform" />
-              Go Back
+              {t("goBack")}
             </button>
 
             <Link
@@ -56,7 +57,7 @@ export default function NotFoundCatchAll() {
               className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold shadow-lg shadow-emerald-200/50 transition-all duration-300 hover:scale-105 hover:shadow-emerald-300/50 flex items-center justify-center gap-2"
             >
               <IoHome />
-              Back to Home
+              {t("backToHome")}
             </Link>
           </div>
 
@@ -70,7 +71,7 @@ export default function NotFoundCatchAll() {
             href="/contact"
             className="text-gray-500 hover:text-emerald-600 text-sm font-medium transition-colors duration-200"
           >
-            Need help? Contact Support &rarr;
+            {t("needHelp")}
           </Link>
         </div>
       </div>

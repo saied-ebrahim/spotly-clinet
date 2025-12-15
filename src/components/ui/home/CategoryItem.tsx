@@ -129,9 +129,7 @@ export const CategoryItem = ({
 }) => {
   const router = useRouter();
   const locale = useLocale();
-  // console.log(category);
-  // const [imgSrc, setImgSrc] = useState(category.imageUrl);
-
+ 
   const handleClick = () => {
     router.push(
       `/${locale}/events?category=${encodeURIComponent(category.name)}`
@@ -139,10 +137,7 @@ export const CategoryItem = ({
   };
 
   return (
-    // Updated Width Classes:
-    // Mobile: w-[calc(50%-8px)] -> Fits 2 items with gap-4 (16px/2 = 8px)
-    // Tablet (md): w-[calc(25%-18px)] -> Fits 4 items with gap-6 (3*24px/4 = 18px)
-    // Widescreen (xl): w-[calc(14.28%-21px)] -> Fits 7 items with gap-6 (6*24px/7 = ~20.5px)
+    
     <div
       onClick={handleClick}
       className="group flex flex-col items-center cursor-pointer snap-start shrink-0 

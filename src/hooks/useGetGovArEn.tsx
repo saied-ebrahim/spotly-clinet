@@ -11,16 +11,14 @@ export const useGetGovArEn = (lang: string = "en") => {
           .then((data) => {
             // Note: This specific dataset returns objects with { "name": "Cairo", ... }
             
-            // console.log(data);
+            
             const arr = data[2].data.map(
               (gov: { [key: string]: string }) => gov[key]
             );
-            //   setAllGovs(data);
-            // console.log(arr);
+           
             setAllGovs(arr);
           });
-        // You can use the location data here to fetch events based on user's city
-        // console.log(allGovs);
+        
       }, []);
     return allGovs;
 }

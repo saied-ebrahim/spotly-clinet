@@ -6,42 +6,8 @@
     "about": "About",
     "contact": "Contact",
     "login": "Login",
-    "signUp": "Sign Up",
-    "dashboard": "Dashboard",
-    "profile": "Profile",
-    "myOrders": "My Orders",
-    "logout": "Logout"
-  },
-  "footer": {
-    "companyInfo": "Company Info",
-    "aboutUs": "About Us",
-    "contactUs": "Contact Us",
-    "careers": "Careers",
-    "faqs": "FAQs",
-    "termsOfService": "Terms of Service",
-    "privacyPolicy": "Privacy Policy",
-    "help": "Help",
-    "accountSupport": "Account Support",
-    "listingEvents": "Listing Events",
-    "eventTicketing": "Event Ticketing",
-    "ticketPurchaseTerms": "Ticket Purchase Terms & Conditions",
-    "categories": "Categories",
-    "concertsGigs": "Concerts & Gigs",
-    "festivalsLifestyle": "Festivals & Lifestyle",
-    "businessNetworking": "Business & Networking",
-    "foodDrinks": "Food & Drinks",
-    "performingArts": "Performing Arts",
-    "sportsOutdoors": "Sports & Outdoors",
-    "exhibitions": "Exhibitions",
-    "workshopsConferences": "Workshops, Conferences & Classes",
-    "followUs": "Follow Us",
-    "facebook": "Facebook",
-    "instagram": "Instagram",
-    "twitter": "Twitter",
-    "youtube": "YouTube",
-    "copyright": "©2024 Spotly. All rights reserved."
-  },
-  "sidebar": {
+
+    "sidebar": {
     "home": "Home",
     "events": "Events",
     "orders": "Orders",
@@ -172,6 +138,38 @@
     "events": "Events"
   },
   "auth": {
+    "login": {
+      "title": "Login",
+      "welcomeBack": "Welcome Back",
+      "subtitle": "Sign in to continue to your account",
+      "emailAddress": "Email Address",
+      "emailPlaceholder": "Enter your email",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "forgotPassword": "Forgot Password?",
+      "signingIn": "Signing In...",
+      "signIn": "Sign In",
+      "dontHaveAccount": "Don't have an account?",
+      "signUp": "Sign Up",
+      "loginSuccessful": "Login successful",
+      "loginFailed": "Login failed",
+      "loginError": "An error occurred during login"
+    },
+    "forgotPassword": {
+      "title": "Forgot Password",
+      "resetPassword": "Reset Password",
+      "instructions": "Enter your email address and we'll send you a link to reset your password.",
+      "emailAddress": "Email Address",
+      "emailPlaceholder": "Enter your email",
+      "backToLogin": "Back to Login",
+      "sending": "Sending...",
+      "sendResetLink": "Send Reset Link",
+      "emailSent": "Email Sent",
+      "checkEmail": "Check your email address for a reset link",
+      "success": "Password reset link sent to your email",
+      "error": "Failed to send reset link",
+      "emailNotFound": "No account found with this email address"
+    },
     "parentTitle": "Parent Registration",
     "specialistTitle": "Specialist Registration",
     "centerTitle": "Center Registration",
@@ -201,7 +199,6 @@
     "facebook": "Facebook",
     "instagram": "Instagram",
     "whatsapp": "WhatsApp",
-    "register": "Register",
     "selectGender": "Select Gender",
     "male": "Male",
     "female": "Female",
@@ -277,7 +274,6 @@
     "specialityInvalid": "Please select a valid speciality",
     "search": "Search",
     "invalidCredentials": "Invalid credentials",
-    "login": "Login",
     "displayName": "Display Name",
     "displayNameEn": "Display Name (English)",
     "displayNameAr": "Display Name (Arabic)",
@@ -292,7 +288,16 @@
     "forgotPasswordInstructions": "Enter your email address and we'll send you a link to reset your password.",
     "emailNotFound": "No account found with this email address",
     "checkEmail": "Check your email address for a reset link",
-    "resendEmail": "Resend Email"
+    "resendEmail": "Resend Email",
+    "register": {
+      "title": "Create Your Account",
+      "formTitle": "Register",
+      "subtitle": "Sign up to join amazing events",
+      "attendeeTitle": "Join as Attendee",
+      "organizerTitle": "Become an Organizer",
+      "attendeeDescription": "Discover and book amazing events",
+      "organizerDescription": "Create and manage your events"
+    }
   },
   "form": {
     "personalInformation": "Personal Information",
@@ -461,6 +466,18 @@
     "noWorkedAtFound": "No work experience found"
   },
   "homePage": {
+    "hero": {
+      "subtitle": "Don't miss out!",
+      "title": "Explore relevant",
+      "titleHighlight": "events",
+      "titleSuffix": "happening locally and globally."
+    },
+    "cta": {
+      "title": "Upgrade Your Learning Journey",
+      "description": "Don't just browse—become a member. Create an account to track your workshops, earn certificates, and get early access to limited-seat events.",
+      "createAccount": "Create Free Account",
+      "browseEvents": "Browse More Events"
+    },
     "centerSection": {
       "subtitle": "Centers offering the best services",
       "title": "Most chosen centers",
@@ -499,6 +516,46 @@
         "pediatricSurgery": "Pediatric surgery",
         "kidney": "Kidney"
       }
+    },
+    "searchEvent": {
+      "searchButton": "Search",
+      "selectEventFirst": "Please select a specific event from the list first."
+    },
+    "eventSelector": {
+      "placeholder": "Search events...",
+      "noEventsFound": "No events found",
+      "noEventsInLocation": "No events found in {location}"
+    },
+    "locationSelector": {
+      "placeholder": "Select Location (e.g. Cairo)"
+    },
+    "categories": {
+      "title": "Explore Categories",
+      "previousCategories": "Previous categories",
+      "nextCategories": "Next categories"
+    },
+    "popularEvents": {
+      "title": "Popular Events in {location}",
+      "yourLocation": "Your Location",
+      "upcomingEvents": "Upcoming Events",
+      "upcomingDescription": "Browse through our latest events and workshops.",
+      "noEventsFound": "No Events Found",
+      "filters": {
+        "all": "All",
+        "today": "Today",
+        "tomorrow": "Tomorrow",
+        "thisWeek": "This Week",
+        "free": "Free"
+      }
+    },
+    "onlineEvents": {
+      "title": "Discover Best of Online Events",
+      "noEventsFound": "No Events Found"
+    },
+    "egyptTopEvents": {
+      "title": "Top Events In Egypt",
+      "showLess": "Show less",
+      "showMore": "Show {count} more"
     }
   },
   "bookings": {
@@ -594,7 +651,150 @@
     "email": "Email",
     "enterEmail": "Enter email"
   },
-  "dashboardAdmin": {
+  "events": {
+    "title": "Events",
+    "exploreTitle": "Explore a world of events. Find what excites you!",
+    "searchPlaceholder": "Search events",
+    "selectLocation": "Select Location",
+    "filters": "Filters",
+    "price": "Price",
+    "date": "Date",
+    "category": "Category",
+    "tags": "Tags",
+    "free": "Free",
+    "paid": "Paid",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "thisWeek": "This Week",
+    "thisWeekend": "This Weekend",
+    "pickDate": "Pick a Date",
+    "showMore": "Show More",
+    "showLess": "Show Less",
+    "sortBy": "Sort by:",
+    "relevance": "Relevance",
+    "loading": "Loading events...",
+    "noEventsFound": "No events found matching your criteria.",
+    "addToFavorites": "Add to favorites",
+    "removeFromFavorites": "Remove from favorites",
+    "freePrice": "Free",
+    "egp": "EGP",
+    "notAvailable": "N/A",
+    "selectDate": "Select Date",
+    "chooseDate": "Choose a date",
+    "cancel": "Cancel",
+    "applyFilter": "Apply Filter"
+  },
+  "about": {
+    "title": "About Us",
+    "subtitle": "Meet the talented team behind Spotly. We're passionate about creating exceptional experiences and delivering innovative solutions.",
+    "ourStory": "Our Story",
+    "story1": "Spotly is a cutting-edge platform designed to revolutionize how you discover and explore properties. Our mission is to provide seamless, intuitive experiences that connect people with their perfect spaces.",
+    "story2": "Built with passion and dedication, Spotly combines innovative technology with user-centric design to deliver exceptional results. We believe in creating solutions that not only meet your needs but exceed your expectations.",
+    "story3": "Our team of five talented individuals has worked tirelessly to bring this vision to life, combining diverse skills and expertise to create something truly special.",
+    "ourTeam": "Our Team",
+    "teamSubtitle": "The passionate individuals who made Spotly possible",
+    "values": {
+      "innovation": {
+        "title": "Innovation",
+        "description": "We constantly push boundaries and explore new possibilities to deliver cutting-edge solutions."
+      },
+      "excellence": {
+        "title": "Excellence",
+        "description": "We strive for perfection in every detail, ensuring the highest quality in everything we do."
+      },
+      "collaboration": {
+        "title": "Collaboration",
+        "description": "We believe in the power of teamwork and working together to achieve extraordinary results."
+      }
+    },
+    "teamMember": {
+      "linkedin": "{name}'s LinkedIn",
+      "github": "{name}'s GitHub",
+      "email": "Email {name}"
+    }
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "subtitle": "We'd love to hear from you. Send us a message and we'll respond as soon as possible.",
+    "sendMessage": "Send us a Message",
+    "contactInformation": "Contact Information",
+    "contactDescription": "Feel free to reach out to us through any of these channels. We're here to help!",
+    "businessHours": "Business Hours",
+    "mondayFriday": "Monday - Friday:",
+    "saturday": "Saturday:",
+    "sunday": "Sunday:",
+    "closed": "Closed",
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "Your name",
+      "email": "Email",
+      "emailPlaceholder": "your.email@example.com",
+      "phone": "Phone",
+      "phonePlaceholder": "+20 123 456 7890",
+      "subject": "Subject",
+      "subjectPlaceholder": "What's this about?",
+      "message": "Message",
+      "messagePlaceholder": "Tell us more about your inquiry...",
+      "sendButton": "Send Message",
+      "sending": "Sending...",
+      "successMessage": "Message sent successfully!"
+    },
+    "contactInfo": {
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address"
+    }
+  },
+  "myOrders": {
+    "title": "Orders",
+    "subtitle": "View and manage your orders",
+    "failedToLoad": "Failed to load orders"
+  },
+  "favorites": {
+    "title": "Favorites",
+    "myFavorites": "My Favorites",
+    "saved": "saved",
+    "noFavorites": "No favorites yet",
+    "noFavoritesDescription": "You haven't saved any events yet. Browse our events and click the heart icon to save them for later.",
+    "browseEvents": "Browse Events"
+  },
+  "notFound": {
+    "title": "404",
+    "heading": "Page Not Found",
+    "description": "Sorry, we couldn't find the page you're looking for. It might have been moved, deleted, or never existed.",
+    "goBack": "Go Back",
+    "backToHome": "Back to Home",
+    "needHelp": "Need help? Contact Support →",
+    "simpleMessage": "not found 404 :("
+  },
+  "eventDetails": {
+    "eventNotFound": "Event not found",
+    "goBackHome": "Go back home",
+    "dateAndTime": "Date and Time",
+    "location": "Location",
+    "onlineEvent": "Online Event",
+    "onlineEventDescription": "This event will be held online",
+    "openInGoogleMaps": "Open in Google Maps",
+    "eventDescription": "Event Description",
+    "tags": "Tags",
+    "noTags": "No tags",
+    "soldOut": "Sold Out",
+    "buyTickets": "Buy Tickets",
+    "getTickets": "Get Tickets"
+  },
+  "ticketsModal": {
+    "selectTickets": "Select Tickets",
+    "ticketTypes": "Ticket Types",
+    "quantity": "Quantity",
+    "standardTicket": "Standard Ticket",
+    "ticketsLeft": "Tickets Left",
+    "qty": "Qty",
+    "total": "Total",
+    "free": "Free",
+    "proceed": "Proceed",
+    "loading": "Loading..."
+  },
+"dashboardAdmin": {
     "common": {
       "analyticsOverview": "Analytics Overview",
       "performanceMetrics": "Performance metrics and statistics for all events",
@@ -724,3 +924,4 @@
     }
   }
 }
+
