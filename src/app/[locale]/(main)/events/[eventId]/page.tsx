@@ -35,16 +35,7 @@ export default async function EventDetailsPage({
   params: Promise<{ eventId: string }>;
 }) {
   const { eventId } = await params;
-  // const getImageUrl = (url?: string) => {
-  //   console.log(url);
-  //   if (!url) return "/no-image.jpg";
-  //   if (url.startsWith("http") || url.startsWith("/")) return url;
-  //   return `https://${url}`;
-  // };
-  // console.log(eventId);
-
-  // const res = await fetch("http://localhost:8080/events");
-  // Fetch events using native fetch to avoid axios url.parse deprecation
+  
   const baseUrl =
     process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000/api/v1";
   const url = baseUrl.startsWith("http")
@@ -68,7 +59,6 @@ export default async function EventDetailsPage({
     (e: EventDocument) => String(e._id) === eventId
   );
   const imageUrl = getImageUrl(myEvent?.media?.mediaUrl);
-  console.log(myEvent);
 
   // --- Helper Functions ---
 

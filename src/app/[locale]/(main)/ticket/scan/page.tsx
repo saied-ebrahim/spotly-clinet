@@ -35,7 +35,6 @@ export default function TicketScanPage() {
       // Example: const res = await fetch('/api/validate', { body: JSON.stringify({ code }) })
 
       const res = await axiosInstance.get(`/tickets/verify/${code}`);
-      console.log(res);
       setTickerData(res.data.data);
       if (res.data?.success === false || res.data?.statusCode === 401) {
         setValidationStatus("invalid");
@@ -62,7 +61,6 @@ export default function TicketScanPage() {
     if (codeReaderRef.current) {
       codeReaderRef.current.reset();
     }
-    console.log(code);
 
     setScanResult(code);
     validateTicket(code);

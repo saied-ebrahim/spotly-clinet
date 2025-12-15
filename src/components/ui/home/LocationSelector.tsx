@@ -22,16 +22,12 @@ const LocationSelector = ({
     )
       .then((res) => res.json())
       .then((data) => {
-        // Note: This specific dataset returns objects with { "name": "Cairo", ... }
-
-        // console.log(data[2].data);
+        
         const arr = data[2].data.map(
           (gov: { city_name_en: string }) => gov.city_name_en
         );
-        //   setAllGovs(data);
         setAllGovs(arr);
       });
-    // You can use the location data here to fetch events based on user's city
   }, []);
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {

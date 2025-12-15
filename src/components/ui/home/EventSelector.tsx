@@ -49,7 +49,6 @@ const EventSelector = ({
     return matchesLocation && matchesInput;
   });
 
-  /* console.log(filteredEvents); */
 
   return (
     <div

@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import axiosInstance from "@/lib/axios";
+import { useTranslations } from "next-intl";
 
 const FilterSection = ({
   title,
@@ -9,18 +10,35 @@ const FilterSection = ({
   defaultOpen = true,
   onChange,
   selectedFilters = {},
+  internalCategory,
+  valueMap,
+  t,
 }: {
   title: string;
   options: string[];
   defaultOpen?: boolean;
   onChange: (category: string, value: string, isChecked: boolean) => void;
   selectedFilters?: Record<string, string[]>;
+  internalCategory: string;
+  valueMap?: Record<string, string>;
+  t: (key: string) => string;
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [showAll, setShowAll] = useState(false);
 
   const displayedOptions = showAll ? options : options.slice(0, 5);
   const hasMore = options.length > 5;
+  
+  // Helper to check if option is selected
+  const isOptionSelected = (option: string) => {
+    const internalValues = selectedFilters[internalCategory] || [];
+    if (valueMap) {
+      // Map displayed option back to internal value
+      const internalValue = Object.entries(valueMap).find(([_, display]) => display === option)?.[0];
+      return internalValue ? internalValues.includes(internalValue) : false;
+    }
+    return internalValues.includes(option);
+  };
 
   return (
     <div className="border-b border-slate-100 py-4 last:border-0">
@@ -45,7 +63,7 @@ const FilterSection = ({
                 type="checkbox"
                 className="h-4 w-4 rounded border-slate-300 text-brand-primary focus:ring-brand-primary"
                 onChange={(e) => onChange(title, option, e.target.checked)}
-                checked={selectedFilters[title]?.includes(option) || false}
+                checked={isOptionSelected(option)}
               />
               <label
                 htmlFor={`filter-${title}-${option}`}
@@ -60,7 +78,7 @@ const FilterSection = ({
               onClick={() => setShowAll(!showAll)}
               className="text-xs font-medium text-brand-primary hover:underline pt-1"
             >
-              {showAll ? "Show Less" : "Show More"}
+              {showAll ? t("showLess") : t("showMore")}
             </button>
           )}
         </div>
@@ -78,6 +96,7 @@ export function EventFilters({
   onFilterChange,
   selectedFilters = {},
 }: EventFiltersProps) {
+  const t = useTranslations("events");
   const [categories, setCategories] = useState<string[]>([]);
   const [tags, setTags] = useState<string[]>([]);
 
@@ -113,38 +132,71 @@ export function EventFilters({
   return (
     <div className="w-64 shrink-0 pr-8 hidden lg:block">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-bold text-slate-900">Filters</h2>
+        <h2 className="text-lg font-bold text-slate-900">{t("filters")}</h2>
       </div>
 
       <FilterSection
-        title="Price"
-        options={["Free", "Paid"]}
-        onChange={onFilterChange}
+        title={t("price")}
+        options={[t("free"), t("paid")]}
+        onChange={(category, value, isChecked) => {
+          const internalValue = 
+            value === t("free") ? "Free" :
+            value === t("paid") ? "Paid" : value;
+          onFilterChange("Price", internalValue, isChecked);
+        }}
         selectedFilters={selectedFilters}
+        internalCategory="Price"
+        valueMap={{ "Free": t("free"), "Paid": t("paid") }}
+        t={t}
       />
       <FilterSection
-        title="Date"
+        title={t("date")}
         options={[
-          "Today",
-          "Tomorrow",
-          "This Week",
-          "This Weekend",
-          "Pick a Date",
+          t("today"),
+          t("tomorrow"),
+          t("thisWeek"),
+          t("thisWeekend"),
+          t("pickDate"),
         ]}
-        onChange={onFilterChange}
+        onChange={(category, value, isChecked) => {
+          const internalValue = 
+            value === t("today") ? "Today" :
+            value === t("tomorrow") ? "Tomorrow" :
+            value === t("thisWeek") ? "This Week" :
+            value === t("thisWeekend") ? "This Weekend" :
+            value === t("pickDate") ? "Pick a Date" : value;
+          onFilterChange("Date", internalValue, isChecked);
+        }}
         selectedFilters={selectedFilters}
+        internalCategory="Date"
+        valueMap={{
+          "Today": t("today"),
+          "Tomorrow": t("tomorrow"),
+          "This Week": t("thisWeek"),
+          "This Weekend": t("thisWeekend"),
+          "Pick a Date": t("pickDate")
+        }}
+        t={t}
       />
       <FilterSection
-        title="Category"
+        title={t("category")}
         options={categories}
-        onChange={onFilterChange}
+        onChange={(category, value, isChecked) => {
+          onFilterChange("Category", value, isChecked);
+        }}
         selectedFilters={selectedFilters}
+        internalCategory="Category"
+        t={t}
       />
       <FilterSection
-        title="Tags"
+        title={t("tags")}
         options={tags}
-        onChange={onFilterChange}
+        onChange={(category, value, isChecked) => {
+          onFilterChange("Tags", value, isChecked);
+        }}
         selectedFilters={selectedFilters}
+        internalCategory="Tags"
+        t={t}
       />
     </div>
   );
