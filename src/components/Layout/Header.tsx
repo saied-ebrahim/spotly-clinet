@@ -11,7 +11,6 @@ import { decryptData, encryptData } from "@/shared/encryption";
 import { FaUserCircle, FaChevronDown } from "react-icons/fa";
 import { authService } from "@/services/authService";
 import { parseJwt } from "@/shared/jwt";
-import { useTranslations } from "next-intl";
 
 export default function Header() {
   const pathname = usePathname();

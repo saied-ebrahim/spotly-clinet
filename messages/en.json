@@ -16,6 +16,9 @@
     "categories": "Categories",
     "users": "Users"
   },
+  "notFound": {
+    "simpleMessage": "Page not found"
+  },
   "dashboardHeader": {
     "scanTicket": "Scan Ticket",
     "create": "Create",
@@ -923,5 +926,5 @@
       "generalError": "An error occurred while fetching users"
     }
   }
-}
+}}
 
