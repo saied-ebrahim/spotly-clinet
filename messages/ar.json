@@ -709,6 +709,18 @@
     "soldOut": "نفذت التذاكر",
     "buyTickets": "شراء التذاكر",
     "getTickets": "الحصول على التذاكر"
+  },
+  "ticketsModal": {
+    "selectTickets": "اختر التذاكر",
+    "ticketTypes": "أنواع التذاكر",
+    "quantity": "الكمية",
+    "standardTicket": "تذكرة عادية",
+    "ticketsLeft": "تذكرة متبقية",
+    "qty": "الكمية",
+    "total": "الإجمالي",
+    "free": "مجاني",
+    "proceed": "المتابعة",
+    "loading": "جاري التحميل..."
   }
 }
 
