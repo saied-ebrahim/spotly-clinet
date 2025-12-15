@@ -5,7 +5,10 @@ import axiosInstance from "@/lib/axios";
 import { AdminCategoriesTable } from "@/components/Dashboard/Categories/AdminCategoriesTable";
 import { CategoryDocument } from "@/types/CategoryInterface";
 
+import { useTranslations } from "next-intl";
+
 export default function AdminCategoriesPage() {
+  const t = useTranslations("dashboardAdmin.categories");
   const [categories, setCategories] = useState<CategoryDocument[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -41,10 +44,8 @@ export default function AdminCategoriesPage() {
   return (
     <div className="p-6 space-y-6">
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-bold text-slate-800">
-          Categories Management
-        </h1>
-        <p className="text-slate-500">Manage event categories</p>
+        <h1 className="text-2xl font-bold text-slate-800">{t("title")}</h1>
+        <p className="text-slate-500">{t("subtitle")}</p>
       </div>
 
       <AdminCategoriesTable initialData={categories} />

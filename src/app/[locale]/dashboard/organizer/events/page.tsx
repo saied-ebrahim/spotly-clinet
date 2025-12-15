@@ -8,61 +8,46 @@ import { decryptData } from "@/shared/encryption";
 import { parseJwt } from "@/shared/jwt";
 import { EventDocument } from "@/types/eventInterface";
 import { toast } from "react-toastify";
+import { useTranslations } from "next-intl";
 
 export default function OrganizerEventsPage() {
+  const t = useTranslations("organizerDashboard.events");
   const [events, setEvents] = useState<EventDocument[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
-    fetchOrganizerEvents();
-  }, []);
+    // Debounce search
+    const timer = setTimeout(() => {
+      fetchOrganizerEvents(search);
+    }, 500);
 
-  const fetchOrganizerEvents = async () => {
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  const fetchOrganizerEvents = async (searchTerm: string) => {
     try {
-      const cookie = Cookies.get("sub");
-      if (!cookie) {
-        setLoading(false);
-        return;
-      }
-
-      const decrypted = decryptData(cookie) as { token?: string };
-      if (!decrypted?.token) {
-        setLoading(false);
-        return;
-      }
-
-      const decodedToken = parseJwt(decrypted.token);
-      const userId = decodedToken?.id || decodedToken?._id || decodedToken?.sub;
-
-      if (!userId) {
-        toast.error("User ID not found");
-        setLoading(false);
-        return;
-      }
+      setLoading(true);
+      const query = searchTerm ? `/events?search=${searchTerm}` : `/events`;
 
       const response = await axiosInstance.get<{
         status: string;
         data: {
-          organizers: {
-            eventID: EventDocument | null;
-          }[];
+          events: EventDocument[];
         };
-      }>(`/Organizers/user/${userId}`);
+        pagination: any;
+      }>(query, {
+        skipGlobalLoading: true,
+      });
 
-      if (
-        response.data?.status === "success" &&
-        response.data?.data?.organizers
-      ) {
-        // Extract eventID from each organizer entry and filter out nulls
-        const organizerEvents = response.data.data.organizers
-          .map((item) => item.eventID)
-          .filter((event): event is EventDocument => event !== null);
-
-        setEvents(organizerEvents);
+      if (response.data.status === "success" && response.data.data?.events) {
+        setEvents(response.data.data.events);
+      } else {
+        toast.error(t("fetchError"));
       }
     } catch (error) {
       console.error("Error fetching organizer events:", error);
-      toast.error("Failed to load events");
+      toast.error(t("generalError"));
     } finally {
       setLoading(false);
     }
@@ -78,8 +63,28 @@ export default function OrganizerEventsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-slate-800">My Events</h1>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-800">{t("title")}</h1>
+          <p className="text-slate-500">{t("subtitle")}</p>
+        </div>
+        <div className="w-full sm:w-64 relative">
+          <input
+            type="text"
+            placeholder={t("searchPlaceholder")}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full px-4 py-2 pr-10 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none"
+          />
+          {search && (
+            <button
+              onClick={() => setSearch("")}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600"
+            >
+              ✕
+            </button>
+          )}
+        </div>
       </div>
       <AdminEventsTable
         rowData={events}

@@ -23,8 +23,11 @@ import {
   AnalyticsResponse,
   StatCardProps,
 } from "@/types/components/Dashboard/analytics";
+import { useTranslations, useLocale } from "next-intl";
 
 export default function AdminAnalyticsPage() {
+  const t = useTranslations("dashboardAdmin.common");
+  const locale = useLocale();
   const [events, setEvents] = useState<EventDocument[]>([]);
   const [totalOrders, setTotalOrders] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
@@ -224,38 +227,36 @@ export default function AdminAnalyticsPage() {
     <div className="p-6 space-y-6">
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-bold text-slate-800">
-          Analytics Overview
+          {t("analyticsOverview")}
         </h1>
-        <p className="text-slate-500">
-          Performance metrics and statistics for all events
-        </p>
+        <p className="text-slate-500">{t("performanceMetrics")}</p>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <StatCard
-          title="Total Revenue"
+          title={t("totalRevenue")}
           value={`$${totalRevenue.toLocaleString()}`}
           icon={FiDollarSign}
           color="text-green-600"
           bg="bg-green-50"
         />
         <StatCard
-          title="Net Income"
+          title={t("netIncome")}
           value={`$${netIncome.toLocaleString()}`}
           icon={FiDollarSign}
           color="text-emerald-600"
           bg="bg-emerald-50"
         />
         <StatCard
-          title="Tickets Sold"
+          title={t("ticketsSold")}
           value={stats.totalTicketsSold.toLocaleString()}
           icon={FiTicket}
           color="text-blue-600"
           bg="bg-blue-50"
         />
         <StatCard
-          title="Avg. Ticket Sales"
+          title={t("avgTicketSales")}
           value={
             events.length
               ? (stats.totalTicketsSold / events.length).toFixed(1)
@@ -266,7 +267,7 @@ export default function AdminAnalyticsPage() {
           bg="bg-purple-50"
         />
         <StatCard
-          title="Total Orders"
+          title={t("totalOrders")}
           value={totalOrders.toLocaleString()}
           icon={FiShoppingBag}
           color="text-red-600"
@@ -279,7 +280,7 @@ export default function AdminAnalyticsPage() {
         {/* Revenue Chart */}
         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
           <h2 className="text-lg font-semibold text-slate-800 mb-4">
-            Top Events by Revenue
+            {t("topEventsByRevenue")}
           </h2>
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -290,12 +291,14 @@ export default function AdminAnalyticsPage() {
                   fontSize={12}
                   tickLine={false}
                   axisLine={false}
+                  reversed={locale === "ar"}
                 />
                 <YAxis
                   fontSize={12}
                   tickLine={false}
                   axisLine={false}
                   tickFormatter={(value) => `$${value}`}
+                  orientation={locale === "ar" ? "right" : "left"}
                 />
                 <Tooltip
                   cursor={{ fill: "transparent" }}
@@ -303,6 +306,7 @@ export default function AdminAnalyticsPage() {
                     borderRadius: "8px",
                     border: "none",
                     boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                    direction: locale === "ar" ? "rtl" : "ltr",
                   }}
                 />
                 <Bar
@@ -319,7 +323,7 @@ export default function AdminAnalyticsPage() {
         {/* Tickets Sold Chart */}
         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
           <h2 className="text-lg font-semibold text-slate-800 mb-4">
-            Ticket Sales vs Available (Top Events)
+            {t("ticketSalesVsAvailable")}
           </h2>
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -330,26 +334,33 @@ export default function AdminAnalyticsPage() {
                   fontSize={12}
                   tickLine={false}
                   axisLine={false}
+                  reversed={locale === "ar"}
                 />
-                <YAxis fontSize={12} tickLine={false} axisLine={false} />
+                <YAxis
+                  fontSize={12}
+                  tickLine={false}
+                  axisLine={false}
+                  orientation={locale === "ar" ? "right" : "left"}
+                />
                 <Tooltip
                   cursor={{ fill: "transparent" }}
                   contentStyle={{
                     borderRadius: "8px",
                     border: "none",
                     boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                    direction: locale === "ar" ? "rtl" : "ltr",
                   }}
                 />
                 <Legend />
                 <Bar
                   dataKey="sold"
-                  name="Sold"
+                  name={t("sold")}
                   fill="#8884d8"
                   radius={[4, 4, 0, 0]}
                 />
                 <Bar
                   dataKey="available"
-                  name="Available"
+                  name={t("available")}
                   fill="#FFBB28"
                   radius={[4, 4, 0, 0]}
                 />
@@ -362,18 +373,18 @@ export default function AdminAnalyticsPage() {
       {/* Event Specific Analytics */}
       <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm mt-6">
         <h2 className="text-lg font-semibold text-slate-800 mb-4">
-          Event Specific Analytics
+          {t("eventSpecificAnalytics")}
         </h2>
 
         <div className="mb-6 relative" ref={dropdownRef}>
           <label className="block text-sm font-medium text-slate-700 mb-2">
-            Select Event
+            {t("selectEvent")}
           </label>
           <div className="relative w-full md:w-1/2">
             <input
               type="text"
               className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none"
-              placeholder="Search for an event..."
+              placeholder={t("searchEvent")}
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
@@ -407,7 +418,7 @@ export default function AdminAnalyticsPage() {
                     ))
                 ) : (
                   <div className="p-2 text-sm text-slate-500">
-                    No events found
+                    {t("noEventsFound")}
                   </div>
                 )}
               </div>
@@ -418,7 +429,7 @@ export default function AdminAnalyticsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-slate-50 p-4 rounded-lg">
             <h3 className="text-md font-medium text-slate-700 mb-4 text-center">
-              Financial Performance
+              {t("financialPerformance")}
             </h3>
             <div className="h-[300px] w-full">
               {eventLoading ? (
@@ -430,12 +441,12 @@ export default function AdminAnalyticsPage() {
                   <BarChart
                     data={[
                       {
-                        name: "Revenue",
+                        name: t("revenue"),
                         value: eventAnalytics.revenue,
                         fill: "#00C49F",
                       },
                       {
-                        name: "Net Income",
+                        name: t("netIncome"),
                         value: eventAnalytics.netIncome,
                         fill: "#10B981",
                       },
@@ -443,19 +454,26 @@ export default function AdminAnalyticsPage() {
                     margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                    <XAxis dataKey="name" axisLine={false} tickLine={false} />
+                    <XAxis
+                      dataKey="name"
+                      axisLine={false}
+                      tickLine={false}
+                      reversed={locale === "ar"}
+                    />
                     <YAxis
                       axisLine={false}
                       tickLine={false}
                       tickFormatter={(value) => `$${value}`}
+                      orientation={locale === "ar" ? "right" : "left"}
                     />
                     <Tooltip
                       cursor={{ fill: "transparent" }}
-                      formatter={(value) => [`$${value}`, "Amount"]}
+                      formatter={(value) => [`$${value}`, t("amount")]}
                       contentStyle={{
                         borderRadius: "8px",
                         border: "none",
                         boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                        direction: locale === "ar" ? "rtl" : "ltr",
                       }}
                     />
                     <Bar dataKey="value" radius={[4, 4, 0, 0]} barSize={60} />
@@ -467,21 +485,21 @@ export default function AdminAnalyticsPage() {
 
           <div className="bg-slate-50 p-4 rounded-lg">
             <h3 className="text-md font-medium text-slate-700 mb-4 text-center">
-              Ticket Sales Analysis
+              {t("ticketSalesAnalysis")}
             </h3>
             <div className="h-[300px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={[
                     {
-                      name: "Tickets Sold",
+                      name: t("ticketsSold"),
                       value:
                         events.find((e) => e._id === selectedEventId)?.analytics
                           ?.ticketsSold || 0,
                       fill: "#8884d8",
                     },
                     {
-                      name: "Available",
+                      name: t("available"),
                       value:
                         events.find((e) => e._id === selectedEventId)?.analytics
                           ?.ticketsAvailable || 0,
@@ -491,14 +509,24 @@ export default function AdminAnalyticsPage() {
                   margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} />
-                  <YAxis axisLine={false} tickLine={false} />
+                  <XAxis
+                    dataKey="name"
+                    axisLine={false}
+                    tickLine={false}
+                    reversed={locale === "ar"}
+                  />
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    orientation={locale === "ar" ? "right" : "left"}
+                  />
                   <Tooltip
                     cursor={{ fill: "transparent" }}
                     contentStyle={{
                       borderRadius: "8px",
                       border: "none",
                       boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                      direction: locale === "ar" ? "rtl" : "ltr",
                     }}
                   />
                   <Bar dataKey="value" radius={[4, 4, 0, 0]} barSize={60} />

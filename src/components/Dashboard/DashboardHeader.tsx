@@ -7,6 +7,7 @@ import Cookies from "js-cookie";
 import { decryptData } from "@/shared/encryption";
 import { parseJwt } from "@/shared/jwt";
 import { authService } from "@/services/authService";
+import { useTranslations } from "next-intl";
 import {
   FiBell,
   FiChevronDown,
@@ -19,8 +20,9 @@ import {
 import LinkTo from "../Global/LinkTo";
 import SpotlyLogo from "../Layout/SpotlyLogo";
 import { CreateEventModal } from "./Events/CreateEventModal";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
-export function DashboardHeader() {
+export function DashboardHeader({ onMobileMenuToggle }: { onMobileMenuToggle: () => void }) {
   const [user, setUser] = useState<{ name?: string; email?: string } | null>(
     null
   );
@@ -28,6 +30,7 @@ export function DashboardHeader() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const t = useTranslations('dashboardHeader');
 
   const handleCreateSuccess = () => {
     // Refresh logic here if needed, e.g., refetch events
@@ -115,7 +118,7 @@ export function DashboardHeader() {
     <header className="sticky top-0 z-10 border-b border-slate-200 bg-white px-4 py-3 sm:px-8">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <button className="rounded-lg p-2 text-slate-500 hover:bg-slate-50 lg:hidden">
+          <button onClick={onMobileMenuToggle} className="rounded-lg p-2 text-slate-500 hover:bg-slate-50 lg:hidden">
             <FiMenu size={24} />
           </button>
           <LinkTo href="/" className="flex items-center gap-2">
@@ -129,7 +132,7 @@ export function DashboardHeader() {
             className="flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
           >
             <FiMaximize />
-            Scan Ticket
+            {t('scanTicket')}
           </Link>
 
           <button
@@ -137,8 +140,10 @@ export function DashboardHeader() {
             className="flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
           >
             <FiPlus />
-            Create
+            {t('create')}
           </button>
+
+          <LanguageSwitcher />
 
           <button className="p-2 text-slate-500 hover:text-slate-700">
             <FiBell size={20} />
@@ -179,7 +184,7 @@ export function DashboardHeader() {
                   onClick={() => setDropdownOpen(false)}
                 >
                   <FiUser size={16} />
-                  Profile
+                  {t('profile')}
                 </Link>
 
                 <button
@@ -187,7 +192,7 @@ export function DashboardHeader() {
                   className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors text-left"
                 >
                   <FiLogOut size={16} />
-                  Logout
+                  {t('logout')}
                 </button>
               </div>
             )}

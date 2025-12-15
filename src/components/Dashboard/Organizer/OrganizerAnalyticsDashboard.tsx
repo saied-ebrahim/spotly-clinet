@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState, useRef } from "react";
 import Cookies from "js-cookie";
 import { decryptData } from "@/shared/encryption";
 import { parseJwt } from "@/shared/jwt";
+import { useTranslations } from "next-intl";
 import {
   Bar,
   BarChart,
@@ -29,6 +30,7 @@ import {
 } from "@/types/components/Dashboard/analytics";
 
 export default function OrganizerAnalyticsDashboard() {
+  const t = useTranslations('organizerDashboard');
   const [events, setEvents] = useState<EventDocument[]>([]);
   const [totalOrders, setTotalOrders] = useState(0);
   const [totalRevenue, setTotalRevenue] = useState(0);
@@ -325,38 +327,38 @@ export default function OrganizerAnalyticsDashboard() {
     <div className="p-6 space-y-6">
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-bold text-slate-800">
-          Analytics Overview
+          {t('analyticsOverview')}
         </h1>
         <p className="text-slate-500">
-          Performance metrics and statistics for your events
+          {t('performanceMetrics')}
         </p>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <StatCard
-          title="Total Revenue"
+          title={t('totalRevenue')}
           value={`$${totalRevenue.toLocaleString()}`}
           icon={FiDollarSign}
           color="text-green-600"
           bg="bg-green-50"
         />
         <StatCard
-          title="Net Income"
+          title={t('netIncome')}
           value={`$${netIncome.toLocaleString()}`}
           icon={FiDollarSign}
           color="text-emerald-600"
           bg="bg-emerald-50"
         />
         <StatCard
-          title="Tickets Sold"
+          title={t('ticketsSold')}
           value={stats.totalTicketsSold.toLocaleString()}
           icon={FiTicket}
           color="text-blue-600"
           bg="bg-blue-50"
         />
         <StatCard
-          title="Avg. Ticket Sales"
+          title={t('avgTicketSales')}
           value={
             events.length
               ? (stats.totalTicketsSold / events.length).toFixed(1)
@@ -367,7 +369,7 @@ export default function OrganizerAnalyticsDashboard() {
           bg="bg-purple-50"
         />
         <StatCard
-          title="Total Orders"
+          title={t('totalOrders')}
           value={totalOrders.toLocaleString()}
           icon={FiShoppingBag}
           color="text-red-600"
@@ -380,7 +382,7 @@ export default function OrganizerAnalyticsDashboard() {
         {/* Revenue Chart */}
         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
           <h2 className="text-lg font-semibold text-slate-800 mb-4">
-            Top Events by Revenue
+            {t('topEventsByRevenue')}
           </h2>
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -420,7 +422,7 @@ export default function OrganizerAnalyticsDashboard() {
         {/* Tickets Sold Chart */}
         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
           <h2 className="text-lg font-semibold text-slate-800 mb-4">
-            Ticket Sales vs Available (Top Events)
+            {t('ticketSalesVsAvailable')}
           </h2>
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
@@ -444,13 +446,13 @@ export default function OrganizerAnalyticsDashboard() {
                 <Legend />
                 <Bar
                   dataKey="sold"
-                  name="Sold"
+                  name={t('sold')}
                   fill="#8884d8"
                   radius={[4, 4, 0, 0]}
                 />
                 <Bar
                   dataKey="available"
-                  name="Available"
+                  name={t('available')}
                   fill="#FFBB28"
                   radius={[4, 4, 0, 0]}
                 />
@@ -463,18 +465,18 @@ export default function OrganizerAnalyticsDashboard() {
       {/* Event Specific Analytics */}
       <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm mt-6">
         <h2 className="text-lg font-semibold text-slate-800 mb-4">
-          Event Specific Analytics
+          {t('eventSpecificAnalytics')}
         </h2>
 
         <div className="mb-6 relative" ref={dropdownRef}>
           <label className="block text-sm font-medium text-slate-700 mb-2">
-            Select Event
+            {t('selectEvent')}
           </label>
           <div className="relative w-full md:w-1/2">
             <input
               type="text"
               className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary outline-none"
-              placeholder="Search for an event..."
+              placeholder={t('searchForEvent')}
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
@@ -519,7 +521,7 @@ export default function OrganizerAnalyticsDashboard() {
                     ))
                 ) : (
                   <div className="p-2 text-sm text-slate-500">
-                    No events found
+                    {t('noEventsFound')}
                   </div>
                 )}
               </div>
@@ -530,7 +532,7 @@ export default function OrganizerAnalyticsDashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="bg-slate-50 p-4 rounded-lg">
             <h3 className="text-md font-medium text-slate-700 mb-4 text-center">
-              Financial Performance
+              {t('financialPerformance')}
             </h3>
             <div className="h-[300px] w-full">
               {eventLoading ? (
@@ -542,12 +544,12 @@ export default function OrganizerAnalyticsDashboard() {
                   <BarChart
                     data={[
                       {
-                        name: "Revenue",
+                        name: t('revenue'),
                         value: eventAnalytics.revenue,
                         fill: "#00C49F",
                       },
                       {
-                        name: "Net Income",
+                        name: t('netIncome'),
                         value: eventAnalytics.netIncome,
                         fill: "#10B981",
                       },
@@ -563,7 +565,7 @@ export default function OrganizerAnalyticsDashboard() {
                     />
                     <Tooltip
                       cursor={{ fill: "transparent" }}
-                      formatter={(value) => [`$${value}`, "Amount"]}
+                      formatter={(value) => [`$${value}`, t('amount')]}
                       contentStyle={{
                         borderRadius: "8px",
                         border: "none",
@@ -579,7 +581,7 @@ export default function OrganizerAnalyticsDashboard() {
 
           <div className="bg-slate-50 p-4 rounded-lg">
             <h3 className="text-md font-medium text-slate-700 mb-4 text-center">
-              Ticket Sales Analysis
+              {t('ticketSalesAnalysis')}
             </h3>
             <div className="h-[300px] w-full">
               {eventLoading ? (
@@ -591,12 +593,12 @@ export default function OrganizerAnalyticsDashboard() {
                   <BarChart
                     data={[
                       {
-                        name: "Tickets Sold",
+                        name: t('ticketsSold'),
                         value: eventAnalytics.ticketsSold,
                         fill: "#8884d8",
                       },
                       {
-                        name: "Available",
+                        name: t('available'),
                         value: eventAnalytics.ticketsAvailable,
                         fill: "#FFBB28",
                       },

@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import { SoldProductsTable } from "@/components/Dashboard/SoldProducts/SoldProductsTable";
 import axiosInstance from "@/lib/axios";
 import { SoldProduct, SoldProductsResponse } from "@/types/soldProduct";
 import { toast } from "react-toastify";
 
 export default function SoldProductsPage() {
+  const t = useTranslations('organizerDashboard.soldEvents');
   const [soldProducts, setSoldProducts] = useState<SoldProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -42,8 +44,8 @@ export default function SoldProductsPage() {
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-800">Sold Events</h1>
-        <p className="text-slate-500">View your sold events and orders</p>
+        <h1 className="text-2xl font-bold text-slate-800">{t('title')}</h1>
+        <p className="text-slate-500">{t('subtitle')}</p>
       </div>
 
       <SoldProductsTable

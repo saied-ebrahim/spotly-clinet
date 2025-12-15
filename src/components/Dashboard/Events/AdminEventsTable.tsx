@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState, useMemo } from "react";
+import { useTranslations, useLocale } from "next-intl";
 import DataTable from "@/components/Custom/DataTable";
 import { ColDef, ValueGetterParams } from "ag-grid-community";
 import { FiEdit2, FiTrash2 } from "react-icons/fi";
@@ -32,6 +33,7 @@ export function AdminEventsTable({
   pagination,
   onPageChange,
 }: AdminEventsTableProps) {
+  const t = useTranslations("eventsTable");
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<EventDocument | null>(
@@ -80,11 +82,19 @@ export function AdminEventsTable({
     }
   };
 
+  const locale = useLocale();
+
   const columnDefs: ColDef<EventDocument>[] = useMemo(
     () => [
-      { field: "_id", headerName: "ID", width: 70, sortable: true, hide: true },
       {
-        headerName: "Image",
+        field: "_id",
+        headerName: t("id"),
+        width: 70,
+        sortable: true,
+        hide: true,
+      },
+      {
+        headerName: t("image"),
         field: "media.mediaUrl",
         width: 100,
         cellRenderer: (params: { data: EventDocument }) => {
@@ -111,14 +121,14 @@ export function AdminEventsTable({
       },
       {
         field: "title",
-        headerName: "Title",
+        headerName: t("title"),
         flex: 2,
         minWidth: 200,
         sortable: true,
         filter: true,
       },
       {
-        headerName: "Category",
+        headerName: t("category"),
         field: "category",
         valueGetter: (params: ValueGetterParams<EventDocument>) => {
           return params.data?.category?.map((cat) => cat.name).join(", ") || "";
@@ -130,7 +140,7 @@ export function AdminEventsTable({
       },
       {
         field: "date",
-        headerName: "Date",
+        headerName: t("date"),
         flex: 1,
         minWidth: 120,
         sortable: true,
@@ -140,35 +150,40 @@ export function AdminEventsTable({
       },
       {
         field: "time",
-        headerName: "Time",
+        headerName: t("time"),
         flex: 1,
         minWidth: 100,
         sortable: true,
+        filter: true,
       },
       {
         field: "ticketType.price",
-        headerName: "Price",
+        headerName: t("price"),
         width: 100,
         sortable: true,
       },
       {
-        headerName: "Actions",
+        headerName: t("actions"),
         width: 120,
-        pinned: "right",
+        pinned: locale === "ar" ? "left" : "right",
         cellRenderer: (params: { data: EventDocument }) => {
           return (
-            <div className="flex items-center gap-2 h-full">
+            <div
+              className={`flex items-center gap-2 h-full ${
+                locale === "ar" ? "flex-row-reverse" : ""
+              }`}
+            >
               <button
                 onClick={() => handleEditClick(params.data)}
                 className="p-2 text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
-                title="Edit"
+                title={t("edit")}
               >
                 <FiEdit2 size={16} />
               </button>
               <button
                 onClick={() => handleDeleteClick(params.data)}
                 className="p-2 text-red-600 hover:bg-red-50 rounded-full transition-colors"
-                title="Delete"
+                title={t("delete")}
               >
                 <FiTrash2 size={16} />
               </button>
@@ -177,7 +192,7 @@ export function AdminEventsTable({
         },
       },
     ],
-    []
+    [t, locale]
   );
 
   const gridHeight = useMemo(() => {

@@ -1,9 +1,11 @@
+import { useTranslations } from "next-intl";
+
 export default function AdminFinancePage() {
+  const t = useTranslations("dashboardAdmin.finance");
+
   return (
     <div className="flex h-full items-center justify-center">
-      <h1 className="text-2xl font-bold text-slate-800">
-        Admin Finance Component
-      </h1>
+      <h1 className="text-2xl font-bold text-slate-800">{t("title")}</h1>
     </div>
   );
 }

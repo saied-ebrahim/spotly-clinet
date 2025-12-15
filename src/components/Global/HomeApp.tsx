@@ -56,8 +56,7 @@ function HomeApp({ children }: { children: React.ReactNode }) {
               ...decrypted,
               token: response.token,
             });
-
-            Cookies.set("token", newEncryptedData, { path: "/" });
+            Cookies.set("sub", newEncryptedData, { path: "/" });
           }
         } catch (error) {
           console.error("Auto refresh failed", error);

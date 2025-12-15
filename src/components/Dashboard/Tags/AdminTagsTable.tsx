@@ -8,12 +8,15 @@ import ConfirmationModal from "@/components/Custom/ConfirmationModal";
 import { CreateTagModal } from "./CreateTagModal";
 import { TagDocument } from "@/types/tagInterface";
 import axiosInstance from "@/lib/axios";
+import { useTranslations, useLocale } from "next-intl";
 
 interface AdminTagsTableProps {
   initialData: TagDocument[];
 }
 
 export function AdminTagsTable({ initialData }: AdminTagsTableProps) {
+  const t = useTranslations("dashboardAdmin.tags");
+  const locale = useLocale();
   const [rowData, setRowData] = useState<TagDocument[]>(initialData);
   const [searchTerm, setSearchTerm] = useState("");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -65,7 +68,7 @@ export function AdminTagsTable({ initialData }: AdminTagsTableProps) {
       { field: "_id", headerName: "ID", width: 90, sortable: true, hide: true },
       {
         field: "name",
-        headerName: "Tag Name",
+        headerName: t("columns.tagName"),
         flex: 1,
         minWidth: 200,
         sortable: true,
@@ -73,7 +76,7 @@ export function AdminTagsTable({ initialData }: AdminTagsTableProps) {
       },
       {
         field: "createdAt",
-        headerName: "Created At",
+        headerName: t("columns.createdAt"),
         flex: 1,
         minWidth: 150,
         sortable: true,
@@ -82,23 +85,27 @@ export function AdminTagsTable({ initialData }: AdminTagsTableProps) {
         },
       },
       {
-        headerName: "Actions",
+        headerName: t("columns.actions"),
         width: 100,
-        pinned: "right",
+        pinned: locale === "ar" ? "left" : "right",
         cellRenderer: (params: { data: TagDocument }) => {
           return (
-            <div className="flex items-center gap-2 h-full">
+            <div
+              className={`flex items-center gap-2 h-full ${
+                locale === "ar" ? "flex-row-reverse" : ""
+              }`}
+            >
               <button
                 onClick={() => handleEditClick(params.data)}
                 className="p-2 text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
-                title="Edit"
+                title={t("edit")}
               >
                 <FiEdit size={16} />
               </button>
               <button
                 onClick={() => handleDeleteClick(params.data)}
                 className="p-2 text-red-600 hover:bg-red-50 rounded-full transition-colors"
-                title="Delete"
+                title={t("delete")}
               >
                 <FiTrash2 size={16} />
               </button>
@@ -107,18 +114,18 @@ export function AdminTagsTable({ initialData }: AdminTagsTableProps) {
         },
       },
     ],
-    []
+    [locale, t]
   );
 
   return (
     <div className="w-full bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
       <div className="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h2 className="text-lg font-bold text-slate-800">All Tags</h2>
+        <h2 className="text-lg font-bold text-slate-800">{t("title")}</h2>
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <div className="relative flex-1 sm:flex-none">
             <input
               type="text"
-              placeholder="Search tags..."
+              placeholder={t("searchPlaceholder")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="px-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary w-full sm:w-64"
@@ -132,7 +139,7 @@ export function AdminTagsTable({ initialData }: AdminTagsTableProps) {
             className="flex items-center gap-2 px-4 py-2 bg-brand-primary text-white rounded-lg text-sm font-medium hover:bg-brand-primary/90 transition-colors whitespace-nowrap"
           >
             <FiPlus size={16} />
-            <span>Create Tag</span>
+            <span>{t("createTag")}</span>
           </button>
         </div>
       </div>
@@ -158,10 +165,12 @@ export function AdminTagsTable({ initialData }: AdminTagsTableProps) {
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}
-        title="Delete Tag"
-        message={`Are you sure you want to delete "${selectedTag?.name}"? This action cannot be undone.`}
-        confirmText="Delete"
-        cancelText="Cancel"
+        title={t("deleteModal.title")}
+        message={t("deleteModal.message", {
+          tagName: selectedTag?.name || "Topic",
+        })}
+        confirmText={t("deleteModal.confirm")}
+        cancelText={t("deleteModal.cancel")}
       />
     </div>
   );

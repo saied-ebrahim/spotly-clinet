@@ -11,13 +11,19 @@ import { FiTrash2, FiEye } from "react-icons/fi";
 import ConfirmationModal from "@/components/Custom/ConfirmationModal";
 import { OrderDocument } from "@/types/orderInterface";
 import { ViewOrderModal } from "./ViewOrderModal";
+import { useTranslations, useLocale } from "next-intl";
 
 interface AdminOrdersTableProps {
   initialData: OrderDocument[];
   loading?: boolean;
 }
 
-export function AdminOrdersTable({ initialData, loading }: AdminOrdersTableProps) {
+export function AdminOrdersTable({
+  initialData,
+  loading,
+}: AdminOrdersTableProps) {
+  const t = useTranslations("dashboardAdmin.orders");
+  const locale = useLocale();
   const [rowData, setRowData] = useState<OrderDocument[]>(initialData);
   const [searchTerm, setSearchTerm] = useState("");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -67,10 +73,10 @@ export function AdminOrdersTable({ initialData, loading }: AdminOrdersTableProps
     () => [
       { field: "_id", headerName: "ID", width: 90, sortable: true, hide: true },
       {
-        headerName: "Customer",
+        headerName: t("columns.customer"),
         valueGetter: (params: ValueGetterParams<OrderDocument>) => {
           const user = params.data?.userID;
-          return user ? `${user.firstName} ${user.lastName}` : "N/A";
+          return user ? `${user.firstName} ${user.lastName}` : t("na");
         },
         flex: 1,
         minWidth: 150,
@@ -79,17 +85,17 @@ export function AdminOrdersTable({ initialData, loading }: AdminOrdersTableProps
       },
       {
         field: "userID.email",
-        headerName: "Email",
+        headerName: t("columns.email"),
         flex: 1,
         minWidth: 200,
         sortable: true,
         filter: true,
       },
       {
-        headerName: "Location",
+        headerName: t("columns.location"),
         valueGetter: (params: ValueGetterParams<OrderDocument>) => {
           const addr = params.data?.userID?.address;
-          return addr ? `${addr.city || "-"}, ${addr.country || "-"}` : "N/A";
+          return addr ? `${addr.city || "-"}, ${addr.country || "-"}` : t("na");
         },
         flex: 1,
         minWidth: 150,
@@ -98,25 +104,27 @@ export function AdminOrdersTable({ initialData, loading }: AdminOrdersTableProps
       },
       {
         field: "quantity",
-        headerName: "Qty",
+        headerName: t("columns.qty"),
         width: 80,
         sortable: true,
         filter: true,
       },
       {
         field: "totalAfterDiscount",
-        headerName: "Total",
+        headerName: t("columns.total"),
         width: 100,
         sortable: true,
         valueFormatter: (
           params: ValueFormatterParams<OrderDocument, number>
         ) => {
-          return params.value != null && params.value > 0 ? `$${params.value}` : "Free";
+          return params.value != null && params.value > 0
+            ? `$${params.value}`
+            : t("free");
         },
       },
       {
         field: "createdAt",
-        headerName: "Date",
+        headerName: t("columns.date"),
         flex: 1,
         minWidth: 150,
         sortable: true,
@@ -129,9 +137,9 @@ export function AdminOrdersTable({ initialData, loading }: AdminOrdersTableProps
         },
       },
       {
-        headerName: "Event",
+        headerName: t("columns.event"),
         valueGetter: (params: ValueGetterParams<OrderDocument>) => {
-          return params.data?.eventID?.title || "N/A";
+          return params.data?.eventID?.title || t("na");
         },
         flex: 2,
         minWidth: 180,
@@ -139,23 +147,27 @@ export function AdminOrdersTable({ initialData, loading }: AdminOrdersTableProps
         filter: true,
       },
       {
-        headerName: "Actions",
+        headerName: t("columns.actions"),
         width: 100,
-        pinned: "right",
+        pinned: locale === "ar" ? "left" : "right",
         cellRenderer: (params: { data: OrderDocument }) => {
           return (
-            <div className="flex items-center gap-2 h-full">
+            <div
+              className={`flex items-center gap-2 h-full ${
+                locale === "ar" ? "flex-row-reverse" : ""
+              }`}
+            >
               <button
                 onClick={() => handleViewClick(params.data)}
                 className="p-2 text-brand-primary hover:bg-brand-primary/10 rounded-full transition-colors"
-                title="View"
+                title={t("view")}
               >
                 <FiEye size={16} />
               </button>
               <button
                 onClick={() => handleDeleteClick(params.data)}
                 className="p-2 text-red-600 hover:bg-red-50 rounded-full transition-colors"
-                title="Delete"
+                title={t("delete")}
               >
                 <FiTrash2 size={16} />
               </button>
@@ -164,16 +176,16 @@ export function AdminOrdersTable({ initialData, loading }: AdminOrdersTableProps
         },
       },
     ],
-    []
+    [locale, t]
   );
 
   return (
     <div className="w-full bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
       <div className="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h2 className="text-lg font-bold text-slate-800">All Orders</h2>
+        <h2 className="text-lg font-bold text-slate-800">{t("title")}</h2>
         <input
           type="text"
-          placeholder="Search orders..."
+          placeholder={t("searchPlaceholder")}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="px-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary w-full sm:w-64"
@@ -201,10 +213,10 @@ export function AdminOrdersTable({ initialData, loading }: AdminOrdersTableProps
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}
-        title="Delete Order"
-        message={`Are you sure you want to delete this order? This action cannot be undone.`}
-        confirmText="Delete"
-        cancelText="Cancel"
+        title={t("deleteModal.title")}
+        message={t("deleteModal.message")}
+        confirmText={t("deleteModal.confirm")}
+        cancelText={t("deleteModal.cancel")}
       />
     </div>
   );

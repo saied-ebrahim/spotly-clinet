@@ -6,8 +6,10 @@ import { toast } from "react-toastify";
 import { AdminUsersTable } from "@/components/Dashboard/Users/AdminUsersTable";
 import { User, UsersResponse, UserPagination } from "@/types/userTypes";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export default function AdminUsersPage() {
+  const t = useTranslations("dashboardAdmin.users");
   const [users, setUsers] = useState<User[]>([]);
   const [pagination, setPagination] = useState<UserPagination | null>(null);
   const [loading, setLoading] = useState(true);
@@ -41,11 +43,11 @@ export default function AdminUsersPage() {
         setUsers(response.data.data.users);
         setPagination(response.data.pagination);
       } else {
-        toast.error("Failed to fetch users");
+        toast.error(t("fetchError"));
       }
     } catch (error) {
       console.error("Error fetching users:", error);
-      toast.error("An error occurred while fetching users");
+      toast.error(t("generalError"));
     } finally {
       setLoading(false);
     }
@@ -60,13 +62,13 @@ export default function AdminUsersPage() {
     <div className="h-[calc(100vh-100px)] p-6">
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">User Management</h1>
-          <p className="text-slate-500">View and manage all registered users</p>
+          <h1 className="text-2xl font-bold text-slate-800">{t("title")}</h1>
+          <p className="text-slate-500">{t("subtitle")}</p>
         </div>
         <div className="w-full sm:w-64">
           <input
             type="text"
-            placeholder="Search by name..."
+            placeholder={t("searchPlaceholder")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none"

@@ -6,6 +6,7 @@ import { EventDocument } from "@/types/eventInterface";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { useTranslations } from "next-intl";
 
 // Define pagination interface based on API response structure
 interface Pagination {
@@ -25,6 +26,7 @@ interface EventsResponse {
 }
 
 export default function AdminEventsPage() {
+  const t = useTranslations("dashboardAdmin.events");
   const [events, setEvents] = useState<EventDocument[]>([]);
   const [pagination, setPagination] = useState<Pagination | null>(null);
   const [loading, setLoading] = useState(true);
@@ -59,11 +61,11 @@ export default function AdminEventsPage() {
         setEvents(response.data.data.events);
         setPagination(response.data.pagination);
       } else {
-        toast.error("Failed to fetch events");
+        toast.error(t("fetchError"));
       }
     } catch (error) {
       console.error("Error fetching events:", error);
-      toast.error("An error occurred while fetching events");
+      toast.error(t("generalError"));
     } finally {
       setLoading(false);
     }
@@ -77,19 +79,25 @@ export default function AdminEventsPage() {
     <div className="h-[calc(100vh-100px)] p-6">
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-800">
-            Events Management
-          </h1>
-          <p className="text-slate-500">View and manage all events</p>
+          <h1 className="text-2xl font-bold text-slate-800">{t("title")}</h1>
+          <p className="text-slate-500">{t("subtitle")}</p>
         </div>
-        <div className="w-full sm:w-64">
+        <div className="w-full sm:w-64 relative">
           <input
             type="text"
-            placeholder="Search events..."
+            placeholder={t("searchPlaceholder")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none"
+            className="w-full px-4 py-2 pr-10 rounded-lg border border-slate-300 focus:ring-2 focus:ring-brand-primary focus:border-transparent outline-none"
           />
+          {search && (
+            <button
+              onClick={() => setSearch("")}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600"
+            >
+              ✕
+            </button>
+          )}
         </div>
       </div>
 

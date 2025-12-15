@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import DataTable from "@/components/Custom/DataTable";
 import { ColDef, ValueFormatterParams } from "ag-grid-community";
 import { FiTrash2, FiEdit, FiPlus } from "react-icons/fi";
@@ -9,6 +10,7 @@ import { CategoryModal } from "./CategoryModal";
 import axiosInstance from "@/lib/axios";
 import Image from "next/image";
 import { CategoryDocument } from "@/types/CategoryInterface";
+import { useLocale } from "next-intl";
 
 interface AdminCategoriesTableProps {
   initialData: CategoryDocument[];
@@ -17,6 +19,7 @@ interface AdminCategoriesTableProps {
 export function AdminCategoriesTable({
   initialData,
 }: AdminCategoriesTableProps) {
+  const t = useTranslations('dashboardAdmin.categories');
   const [rowData, setRowData] = useState<CategoryDocument[]>(initialData);
   const [searchTerm, setSearchTerm] = useState("");
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -74,12 +77,14 @@ export function AdminCategoriesTable({
     });
   };
 
+  const locale = useLocale();
+
   const columnDefs: ColDef<CategoryDocument>[] = useMemo(
     () => [
-      { field: "_id", headerName: "ID", width: 90, sortable: true, hide: true },
+      { field: "_id", headerName: t('id'), width: 90, sortable: true, hide: true },
       {
         field: "image",
-        headerName: "Image",
+        headerName: t('image'),
         width: 100,
         sortable: false,
         cellRenderer: (params: { data: CategoryDocument }) => {
@@ -98,7 +103,7 @@ export function AdminCategoriesTable({
       },
       {
         field: "name",
-        headerName: "Name",
+        headerName: t('name'),
         flex: 1,
         minWidth: 150,
         sortable: true,
@@ -106,7 +111,7 @@ export function AdminCategoriesTable({
       },
       {
         field: "description",
-        headerName: "Description",
+        headerName: t('description'),
         flex: 2,
         minWidth: 200,
         sortable: true,
@@ -114,7 +119,7 @@ export function AdminCategoriesTable({
       },
       {
         field: "createdAt",
-        headerName: "Created At",
+        headerName: t('createdAt'),
         flex: 1,
         minWidth: 150,
         sortable: true,
@@ -125,23 +130,27 @@ export function AdminCategoriesTable({
         },
       },
       {
-        headerName: "Actions",
+        headerName: t('actions'),
         width: 100,
-        pinned: "right",
+        pinned: locale === "ar" ? "left" : "right",
         cellRenderer: (params: { data: CategoryDocument }) => {
           return (
-            <div className="flex items-center gap-2 h-full">
+            <div
+              className={`flex items-center gap-2 h-full ${
+                locale === "ar" ? "flex-row-reverse" : ""
+              }`}
+            >
               <button
                 onClick={() => handleEditClick(params.data)}
                 className="p-2 text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
-                title="Edit"
+                title={t('edit')}
               >
                 <FiEdit size={16} />
               </button>
               <button
                 onClick={() => handleDeleteClick(params.data)}
                 className="p-2 text-red-600 hover:bg-red-50 rounded-full transition-colors"
-                title="Delete"
+                title={t('delete')}
               >
                 <FiTrash2 size={16} />
               </button>
@@ -150,18 +159,18 @@ export function AdminCategoriesTable({
         },
       },
     ],
-    []
+    [locale, t]
   );
 
   return (
     <div className="w-full bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
       <div className="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h2 className="text-lg font-bold text-slate-800">All Categories</h2>
+        <h2 className="text-lg font-bold text-slate-800">{t('allCategories')}</h2>
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <div className="relative flex-1 sm:flex-none">
             <input
               type="text"
-              placeholder="Search categories..."
+              placeholder={t('searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="px-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary w-full sm:w-64"
@@ -172,7 +181,7 @@ export function AdminCategoriesTable({
             className="flex items-center gap-2 px-4 py-2 bg-brand-primary text-white rounded-lg text-sm font-medium hover:bg-brand-primary/90 transition-colors whitespace-nowrap"
           >
             <FiPlus size={16} />
-            <span>Create Category</span>
+            <span>{t('createCategory')}</span>
           </button>
         </div>
       </div>
@@ -198,10 +207,10 @@ export function AdminCategoriesTable({
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         onConfirm={handleConfirmDelete}
-        title="Delete Category"
-        message={`Are you sure you want to delete "${selectedCategory?.name}"? This action cannot be undone.`}
-        confirmText="Delete"
-        cancelText="Cancel"
+        title={t('deleteCategory')}
+        message={t('deleteMessage').replace('{name}', selectedCategory?.name || '')}
+        confirmText={t('confirmDelete')}
+        cancelText={t('cancel')}
       />
     </div>
   );
