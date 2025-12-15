@@ -6,31 +6,36 @@ import { EventDocument } from "@/types/eventInterface";
 import EventCard from "@/components/ui/home/EventCard";
 
 const RecommendationList = ({ event }: { event: EventDocument }) => {
-  // const [events, setEvents] = useState<EventObject[]>([]);
+
   const [currentPage, setCurrentPage] = useState(0);
-  // Default to 3, will be updated by useEffect on mount
+
   const [eventsPerPage, setEventsPerPage] = useState(3);
-  // const filterEvents = useCallback(
-  //   (e: EventObject) => {
-  //     return e.organizer === event.organizer;
-  //   },
-  //   [event.organizer] // Only recreate this function if the organizer changes
-  // );
-  // const [items] = useFilter("http://localhost:8080/events", filterEvents);
+ 
   const [recs, setRecs] = useState<EventDocument[]>([]);
+ 
   useEffect(() => {
-    axiosInstance.get("/events").then((res) => {
-      // console.log(res);
-      const myRecs = res.data.data.events.filter((e: EventDocument) => {
-        return (
-          e.organizer.firstName === event.organizer.firstName &&
-          e.organizer.lastName === event.organizer.lastName
-        );
-      });
-      // console.log(myRecs);
-      setRecs(myRecs);
+  // Guard clause: ensure event and categories exist
+  if (!event || !event.category) return;
+
+  axiosInstance.get("/events").then((res) => {
+    const myRecs = res.data.data.events.filter((e: EventDocument) => {
+      // 1. Exclude the current event
+      if (e._id === event._id) return false;
+
+      // 2. Compare IDs:
+      // Check if ANY category in the fetched event (e) matches ANY category in the current event
+      const hasMatchingCategory = e.category.some((fetchedCat) => 
+        event.category.some((currentCat) => currentCat._id === fetchedCat._id)
+      );
+
+      return hasMatchingCategory;
     });
-  }, [event.organizer.firstName, event.organizer.lastName]);
+
+    setRecs(myRecs);
+  });
+  
+  // Update dependency to watch the ID specifically, or the category array length
+}, [event._id, event.category]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -73,8 +78,9 @@ const RecommendationList = ({ event }: { event: EventDocument }) => {
   );
   // console.log(recs);
   return (
+    
     <section className="md:py-16 max-w-7xl mx-auto  sm:px-6 lg:px-8">
-      <div className="w-full py-12 pt-0 sm:pb-0">
+      {recs.length > 0 ? <div className="w-full py-12 pt-0 sm:pb-0">
         <div className="max-w-7xl mx-auto p-0 md:p-3">
           <div className="flex flex-wrap justify-between items-center mb-8">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 mb-5 sm:mb-0">
@@ -165,7 +171,8 @@ const RecommendationList = ({ event }: { event: EventDocument }) => {
             </div>
           </div>
         </div>
-      </div>
+      </div> : <h1 className="text-2xl text-center font-bold text-gray-900">No recommendations found</h1>}
+      
     </section>
   );
 };

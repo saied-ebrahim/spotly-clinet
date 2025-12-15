@@ -138,6 +138,13 @@ export default function Header() {
     { label: "Contact", href: "/contact" },
   ];
 
+  const getDashboardLink = () => {
+    if (user?.role === "Admin" || user?.role === "admin") {
+      return "/dashboard/admin";
+    }
+    return "/dashboard/organizer";
+  };
+
   return (
     <header
       className={`sticky top-0 z-50 bg-[#181828] text-white shadow-lg ${
@@ -202,7 +209,7 @@ export default function Header() {
               {dropdownOpen && (
                 <div className="absolute right-0 mt-3 w-48 bg-white text-[#181828] rounded-xl shadow-2xl py-2 animate-fadeIn border border-gray-100 overflow-hidden">
                   <Link
-                    href="/dashboard/organizer"
+                    href={getDashboardLink()}
                     className="block px-4 py-2.5 hover:bg-gray-50 transition-colors font-medium"
                     onClick={() => setDropdownOpen(false)}
                   >
@@ -214,6 +221,13 @@ export default function Header() {
                     onClick={() => setDropdownOpen(false)}
                   >
                     Profile
+                  </Link>
+                  <Link
+                    href="/my-orders"
+                    className="block px-4 py-2.5 hover:bg-gray-50 transition-colors font-medium"
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    my-orders
                   </Link>
                   <div className="h-px bg-gray-100 my-1"></div>
                   <button
@@ -287,7 +301,7 @@ export default function Header() {
                 <span className="font-bold">{user.name}</span>
               </div>
               <Link
-                href="/dashboard"
+                href={getDashboardLink()}
                 className="block py-2 hover:text-green-300 transition"
                 onClick={() => setOpen(false)}
               >

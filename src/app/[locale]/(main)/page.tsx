@@ -1,14 +1,12 @@
 "use client";
-// import Home from "@/components/homePage/home";
-// import HeroSection from "@/components/homePageComponent/HeroSection";
+
 import Categories from "@/components/ui/home/Caregories";
-import OnlineEvents from "@/components/ui/home/OnlineEvents";
-import PopularEvents from "@/components/ui/home/PopularEvents";
-import EgyptTopEvents from "@/components/ui/home/EgyptTopEvents";
+
 import Link from "next/link";
 
 import { IoSparkles } from "react-icons/io5";
 import SearchEvent from "@/components/ui/home/SearchEvent";
+import ParentComp from "@/components/ui/home/ParentComp";
 
 function Page() {
   return (
@@ -37,11 +35,7 @@ function Page() {
         </div>
 
         <Categories />
-
-        <PopularEvents />
-
-        <OnlineEvents />
-        <EgyptTopEvents />
+        <ParentComp/>
 
         <section className="py-16 bg-yellow-400">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
