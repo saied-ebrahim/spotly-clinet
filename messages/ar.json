@@ -694,6 +694,18 @@
     "backToHome": "العودة إلى الرئيسية",
     "needHelp": "تحتاج مساعدة؟ اتصل بالدعم →",
     "simpleMessage": "الصفحة غير موجودة 404 :("
+  },
+  "eventDetails": {
+    "eventNotFound": "الفعالية غير موجودة",
+    "goBackHome": "العودة إلى الرئيسية",
+    "dateAndTime": "التاريخ والوقت",
+    "location": "الموقع",
+    "onlineEvent": "فعالية إلكترونية",
+    "onlineEventDescription": "ستعقد هذه الفعالية عبر الإنترنت",
+    "openInGoogleMaps": "فتح في خرائط جوجل",
+    "eventDescription": "وصف الفعالية",
+    "tags": "العلامات",
+    "noTags": "لا توجد علامات"
   }
 }
 
