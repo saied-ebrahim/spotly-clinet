@@ -2,6 +2,7 @@
 
 import { formatPrice } from "@/utils/details/formatting";
 import { FaTicketAlt } from "react-icons/fa";
+import { TfiFaceSad } from "react-icons/tfi";
 import { useState } from "react";
 import TicketsModal from "@/components/Custom/TicketsModal";
 import { EventDocument } from "@/types/eventInterface";
@@ -33,10 +34,11 @@ export default function TicketSidebar({ event }: { event: EventDocument }) {
 
           <button
             onClick={() => setIsModalOpen(true)}
-            className="w-full py-3.5 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold rounded-xl shadow-sm hover:shadow-md transition-all active:scale-[0.98] flex justify-center items-center gap-2"
+            disabled={event.analytics?.ticketsAvailable === 0}
+            className={`w-full py-3.5  text-gray-900 font-bold rounded-xl shadow-sm hover:shadow-md ${event.analytics?.ticketsAvailable === 0 ? "" : "transition-all active:scale-[0.98]"} flex justify-center items-center gap-2 ${event.analytics?.ticketsAvailable === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-yellow-400 hover:bg-yellow-500"}`}
           >
-            <FaTicketAlt className="-rotate-45" />
-            {event.ticketType.price > 0 ? "Buy Tickets" : "Get Tickets"}
+           {event.analytics?.ticketsAvailable === 0 ? <TfiFaceSad className="" />: <FaTicketAlt className="-rotate-45" /> }
+            {event.analytics?.ticketsAvailable === 0 ? "Tickets are sold out" : event.ticketType.price > 0 ? "Buy Tickets" : "Get Tickets"}
           </button>
           <TicketsModal
             isOpen={isModalOpen}
