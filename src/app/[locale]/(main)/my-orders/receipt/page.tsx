@@ -20,7 +20,6 @@ interface InvoiceData {
   fees: number;
   discount: number;
   purchaserName: string;
-  
 }
 
 async function fetchInvoiceData(
@@ -31,7 +30,7 @@ async function fetchInvoiceData(
     // Get base URL - handle both relative and absolute URLs
     // Fetch using native fetch to avoid axios url.parse deprecation
     let baseURL = process.env.NEXT_PUBLIC_API_BASE_URL || "/api/v1";
-    
+
     // If baseURL is relative, we need to construct full URL for SSR
     if (baseURL.startsWith("/")) {
       // For SSR, we need the full URL
@@ -39,7 +38,7 @@ async function fetchInvoiceData(
       const host = process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL;
       baseURL = `${protocol}://${host?.replace(/^https?:\/\//, "")}${baseURL}`;
     }
-    
+
     // Remove trailing slash if present
     const cleanBaseURL = baseURL.replace(/\/$/, "");
     const url = `${cleanBaseURL}/tickets/order/${invoiceId}`;
@@ -61,7 +60,6 @@ async function fetchInvoiceData(
       headers,
       signal: controller.signal,
 
-
       cache: "no-cache",
     });
 
@@ -73,9 +71,13 @@ async function fetchInvoiceData(
       } else if (response.status === 404) {
         throw new Error("Invoice not found");
       } else if (response.status === 403) {
-        throw new Error("Access denied: You don't have permission to view this invoice");
+        throw new Error(
+          "Access denied: You don't have permission to view this invoice"
+        );
       }
-      throw new Error(`Failed to fetch invoice: ${response.status} ${response.statusText}`);
+      throw new Error(
+        `Failed to fetch invoice: ${response.status} ${response.statusText}`
+      );
     }
 
     const responseData: {
@@ -95,8 +97,14 @@ async function fetchInvoiceData(
     } = await response.json();
 
     const data = responseData.data;
-    
-    if (!data || !data.order || !data.checkout || !data.tickets || data.tickets.length === 0) {
+
+    if (
+      !data ||
+      !data.order ||
+      !data.checkout ||
+      !data.tickets ||
+      data.tickets.length === 0
+    ) {
       throw new Error("Invalid invoice data");
     }
 
@@ -124,7 +132,7 @@ async function fetchInvoiceData(
       });
       throw error;
     }
-    
+
     console.error("Error fetching invoice:", error);
     throw error instanceof Error ? error : new Error("Failed to fetch invoice");
   }
@@ -133,7 +141,7 @@ async function fetchInvoiceData(
 async function getAuthToken(): Promise<string | undefined> {
   try {
     const cookieStore = await cookies();
-    const tokenCookie = cookieStore.get("token");
+    const tokenCookie = cookieStore.get("sub");
 
     if (!tokenCookie?.value) {
       return undefined;

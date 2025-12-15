@@ -14,6 +14,7 @@ import {
   FiPlus,
   FiLogOut,
   FiUser,
+  FiMaximize,
 } from "react-icons/fi";
 import LinkTo from "../Global/LinkTo";
 import SpotlyLogo from "../Layout/SpotlyLogo";
@@ -27,7 +28,7 @@ export function DashboardHeader() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  
+
   const handleCreateSuccess = () => {
     // Refresh logic here if needed, e.g., refetch events
     console.log("Event created successfully");
@@ -35,7 +36,7 @@ export function DashboardHeader() {
 
   useEffect(() => {
     const checkSession = async () => {
-      const cookie = Cookies.get("token");
+      const cookie = Cookies.get("sub");
       let userData = null;
       let token = null;
 
@@ -123,9 +124,18 @@ export function DashboardHeader() {
         </div>
 
         <div className="flex items-center gap-4">
+          <Link
+            href="/ticket/scan"
+            className="flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          >
+            <FiMaximize />
+            Scan Ticket
+          </Link>
+
           <button
-          onClick={() => setIsCreateModalOpen(true)}
-          className="flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
+            onClick={() => setIsCreateModalOpen(true)}
+            className="flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+          >
             <FiPlus />
             Create
           </button>
