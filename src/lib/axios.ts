@@ -3,12 +3,14 @@ import Cookies from "js-cookie";
 import { decryptData, encryptData } from "@/shared/encryption";
 import { getDeviceID } from "@/shared/device";
 import { useLoaderStore } from "@/store/useLoaderStore";
+import { authService } from "@/services/authService";
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL || "/api/v1",
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 // Extend AxiosRequestConfig to include our custom property
@@ -20,7 +22,7 @@ declare module "axios" {
 
 axiosInstance.interceptors.request.use(
   (config) => {
-    const cookie = Cookies.get("token");
+    const cookie = Cookies.get("sub");
     if (cookie) {
       const decrypted = decryptData(cookie) as {
         token?: string;
@@ -48,6 +50,24 @@ axiosInstance.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+
+let isRefreshing = false;
+let failedQueue: {
+  resolve: (token: string) => void;
+  reject: (error: unknown) => void;
+}[] = [];
+
+const processQueue = (error: unknown, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token!);
+    }
+  });
+
+  failedQueue = [];
+};
 
 axiosInstance.interceptors.response.use(
   (response) => {
@@ -90,55 +110,71 @@ axiosInstance.interceptors.response.use(
       !originalRequest.url?.includes("/auth/login") &&
       !originalRequest.url?.includes("/auth/logout")
     ) {
+      if (isRefreshing) {
+        return new Promise(function (resolve, reject) {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            originalRequest.headers["Authorization"] = "Bearer " + token;
+            return axiosInstance(originalRequest);
+          })
+          .catch((err) => {
+            return Promise.reject(err);
+          });
+      }
+
       originalRequest._retry = true;
+      isRefreshing = true;
 
       try {
         const deviceID = await getDeviceID();
-        const cookie = Cookies.get("token");
-        let token = "";
-        if (cookie) {
-          const decrypted = cookie
-            ? (decryptData(cookie) as { token?: string })
-            : {};
-          token = decrypted?.token || "";
-        }
+        const refreshResponse = await authService.refreshToken(deviceID);
 
-        const response = await axios.post(
-          "/api/v1/auth/refreshToken",
-          {
-            deviceID,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        // Handle different response structures based on what authService returns
+        const newToken =
+          refreshResponse?.token ||
+          refreshResponse?.data?.token ||
+          refreshResponse?.accessToken;
+
+        if (newToken) {
+          const cookie = Cookies.get("sub");
+          // If we had a previous cookie, try to preserve other data, otherwise start fresh
+          let previousData = {};
+          try {
+            if (cookie) {
+              previousData = decryptData(cookie) as Record<string, unknown>;
+            }
+          } catch (e) {
+            // ignore decryption errors on old cookie
           }
-        );
-
-        if (response.data?.token) {
-          const cookie = Cookies.get("token");
-          const decrypted = cookie
-            ? (decryptData(cookie) as {
-                token?: string;
-                deviceID?: string;
-                user?: unknown;
-              })
-            : {};
 
           const newEncryptedData = encryptData({
-            ...decrypted,
-            token: response.data.token,
+            ...previousData,
+            token: newToken,
+            deviceID, // Ensure deviceID is always present
           });
 
-          Cookies.set("token", newEncryptedData, { path: "/" });
+          Cookies.set("sub", newEncryptedData, {
+            path: "/",
+            secure: false,
+            sameSite: "Lax",
+          });
 
-          originalRequest.headers.Authorization = `Bearer ${response.data.token}`;
+          axiosInstance.defaults.headers.common["Authorization"] =
+            "Bearer " + newToken;
+          processQueue(null, newToken);
+
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
           return axiosInstance(originalRequest);
         }
       } catch (refreshError) {
-        Cookies.remove("token");
-        // window.location.href = "/auth/login";
+        processQueue(refreshError, null);
+        Cookies.remove("sub");
+
+        window.location.href = "/auth/login";
         return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
       }
     }
     return Promise.reject(error);

@@ -21,15 +21,18 @@ async function fetchTickets(
   try {
     // Get base URL - handle both relative and absolute URLs
     let baseURL = process.env.NEXT_PUBLIC_API_BASE_URL || "/api/v1";
-    
+
     // If baseURL is relative, we need to construct full URL for SSR
     if (baseURL.startsWith("/")) {
       // For SSR, we need the full URL
       const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
-      const host = process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL || "http://localhost:8000";
+      const host =
+        process.env.NEXT_PUBLIC_APP_URL ||
+        process.env.VERCEL_URL ||
+        "http://localhost:8000";
       baseURL = `${protocol}://${host.replace(/^https?:\/\//, "")}${baseURL}`;
     }
-    
+
     // Remove trailing slash if present
     const cleanBaseURL = baseURL.replace(/\/$/, "");
     const url = `${cleanBaseURL}/tickets/order/${invoiceId}`;
@@ -45,7 +48,7 @@ async function fetchTickets(
     const response = await axios.get<{
       status?: string;
       success?: boolean;
-      data?: { 
+      data?: {
         tickets?: Ticket[];
         order?: unknown;
         checkout?: unknown;
@@ -62,19 +65,25 @@ async function fetchTickets(
     let tickets: Ticket[] | undefined;
 
     // Check response.data.data.tickets (most common structure)
-    if (response.data.data?.tickets && Array.isArray(response.data.data.tickets)) {
+    if (
+      response.data.data?.tickets &&
+      Array.isArray(response.data.data.tickets)
+    ) {
       tickets = response.data.data.tickets;
-    } 
+    }
     // Check response.data.tickets
     else if (Array.isArray(response.data.tickets)) {
       tickets = response.data.tickets;
-    } 
+    }
     // Check if data itself is an array
     else if (Array.isArray(response.data.data)) {
       tickets = response.data.data;
     }
     // Check status-based response
-    else if (response.data.status === "success" && response.data.data?.tickets) {
+    else if (
+      response.data.status === "success" &&
+      response.data.data?.tickets
+    ) {
       tickets = response.data.data.tickets;
     }
 
@@ -101,16 +110,18 @@ async function fetchTickets(
         data: error.response?.data,
         url: error.config?.url,
       });
-      
+
       if (error.response?.status === 401) {
         throw new Error("Unauthorized: Please login to view tickets");
       } else if (error.response?.status === 404) {
         throw new Error("Order not found");
       } else if (error.response?.status === 403) {
-        throw new Error("Access denied: You don't have permission to view these tickets");
+        throw new Error(
+          "Access denied: You don't have permission to view these tickets"
+        );
       }
     }
-    
+
     console.error("Error fetching tickets:", error);
     throw error instanceof Error ? error : new Error("Failed to fetch tickets");
   }
@@ -141,7 +152,7 @@ function transformTicketsToDisplayData(tickets: Ticket[]): TicketDisplayData[] {
 async function getAuthToken(): Promise<string | undefined> {
   try {
     const cookieStore = await cookies();
-    const tokenCookie = cookieStore.get("token");
+    const tokenCookie = cookieStore.get("sub");
 
     if (!tokenCookie?.value) {
       return undefined;

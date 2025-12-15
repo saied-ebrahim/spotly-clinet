@@ -24,7 +24,7 @@ export default function Header() {
 
   useEffect(() => {
     const checkSession = async () => {
-      const cookie = Cookies.get("token");
+      const cookie = Cookies.get("sub");
       let userData = null;
       let token = null;
       let storedDeviceID = "";
@@ -109,7 +109,7 @@ export default function Header() {
   const handleLogout = async () => {
     try {
       let deviceID = "";
-      const cookie = Cookies.get("token");
+      const cookie = Cookies.get("sub");
       if (cookie) {
         const decrypted = decryptData(cookie) as { deviceID?: string };
         deviceID = decrypted.deviceID || "";

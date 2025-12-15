@@ -19,7 +19,7 @@ export default function OrganizerOrdersPage() {
       try {
         setLoading(true);
         // Get user ID from cookie
-        const cookie = Cookies.get("token");
+        const cookie = Cookies.get("sub");
         if (!cookie) {
           throw new Error("No auth token found");
         }

@@ -90,11 +90,13 @@ const FilterSection = ({
 interface EventFiltersProps {
   onFilterChange: (category: string, value: string, isChecked: boolean) => void;
   selectedFilters?: Record<string, string[]>;
+  onReset: () => void;
 }
 
 export function EventFilters({
   onFilterChange,
   selectedFilters = {},
+  onReset,
 }: EventFiltersProps) {
   const t = useTranslations("events");
   const [categories, setCategories] = useState<string[]>([]);
@@ -132,7 +134,13 @@ export function EventFilters({
   return (
     <div className="w-64 shrink-0 pr-8 hidden lg:block">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-bold text-slate-900">{t("filters")}</h2>
+        <h2 className="text-lg font-bold text-slate-900">Filters</h2>
+        <button
+          onClick={onReset}
+          className="text-sm font-medium text-brand-primary hover:underline bg-transparent border-none cursor-pointer"
+        >
+          Reset
+        </button>
       </div>
 
       <FilterSection
