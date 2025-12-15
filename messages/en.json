@@ -713,6 +713,18 @@
     "soldOut": "Sold Out",
     "buyTickets": "Buy Tickets",
     "getTickets": "Get Tickets"
+  },
+  "ticketsModal": {
+    "selectTickets": "Select Tickets",
+    "ticketTypes": "Ticket Types",
+    "quantity": "Quantity",
+    "standardTicket": "Standard Ticket",
+    "ticketsLeft": "Tickets Left",
+    "qty": "Qty",
+    "total": "Total",
+    "free": "Free",
+    "proceed": "Proceed",
+    "loading": "Loading..."
   }
 }
 
