@@ -35,7 +35,6 @@ export default function TicketScanPage() {
       // Example: const res = await fetch('/api/validate', { body: JSON.stringify({ code }) })
 
       const res = await axiosInstance.get(`/tickets/verify/${code}`);
-      console.log(res);
       setTickerData(res.data.data);
       if (res.data?.success === false || res.data?.statusCode === 401) {
         setValidationStatus("invalid");
@@ -62,7 +61,6 @@ export default function TicketScanPage() {
     if (codeReaderRef.current) {
       codeReaderRef.current.reset();
     }
-    console.log(code);
 
     setScanResult(code);
     validateTicket(code);
@@ -119,7 +117,7 @@ export default function TicketScanPage() {
     <div className="min-h-screen bg-gray-50 flex flex-col items-center py-10 px-4">
       {/* Header */}
       <div className="w-full max-w-md flex items-center justify-between mb-8">
-        <Link href="/dashboard" className="text-gray-600 hover:text-gray-900">
+        <Link href="/dashboard/organizer" className="text-gray-600 hover:text-gray-900">
           <FaArrowLeft size={20} />
         </Link>
         <h1 className="text-xl font-bold text-gray-800">Scan Ticket</h1>

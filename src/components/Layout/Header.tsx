@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { usePathname } from "next/navigation";
 import SpotlyLogo from "@/components/Layout/SpotlyLogo";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -15,6 +15,7 @@ import { parseJwt } from "@/shared/jwt";
 export default function Header() {
   const pathname = usePathname();
   const locale = useLocale();
+  const t = useTranslations("header");
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<{ name?: string; role?: string } | null>(
     null
@@ -23,7 +24,7 @@ export default function Header() {
 
   useEffect(() => {
     const checkSession = async () => {
-      const cookie = Cookies.get("token");
+      const cookie = Cookies.get("sub");
       let userData = null;
       let token = null;
       let storedDeviceID = "";
@@ -108,7 +109,7 @@ export default function Header() {
   const handleLogout = async () => {
     try {
       let deviceID = "";
-      const cookie = Cookies.get("token");
+      const cookie = Cookies.get("sub");
       if (cookie) {
         const decrypted = decryptData(cookie) as { deviceID?: string };
         deviceID = decrypted.deviceID || "";
@@ -131,11 +132,11 @@ export default function Header() {
   };
 
   const nav = [
-    { label: "Home", href: "/" },
-    { label: "Events", href: "/events" },
-    { label: "Favorites", href: "/favorites" },
-    { label: "About", href: "/about" },
-    { label: "Contact", href: "/contact" },
+    { label: t("home"), href: "/" },
+    { label: t("events"), href: "/events" },
+    { label: t("favorites"), href: "/favorites" },
+    { label: t("about"), href: "/about" },
+    { label: t("contact"), href: "/contact" },
   ];
 
   const getDashboardLink = () => {
@@ -213,28 +214,28 @@ export default function Header() {
                     className="block px-4 py-2.5 hover:bg-gray-50 transition-colors font-medium"
                     onClick={() => setDropdownOpen(false)}
                   >
-                    Dashboard
+                    {t("dashboard")}
                   </Link>
                   <Link
                     href="/auth/Profile"
                     className="block px-4 py-2.5 hover:bg-gray-50 transition-colors font-medium"
                     onClick={() => setDropdownOpen(false)}
                   >
-                    Profile
+                    {t("profile")}
                   </Link>
                   <Link
                     href="/my-orders"
                     className="block px-4 py-2.5 hover:bg-gray-50 transition-colors font-medium"
                     onClick={() => setDropdownOpen(false)}
                   >
-                    my-orders
+                    {t("myOrders")}
                   </Link>
                   <div className="h-px bg-gray-100 my-1"></div>
                   <button
                     onClick={handleLogout}
                     className="block w-full text-left px-4 py-2.5 hover:bg-red-50 text-red-600 transition-colors font-medium"
                   >
-                    Logout
+                    {t("logout")}
                   </button>
                 </div>
               )}
@@ -245,14 +246,14 @@ export default function Header() {
                 href="/auth/login"
                 className="hover:text-green-300 transition"
               >
-                Login
+                {t("login")}
               </Link>
 
               <Link
                 href="/auth/register"
                 className="px-4 py-2 bg-yellow-400 text-black rounded-xl font-semibold shadow hover:scale-105 transition text-center"
               >
-                Sign Up
+                {t("signUp")}
               </Link>
             </>
           )}
@@ -305,20 +306,20 @@ export default function Header() {
                 className="block py-2 hover:text-green-300 transition"
                 onClick={() => setOpen(false)}
               >
-                Dashboard
+                {t("dashboard")}
               </Link>
               <Link
                 href="/profile"
                 className="block py-2 hover:text-green-300 transition"
                 onClick={() => setOpen(false)}
               >
-                Profile
+                {t("profile")}
               </Link>
               <button
                 onClick={handleLogout}
                 className="block w-full text-left py-2 text-red-400 hover:text-red-300 transition"
               >
-                Logout
+                {t("logout")}
               </button>
             </div>
           ) : (
@@ -329,7 +330,7 @@ export default function Header() {
                 className="block hover:text-green-300 transition"
                 onClick={() => setOpen(false)}
               >
-                Login
+                {t("login")}
               </Link>
 
               {/* SIGN UP */}
@@ -337,7 +338,7 @@ export default function Header() {
                 href="/auth/register"
                 className="w-full py-2 bg-yellow-400 text-black rounded-xl font-semibold shadow text-center block"
               >
-                Sign Up
+                {t("signUp")}
               </Link>
             </>
           )}

@@ -93,7 +93,7 @@ export default function AttendeeRegisterForm() {
     country: t("auth.country"),
     password: t("auth.password"),
     confirmPassword: t("auth.confirmPassword"),
-    register: t("auth.register"),
+    register: t("auth.register.title"),
   };
 
   const country = useWatch({
@@ -314,7 +314,7 @@ export default function AttendeeRegisterForm() {
         <div className="flex w-full items-center justify-between mt-8 pt-6 border-t border-gray-200">
           <button
             type="button"
-            onClick={() => router.push("/auth/register")}
+            onClick={() => router.push("/auth/login")}
             className={`flex items-center gap-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${"bg-white text-gray-700 hover:bg-gray-50 border border-gray-200/60"}`}
           >
             <FaArrowLeft className={`${locale === "ar" ? "rotate-180" : ""}`} />

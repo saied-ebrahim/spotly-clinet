@@ -22,7 +22,9 @@ const useEventStore = create<EventState>((set) => ({
 
     set({ isLoading: true, error: null });
     try {
-      const response = await axiosInstance.get("/events");
+      const response = await axiosInstance.get("/events", {
+        skipGlobalLoading: true,
+      });
       // Adjust this based on your API response structure: res.data.data.events
       const eventsData = response.data.data.events;
       set({ events: eventsData, isLoading: false });

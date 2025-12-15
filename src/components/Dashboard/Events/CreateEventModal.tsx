@@ -138,7 +138,7 @@ export function CreateEventModal({
   }, []);
 
   const fetchOrganizerInfo = useCallback(() => {
-    const cookie = Cookies.get("token");
+    const cookie = Cookies.get("sub");
     if (cookie) {
       try {
         const decrypted = decryptData(cookie) as { token?: string };

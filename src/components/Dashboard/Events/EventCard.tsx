@@ -5,12 +5,39 @@ import { EventDocument } from "@/types/eventInterface";
 import { formatDate } from "@/utils/details/formatting";
 import useFavoriteStore from "@/hooks/useFavorateStore";
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 
 interface EventCardProps {
   event: EventDocument;
 }
 
+const colors = [
+  "bg-red-500 text-white",
+  "bg-orange-500 text-white",
+  "bg-green-600 text-white",
+  "bg-teal-500 text-white",
+  "bg-blue-500 text-white",
+  "bg-indigo-500 text-white",
+  "bg-purple-500 text-white",
+  "bg-pink-500 text-white",
+
+  "bg-slate-800 text-white",
+  "bg-zinc-900 text-white",
+  "bg-neutral-800 text-white",
+  "bg-stone-800 text-white",
+];
+
+export const getCategoryColor = (category: string) => {
+  let hash = 0;
+  for (let i = 0; i < category.length; i++) {
+    hash = category.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const index = Math.abs(hash % colors.length);
+  return colors[index];
+};
+
 export function EventCard({ event }: EventCardProps) {
+  const t = useTranslations("events");
   const router = useRouter();
   const [isAnimating, setIsAnimating] = useState(false);
   const { toggleFavorite, favorites } = useFavoriteStore();
@@ -57,7 +84,11 @@ export function EventCard({ event }: EventCardProps) {
 
         {/* Category Badge */}
         {event.category?.[0]?.name && (
-          <div className="absolute bottom-2 left-2 bg-yellow-400 text-slate-900 text-xs font-bold px-2 py-1 rounded">
+          <div
+            className={`absolute bottom-2 left-2 text-[10px] uppercase font-semibold tracking-wider px-2 py-1 rounded-sm ${getCategoryColor(
+              event.category[0].name
+            )} text-white bg-opacity-90`}
+          >
             {event.category[0].name}
           </div>
         )}
@@ -79,7 +110,7 @@ export function EventCard({ event }: EventCardProps) {
                 : "hover:scale-110 active:scale-95"
             }
           `}
-          aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+          aria-label={isFavorite ? t("removeFromFavorites") : t("addToFavorites")}
         >
           <FiStar
             size={18}
@@ -101,7 +132,7 @@ export function EventCard({ event }: EventCardProps) {
           <div className="space-y-1 mb-3">
             <div className="flex items-center text-sm text-slate-600">
               <span className="font-medium mr-1">
-                {formatDate(event.date)} | {event.location?.city || "N/A"}
+                {formatDate(event.date)} | {event.location?.city || t("notAvailable")}
               </span>
             </div>
             <div className="text-sm text-slate-500">{event.time}</div>
@@ -111,8 +142,8 @@ export function EventCard({ event }: EventCardProps) {
         <div className="flex items-center text-brand-primary font-bold text-sm">
           <FiTag className="mr-1.5" />
           {event.ticketType.price === 0
-            ? "Free"
-            : `${event.ticketType.price} EGP`}
+            ? t("freePrice")
+            : `${event.ticketType.price} ${t("egp")}`}
         </div>
       </div>
     </div>

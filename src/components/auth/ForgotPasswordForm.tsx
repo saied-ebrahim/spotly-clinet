@@ -15,7 +15,8 @@ import {
 } from "@/schemas/forgotPasswordSchema";
 
 export default function ForgotPasswordForm() {
-  const t = useTranslations();
+  const t = useTranslations("auth.forgotPassword");
+  const tCommon = useTranslations("common");
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -31,12 +32,11 @@ export default function ForgotPasswordForm() {
     setIsLoading(true);
     try {
       await authService.forgotPassword(data.email);
-      // toast.success(t("auth.forgotPasswordSuccess") || "Password reset link sent to your email");
+      toast.success(t("success"));
       setIsSuccess(true);
     } catch (error: unknown) {
       console.error("Forgot password error:", error);
-      let message =
-        t("auth.forgotPasswordError") || "Failed to send reset link";
+      let message = t("error");
 
       if (error instanceof Error) {
         const errorMsg = error.message.toLowerCase();
@@ -45,7 +45,7 @@ export default function ForgotPasswordForm() {
           errorMsg.includes("no user") ||
           errorMsg.includes("does not exist")
         ) {
-          message = t("auth.emailNotFound") || "Email not found";
+          message = t("emailNotFound");
         } else {
           message = error.message;
         }
@@ -77,18 +77,17 @@ export default function ForgotPasswordForm() {
         </div>
         <div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">
-            {t("auth.forgotPasswordSuccess") || "Email Sent"}
+            {t("emailSent")}
           </h3>
           <p className="text-gray-600">
-            {t("auth.checkEmail") ||
-              "Check your email address for a reset link"}
+            {t("checkEmail")}
           </p>
         </div>
         <Link
           href="/auth/login"
           className="text-[#2B293D] font-semibold hover:text-[#4A4763] hover:underline transition-colors duration-150"
         >
-          {t("common.back") || "Back"} to Login
+          {t("backToLogin")}
         </Link>
       </div>
     );
@@ -101,16 +100,15 @@ export default function ForgotPasswordForm() {
     >
       <div className="text-center mb-4">
         <p className="text-gray-600">
-          {t("auth.forgotPasswordInstructions") ||
-            "Enter your email address and we'll send you a link to reset your password."}
+          {t("instructions")}
         </p>
       </div>
 
       <div className="flex flex-col w-full gap-2">
-        <AuthFormLabel htmlFor="email">Email Address</AuthFormLabel>
+        <AuthFormLabel htmlFor="email">{t("emailAddress")}</AuthFormLabel>
         <AuthFormInput
           {...register("email")}
-          placeHolder="Enter your email"
+          placeHolder={t("emailPlaceholder")}
           type="email"
           className={errors.email ? "border-red-500" : ""}
         />
@@ -124,7 +122,7 @@ export default function ForgotPasswordForm() {
           href="/auth/login"
           className="text-sm text-[#2B293D] hover:text-[#4A4763] font-medium transition-colors duration-150"
         >
-          Back to Login
+          {t("backToLogin")}
         </Link>
       </div>
 
@@ -133,7 +131,7 @@ export default function ForgotPasswordForm() {
         disabled={isLoading}
         className="bg-[#2B293D] w-full py-3.5 text-white text-lg font-bold rounded-lg transition-all duration-200 hover:bg-[#4A4763] hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#2B293D]/50 mt-2 disabled:opacity-70 disabled:cursor-not-allowed"
       >
-        {isLoading ? "Sending..." : "Send Reset Link"}
+        {isLoading ? t("sending") : t("sendResetLink")}
       </button>
     </form>
   );

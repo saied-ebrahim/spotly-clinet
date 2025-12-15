@@ -9,20 +9,21 @@ import { FiChevronDown } from "react-icons/fi";
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import useEventStore from "@/store/useEventStore";
+import { useTranslations } from "next-intl";
 
 const EventsPage = () => {
+  const t = useTranslations("events");
   const searchParams = useSearchParams();
   const categoryFromUrl = searchParams.get("category");
 
   const [searchQuery, setSearchQuery] = useState("");
-  const [location, setLocation] = useState("");
   const [selectedFilters, setSelectedFilters] = useState<
     Record<string, string[]>
   >(() => {
     // Initialize with category from URL
     const initialFilters: Record<string, string[]> = {};
     if (categoryFromUrl) {
-      initialFilters.Category = [categoryFromUrl];
+      initialFilters["Category"] = [categoryFromUrl];
     }
     return initialFilters;
   });
@@ -91,7 +92,7 @@ const EventsPage = () => {
     selectedPrices: string[] | undefined
   ): boolean => {
     if (!selectedPrices || selectedPrices.length === 0) return true;
-    const isFree = eventPrice.toLowerCase() === "free";
+    const isFree = eventPrice.toLowerCase() === "free" || eventPrice === "0";
     const isPaid = !isFree;
 
     return selectedPrices.some((price) => {
@@ -160,12 +161,6 @@ const EventsPage = () => {
       (event.title &&
         event.title.toLowerCase().includes(searchQuery.toLowerCase()));
 
-    // Location Filter
-    const matchesLocation =
-      location === "" ||
-      (event.location?.city &&
-        event.location.city.toLowerCase().includes(location.toLowerCase()));
-
     // Price Filter
     const matchesPrice = checkPriceFilter(
       String(event.ticketType.price),
@@ -211,37 +206,35 @@ const EventsPage = () => {
       }
     );
 
-    return (
-      matchesSearch &&
-      matchesLocation &&
-      matchesPrice &&
-      matchesDate &&
-      matchesOtherFilters
-    );
+    return matchesSearch && matchesPrice && matchesDate && matchesOtherFilters;
   });
+
+  const handleReset = () => {
+    setSelectedFilters({});
+    setSearchQuery("");
+    setCustomDate(null);
+  };
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <EventSearchSection
-        onSearchChange={setSearchQuery}
-        onLocationChange={setLocation}
-      />
+      <EventSearchSection onSearchChange={setSearchQuery} />
 
       <div className="flex flex-col lg:flex-row mt-12 gap-8">
         {/* Sidebar Filters */}
         <EventFilters
           onFilterChange={handleFilterChange}
           selectedFilters={selectedFilters}
+          onReset={handleReset}
         />
 
         {/* Main Content */}
         <div className="flex-1">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-2xl font-bold text-slate-900">Events</h1>
+            <h1 className="text-2xl font-bold text-slate-900">{t("title")}</h1>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-slate-500">Sort by:</span>
+              <span className="text-sm text-slate-500">{t("sortBy")}</span>
               <button className="flex items-center gap-1 text-sm font-medium text-slate-900 border border-slate-300 rounded px-3 py-1.5 bg-white">
-                Relevance <FiChevronDown />
+                {t("relevance")} <FiChevronDown />
               </button>
             </div>
           </div>
@@ -259,7 +252,7 @@ const EventsPage = () => {
                     ></div>
                   </div>
                   <p className="text-slate-600 font-medium">
-                    Loading events...
+                    {t("loading")}
                   </p>
                 </div>
               </div>
@@ -269,7 +262,7 @@ const EventsPage = () => {
               ))
             ) : (
               <div className="col-span-2 text-center py-12 text-slate-500">
-                No events found matching your criteria.
+                {t("noEventsFound")}
               </div>
             )}
           </div>

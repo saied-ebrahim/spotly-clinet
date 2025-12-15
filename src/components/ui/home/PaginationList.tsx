@@ -1,14 +1,12 @@
 "use client";
 import React, { useState } from "react";
-
 import EventCard from "./EventCard";
-// import PaginatedEventElement from "@/types/PaginatedEventElement";
-
 import {
   PaginationProps,
   PaginationEventsProps,
 } from "@/types/PaginationInterface";
-import Link from "next/link";
+
+
 
 // 1. Mock Data Generator
 const Pagination = ({
@@ -30,8 +28,8 @@ const Pagination = ({
     <nav className="flex items-center justify-center space-x-2">
       {/* Previous Button */}
       <button
-        onClick={prevPage}
-        disabled={currentPage === 1}
+        onClick={() => prevPage(currentPage === 1)}
+        // disabled={currentPage === 1}
         className={`p-2 rounded-lg border flex items-center justify-center transition-colors ${
           currentPage === 1
             ? "border-gray-200 text-gray-300 cursor-not-allowed"
@@ -44,6 +42,13 @@ const Pagination = ({
       {/* Page Numbers */}
       <div className="hidden sm:flex space-x-2">
         {pageNumbers.map((number) => (
+          // <button
+          //   key={number}
+          //   onClick={() => paginate(number)}
+           
+          // >
+          //   {number}
+          // </button>
           <button
             key={number}
             onClick={() => paginate(number)}
@@ -65,8 +70,8 @@ const Pagination = ({
 
       {/* Next Button */}
       <button
-        onClick={nextPage}
-        disabled={currentPage === totalPages}
+        onClick={() => nextPage(currentPage === totalPages)}
+        // disabled={currentPage === totalPages} 
         className={`p-2 rounded-lg border flex items-center justify-center transition-colors ${
           currentPage === totalPages
             ? "border-gray-200 text-gray-300 cursor-not-allowed"
@@ -82,6 +87,7 @@ const Pagination = ({
 const PaginatedEvents = ({
   itemsPerPage,
   allEvents,
+  smoothScroll,
 }: PaginationEventsProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   // const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
@@ -92,10 +98,20 @@ const PaginatedEvents = ({
   const totalPages = Math.ceil(allEvents.length / itemsPerPage);
 
   // Change page
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-  const nextPage = () =>
+  const paginate = (pageNumber: number) => {
+    setCurrentPage(pageNumber)
+    smoothScroll();
+  };
+  const nextPage = (noScroll?: boolean) =>{
+
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
-  const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+    if (!noScroll) smoothScroll();
+  }
+
+  const prevPage = (noScroll?: boolean) => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+    if (!noScroll) smoothScroll();
+  };
 
   return (
     <div className="max-w-7xl mx-auto">
