@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { FiX } from "react-icons/fi";
+import { useTranslations } from "next-intl";
 
 interface DateSelectionModalProps {
   isOpen: boolean;
@@ -13,6 +14,7 @@ export function DateSelectionModal({
   onClose,
   onSelectDate,
 }: DateSelectionModalProps) {
+  const t = useTranslations("events");
   const [selectedDate, setSelectedDate] = React.useState("");
 
   if (!isOpen) return null;
@@ -29,7 +31,7 @@ export function DateSelectionModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-xs p-4">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
         <div className="flex items-center justify-between p-4 border-b border-slate-100">
-          <h3 className="text-lg font-bold text-slate-900">Select Date</h3>
+          <h3 className="text-lg font-bold text-slate-900">{t("selectDate")}</h3>
           <button
             onClick={onClose}
             className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-50 rounded-full transition-colors"
@@ -44,7 +46,7 @@ export function DateSelectionModal({
               htmlFor="custom-date"
               className="block text-sm font-medium text-slate-700 mb-2"
             >
-              Choose a date
+              {t("chooseDate")}
             </label>
             <input
               type="date"
@@ -62,13 +64,13 @@ export function DateSelectionModal({
               onClick={onClose}
               className="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
             >
-              Cancel
+              {t("cancel")}
             </button>
             <button
               type="submit"
               className="px-4 py-2 text-sm font-medium text-white bg-brand-primary rounded-lg hover:opacity-90 transition-opacity"
             >
-              Apply Filter
+              {t("applyFilter")}
             </button>
           </div>
         </form>

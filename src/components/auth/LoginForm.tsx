@@ -16,7 +16,8 @@ import { encryptData } from "@/shared/encryption";
 import { parseJwt } from "@/shared/jwt";
 
 export default function LoginForm() {
-  const t = useTranslations();
+  const t = useTranslations("auth.login");
+  const tAuth = useTranslations("auth");
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -25,7 +26,7 @@ export default function LoginForm() {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginSchema>({
-    resolver: yupResolver(loginSchema(t)),
+    resolver: yupResolver(loginSchema(tAuth)),
   });
 
   const onSubmit = async (data: LoginSchema) => {
@@ -60,14 +61,14 @@ export default function LoginForm() {
           sameSite: "Lax",
         });
 
-        toast.success("Login successful");
+        toast.success(t("loginSuccessful"));
         window.location.href = "/";
       } else {
-        toast.error("Login failed");
+        toast.error(t("loginFailed"));
       }
     } catch (error) {
       console.error("Login error:", error);
-      toast.error(t("auth.loginError") || "An error occurred during login");
+      toast.error(t("loginError"));
     } finally {
       setIsLoading(false);
     }
@@ -79,10 +80,10 @@ export default function LoginForm() {
       className="flex flex-col gap-5 w-full"
     >
       <div className="flex flex-col w-full gap-2">
-        <AuthFormLabel htmlFor="email">Email Address</AuthFormLabel>
+        <AuthFormLabel htmlFor="email">{t("emailAddress")}</AuthFormLabel>
         <AuthFormInput
           {...register("email")}
-          placeHolder="Enter your email"
+          placeHolder={t("emailPlaceholder")}
           type="email"
           className={errors.email ? "border-red-500" : ""}
         />
@@ -92,10 +93,10 @@ export default function LoginForm() {
       </div>
 
       <div className="flex flex-col w-full gap-2">
-        <AuthFormLabel htmlFor="password">Password</AuthFormLabel>
+        <AuthFormLabel htmlFor="password">{t("password")}</AuthFormLabel>
         <AuthFormInput
           {...register("password")}
-          placeHolder="Enter your password"
+          placeHolder={t("passwordPlaceholder")}
           type="password"
           className={errors.password ? "border-red-500" : ""}
         />
@@ -111,7 +112,7 @@ export default function LoginForm() {
           href="/auth/forgot-password"
           className="text-sm text-[#2B293D] hover:text-[#4A4763] font-medium transition-colors duration-150"
         >
-          Forgot Password?
+          {t("forgotPassword")}
         </Link>
       </div>
 
@@ -120,17 +121,17 @@ export default function LoginForm() {
         disabled={isLoading}
         className="bg-[#2B293D] w-full py-3.5 text-white text-lg font-bold rounded-lg transition-all duration-200 hover:bg-[#4A4763] hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#2B293D]/50 mt-2 disabled:opacity-70 disabled:cursor-not-allowed"
       >
-        {isLoading ? "Signing In..." : "Sign In"}
+        {isLoading ? t("signingIn") : t("signIn")}
       </button>
       <div className="flex items-center justify-center gap-2 mt-2">
         <span className="text-base text-gray-600">
-          Don&apos;t have an account?
+          {t("dontHaveAccount")}
         </span>
         <Link
           href="/auth/register"
           className="text-base text-[#2B293D] font-semibold hover:text-[#4A4763] hover:underline transition-colors duration-150"
         >
-          Sign Up
+          {t("signUp")}
         </Link>
       </div>
     </form>

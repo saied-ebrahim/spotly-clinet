@@ -5,12 +5,14 @@ import { EventDocument } from "@/types/eventInterface";
 import { formatDate } from "@/utils/details/formatting";
 import useFavoriteStore from "@/hooks/useFavorateStore";
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 
 interface EventCardProps {
   event: EventDocument;
 }
 
 export function EventCard({ event }: EventCardProps) {
+  const t = useTranslations("events");
   const router = useRouter();
   const [isAnimating, setIsAnimating] = useState(false);
   const { toggleFavorite, favorites } = useFavoriteStore();
@@ -79,7 +81,7 @@ export function EventCard({ event }: EventCardProps) {
                 : "hover:scale-110 active:scale-95"
             }
           `}
-          aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
+          aria-label={isFavorite ? t("removeFromFavorites") : t("addToFavorites")}
         >
           <FiStar
             size={18}
@@ -101,7 +103,7 @@ export function EventCard({ event }: EventCardProps) {
           <div className="space-y-1 mb-3">
             <div className="flex items-center text-sm text-slate-600">
               <span className="font-medium mr-1">
-                {formatDate(event.date)} | {event.location?.city || "N/A"}
+                {formatDate(event.date)} | {event.location?.city || t("notAvailable")}
               </span>
             </div>
             <div className="text-sm text-slate-500">{event.time}</div>
@@ -111,8 +113,8 @@ export function EventCard({ event }: EventCardProps) {
         <div className="flex items-center text-brand-primary font-bold text-sm">
           <FiTag className="mr-1.5" />
           {event.ticketType.price === 0
-            ? "Free"
-            : `${event.ticketType.price} EGP`}
+            ? t("freePrice")
+            : `${event.ticketType.price} ${t("egp")}`}
         </div>
       </div>
     </div>

@@ -5,26 +5,7 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       
-      {
-        protocol: "https",
-        hostname: "placehold.co",
-      },
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-      },
-      {
-        protocol: "https",
-        hostname: "ui-avatars.com",
-      },
-      {
-        protocol: "https",
-        hostname: "static.vecteezy.com",
-      },
-       {
-        protocol: "https",
-        hostname: "example.com",
-      },
+     
        {
         protocol: "https",
         hostname: "spotly.1177c01fe5730167b0890cc5b12a8f61.r2.cloudflarestorage.com",

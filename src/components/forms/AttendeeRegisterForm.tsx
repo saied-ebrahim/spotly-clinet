@@ -93,7 +93,7 @@ export default function AttendeeRegisterForm() {
     country: t("auth.country"),
     password: t("auth.password"),
     confirmPassword: t("auth.confirmPassword"),
-    register: t("auth.register"),
+    register: t("auth.register.title"),
   };
 
   const country = useWatch({

@@ -10,11 +10,17 @@ import filterEvents from "@/utils/home/filterPopularEvents";
 import useGeolocation from "@/hooks/useGeolocation";
 import { EventDocument } from "@/types/eventInterface";
 import { useCityMatcher } from "@/utils/home/useCityMatcher";
+import { useTranslations } from "next-intl";
 
 // 3. The Main Container Component
 const PopularEvents = ({events}: {events: EventDocument[]}) => {
+  const t = useTranslations("homePage.popularEvents");
   console.log(events);
-  const filters = ["All", "Today", "Tomorrow", "This Week", "Free"];
+  const filterKeys = ["all", "today", "tomorrow", "thisWeek", "free"];
+  const filters = filterKeys.map(key => ({
+    key,
+    label: t(`filters.${key}`)
+  }));
   const ref = useRef<HTMLDivElement>(null);
   const {
     location: { city },
@@ -29,10 +35,17 @@ const smoothScroll = () => {
     });
   }
 };
-const [matchedCity, setMatchedCity] = useState<string | null>(null);
-  const [currentFilter, setCurrentFilter] = useState<string>("All");
+  const [matchedCity, setMatchedCity] = useState<string | null>(null);
+  const [currentFilter, setCurrentFilter] = useState<string>("all");
 
-  const filtered = filterEvents(events, currentFilter);
+  const filterMap: Record<string, string> = {
+    all: "All",
+    today: "Today",
+    tomorrow: "Tomorrow",
+    thisWeek: "This Week",
+    free: "Free"
+  };
+  const filtered = filterEvents(events, filterMap[currentFilter] || "All");
   const filteredEvents = filtered.filter((e) => e.type !== "online" && e.location.district === matchedCity);
 const { findClosestMatch } = useCityMatcher();
   
@@ -51,29 +64,29 @@ console.log(findClosestMatch("Al-Sayyida Zeinab"));
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 font-sans">
         {/* Header */}
         <h2 className="text-3xl font-bold text-gray-900 mb-6">
-          Popular Events in {matchedCity ||  "Your Location"}
+          {t("title", { location: matchedCity || t("yourLocation") })}
         </h2>
 
         {/* Filter Buttons */}
         <div className="flex flex-wrap gap-3 mb-8">
-          {filters.map((filter, index) => (
+          {filters.map((filter) => (
             <button
-              key={index}
-              onClick={() => setCurrentFilter(filter)}
+              key={filter.key}
+              onClick={() => setCurrentFilter(filter.key)}
               className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors duration-200 border ${
-                filter === currentFilter
+                filter.key === currentFilter
                   ? "bg-gray-900 text-white border-gray-900"
                   : "bg-white text-gray-600 border-gray-300 hover:border-gray-900 hover:text-gray-900"
               }`}
             >
-              {filter}
+              {filter.label}
             </button>
           ))}
         </div>
         <div className="mb-8 text-center sm:text-left">
-          <h3 className="text-2xl font-bold text-gray-900">Upcoming Events</h3>
+          <h3 className="text-2xl font-bold text-gray-900">{t("upcomingEvents")}</h3>
           <p className="text-gray-500 mt-2">
-            Browse through our latest events and workshops.
+            {t("upcomingDescription")}
           </p>
         </div>
         {
@@ -84,7 +97,7 @@ console.log(findClosestMatch("Al-Sayyida Zeinab"));
               smoothScroll={smoothScroll}
             /> // this is a COMMON COMPONENT for pagination
           ) : (
-            <h1 className="text-center w-full text-xl">No Events Found</h1>
+            <h1 className="text-center w-full text-xl">{t("noEventsFound")}</h1>
           )
         }
       </div>
