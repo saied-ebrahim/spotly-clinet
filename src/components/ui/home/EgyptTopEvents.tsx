@@ -1,19 +1,19 @@
 import useEventStore from "@/store/useEventStore";
-import { EventDocument } from "@/types/eventInterface";
+
 import { EgyptTopEventInterace } from "@/types/EgyptTopEventInterface";
 import { useEffect, useState } from "react";
 import TopEventCard from "./EgyptTopEventCard";
 
-export default function EgyptTopEvents() {
+export default function EgyptTopEvents({events}: {events: EgyptTopEventInterace[]}) {
   const [expanded, setExpanded] = useState(false);
-  const { events: allEvents, fetchEvents } = useEventStore();
+  // const { events: allEvents, fetchEvents } = useEventStore();
 
-  useEffect(() => {
-    fetchEvents();
-  }, [fetchEvents]);
+  // useEffect(() => {
+  //   fetchEvents();
+  // }, [fetchEvents]);
 
   // Use allEvents from store instead of local state fetching
-  const topEvents = allEvents as unknown as EgyptTopEventInterace[];
+  const topEvents = events ;
 
   // 1. Filter for Online Events in Egypt
   // 1. Parsing Helper

@@ -51,16 +51,15 @@ export interface Analytics {
 export interface PaginationEventsProps {
   itemsPerPage: number;
   allEvents: EventDocument[];
-  // Add any other fields your event objects have
+  smoothScroll: () => void;
 }
 
-export interface PaginationProps extends PaginationEventsProps {
+// 2. Use Omit<Type, Keys> to remove the specific field, then extend
+export interface PaginationProps extends Omit<PaginationEventsProps, 'smoothScroll'> {
   currentPage: number;
   paginate: (pageNumber: number) => void;
-  nextPage: () => void;
-  prevPage: () => void;
-
-  // Add any other fields your event objects have
+  nextPage: (noScroll?: boolean) => void;
+  prevPage: (noScroll?: boolean) => void;
 }
 //----------------------------
 // export interface PaginationEventsProps {

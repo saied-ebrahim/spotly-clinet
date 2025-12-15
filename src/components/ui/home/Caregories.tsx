@@ -1,18 +1,26 @@
+
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { CategoryItem } from "./CategoryItem";
-import axios from "axios";
-import axiosInstance from "@/lib/axios";
+// import { useDataStore } from "@/store/useEventStore";
+import { CategoryItemInterface } from "@/types/CategoryInterface";
+import { useDataStore } from "@/hooks/fetchingHooks";
 
 // Main Slider Component
+const useCategoryStore = useDataStore<CategoryItemInterface[]>();
 const Categories = () => {
-  const [categories, setCategories] = useState([]);
+
+  const {data:categories,fetchData} = useCategoryStore()
+
+
+
+  // console.log(categories);
   useEffect(() => {
-    axiosInstance.get("/categories").then((res) => {
-      // const arr = data.data.categories.slice(0, 7);
-      setCategories(res.data.data.categories);
-    });
+    fetchData("/categories", "categories");
+
+
   }, []);
+
   const sliderRef = useRef<HTMLDivElement>(null);
   const scrollLeft = () => {
     if (sliderRef.current) {
@@ -38,7 +46,7 @@ const Categories = () => {
               Explore Categories
             </h2>
 
-            <div className="hidden sm:flex xl:hidden gap-2">
+            <div className="hidden sm:flex gap-2">
               <button
                 onClick={scrollLeft}
                 className="p-2 rounded-full bg-white border border-gray-200 shadow-sm hover:bg-gray-50 hover:border-gray-300 transition-colors text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -91,7 +99,7 @@ const Categories = () => {
               // - gap-6 (24px) on md+
               className="flex overflow-x-auto pb-5 gap-5 md:gap-6 xl:gap-[25px] snap-x snap-mandatory scroll-smooth no-scrollbar p-3"
             >
-              {categories.map((category, index) => (
+              {categories?.map((category, index) => (
                 <CategoryItem key={index} category={category} />
               ))}
             </div>
@@ -108,3 +116,4 @@ const Categories = () => {
 };
 
 export default Categories;
+
