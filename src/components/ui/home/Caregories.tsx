@@ -5,11 +5,12 @@ import { CategoryItem } from "./CategoryItem";
 // import { useDataStore } from "@/store/useEventStore";
 import { CategoryItemInterface } from "@/types/CategoryInterface";
 import { useDataStore } from "@/hooks/fetchingHooks";
+import { useTranslations } from "next-intl";
 
 // Main Slider Component
 const useCategoryStore = useDataStore<CategoryItemInterface[]>();
 const Categories = () => {
-
+  const t = useTranslations("homePage.categories");
   const {data:categories,fetchData} = useCategoryStore()
 
 
@@ -43,14 +44,14 @@ const Categories = () => {
         <div className="max-w-7xl mx-auto p-3">
           <div className="flex justify-between items-center mb-8">
             <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900">
-              Explore Categories
+              {t("title")}
             </h2>
 
             <div className="hidden sm:flex gap-2">
               <button
                 onClick={scrollLeft}
                 className="p-2 rounded-full bg-white border border-gray-200 shadow-sm hover:bg-gray-50 hover:border-gray-300 transition-colors text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                aria-label="Previous categories"
+                aria-label={t("previousCategories")}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -70,7 +71,7 @@ const Categories = () => {
               <button
                 onClick={scrollRight}
                 className="p-2 rounded-full bg-white border border-gray-200 shadow-sm hover:bg-gray-50 hover:border-gray-300 transition-colors text-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                aria-label="Next categories"
+                aria-label={t("nextCategories")}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

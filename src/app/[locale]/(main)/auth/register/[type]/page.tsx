@@ -1,3 +1,5 @@
+"use client";
+
 import { useTranslations } from "next-intl";
 import AttendeeRegisterForm from "@/components/forms/AttendeeRegisterForm";
 import OrganizerRegisterForm from "@/components/forms/OrganizerRegisterForm";
@@ -5,8 +7,9 @@ import { FaBuilding, FaUser } from "react-icons/fa";
 import { actor } from "@/svg/actor";
 import { redirect } from "next/navigation";
 import TypewriterText from "@/components/auth/TypewriterText";
+import { use } from "react";
 
-export default async function RegisterPage({
+export default function RegisterPage({
   params,
 }: {
   params: Promise<{
@@ -14,7 +17,7 @@ export default async function RegisterPage({
     locale: string;
   }>;
 }) {
-  const { type } = await params;
+  const { type } = use(params);
 
   return <RegisterFormComponent type={type} />;
 }
@@ -24,7 +27,7 @@ const RegisterFormComponent = ({
 }: {
   type: "attendee" | "organizer";
 }) => {
-  const t = useTranslations("");
+  const t = useTranslations("auth.register");
 
   // Handle invalid type
   if (!["attendee", "organizer"].includes(type)) {
@@ -47,9 +50,9 @@ const RegisterFormComponent = ({
   const getTitle = () => {
     switch (type) {
       case "attendee":
-        return "Join as Attendee";
+        return t("attendeeTitle");
       case "organizer":
-        return "Become an Organizer";
+        return t("organizerTitle");
       default:
         return "";
     }
@@ -59,19 +62,16 @@ const RegisterFormComponent = ({
   const getDescription = () => {
     switch (type) {
       case "attendee":
-        return "Discover and book amazing events";
+        return t("attendeeDescription");
       case "organizer":
-        return "Create and manage your events";
+        return t("organizerDescription");
       default:
         return "";
     }
   };
 
-  // Determine illustration based on type
-  const getIllustration = () => actor;
-
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-[#2B293D] via-[#3a3850] to-[#2B293D] flex items-center justify-center p-4">
+    <div className="min-h-screen w-full bg-linear-to-br from-[#2B293D] via-[#3a3850] to-[#2B293D] flex items-center justify-center p-4">
       <div className="w-full max-w-3xl">
         {/* Logo/Brand Section */}
         <div className="flex flex-col items-center mb-8">

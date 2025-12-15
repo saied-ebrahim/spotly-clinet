@@ -6,6 +6,7 @@ import { FiSearch } from "react-icons/fi";
 import { EventDocument } from "@/types/eventInterface";
 import useEventStore from "@/store/useEventStore";
 import { useCityMatcher } from "@/utils/home/useCityMatcher";
+import { useTranslations } from "next-intl";
 const longCity =(city:string)=> {
     if (city === "Alexandria") return "Alex";
     else if (city === "Kafr Al Sheikh") return "KFS";
@@ -17,6 +18,7 @@ const EventSelector = ({
   locationQuery?: string | null;
   onSelect?: (eventId: string | null) => void;
 }) => {
+  const t = useTranslations("homePage.eventSelector");
   const [input, setInput] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   // const [events, setEvents] = useState<EventDocument[]>([]);
@@ -99,7 +101,7 @@ const filteredEvents = events.filter((item) => {
             if (onSelect) onSelect(null);
           }}
           onFocus={() => setIsOpen(true)}
-          placeholder="Search events..."
+          placeholder={t("placeholder")}
           className="w-full h-full bg-gray-50 text-gray-900 text-sm font-medium rounded-xl border-0 px-4 py-3 pl-10 shadow-sm placeholder-gray-400 ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 transition-all outline-none"
         />
         {!input && (
@@ -150,8 +152,8 @@ const filteredEvents = events.filter((item) => {
           ) : (
             <li className="px-4 py-6 text-sm text-gray-500 text-center">
               {locationQuery
-                ? `No events found in ${locationQuery}`
-                : "No events found"}
+                ? t("noEventsInLocation", { location: locationQuery })
+                : t("noEventsFound")}
             </li>
           )}
         </ul>

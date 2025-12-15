@@ -5,7 +5,7 @@ import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaPaperPlane } from "react-icons/f
 import { useTranslations } from "next-intl";
 
 function Page() {
-  const t = useTranslations();
+  const t = useTranslations("contact");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -30,7 +30,7 @@ function Page() {
     // TODO: Add API call here
     setTimeout(() => {
       setIsSubmitting(false);
-      alert("Message sent successfully!");
+      alert(t("form.successMessage"));
       setFormData({
         name: "",
         email: "",
@@ -44,19 +44,19 @@ function Page() {
   const contactInfo = [
     {
       icon: FaEnvelope,
-      title: "Email",
+      title: t("contactInfo.email"),
       value: "info@spotly.com",
       link: "mailto:info@spotly.com",
     },
     {
       icon: FaPhone,
-      title: "Phone",
+      title: t("contactInfo.phone"),
       value: "+20 123 456 7890",
       link: "tel:+201234567890",
     },
     {
       icon: FaMapMarkerAlt,
-      title: "Address",
+      title: t("contactInfo.address"),
       value: "Cairo, Egypt",
       link: "#",
     },
@@ -68,11 +68,10 @@ function Page() {
       <section className="pt-20 pb-12 container">
         <div className="text-center space-y-4">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-text-primary">
-            Get in Touch
+            {t("title")}
           </h1>
           <p className="text-lg text-text-primary/80 max-w-2xl mx-auto">
-            We&apos;d love to hear from you. Send us a message and we&apos;ll
-            respond as soon as possible.
+            {t("subtitle")}
           </p>
         </div>
       </section>
@@ -88,7 +87,7 @@ function Page() {
 
             <div className="relative z-10">
               <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-6">
-                Send us a Message
+                {t("sendMessage")}
               </h2>
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="grid sm:grid-cols-2 gap-5">
@@ -97,7 +96,7 @@ function Page() {
                       htmlFor="name"
                       className="text-sm font-medium text-text-primary"
                     >
-                      Name
+                      {t("form.name")}
                     </label>
                     <input
                       type="text"
@@ -107,7 +106,7 @@ function Page() {
                       onChange={handleChange}
                       required
                       className="w-full px-4 py-3 text-sm border-2 border-[#2B293D]/20 rounded-lg outline-none transition-all duration-200 focus:border-[#2B293D] focus:ring-2 focus:ring-[#2B293D]/20 bg-[#2B293D]/5 placeholder:text-gray-400"
-                      placeholder="Your name"
+                      placeholder={t("form.namePlaceholder")}
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -115,7 +114,7 @@ function Page() {
                       htmlFor="email"
                       className="text-sm font-medium text-text-primary"
                     >
-                      Email
+                      {t("form.email")}
                     </label>
                     <input
                       type="email"
@@ -125,7 +124,7 @@ function Page() {
                       onChange={handleChange}
                       required
                       className="w-full px-4 py-3 text-sm border-2 border-[#2B293D]/20 rounded-lg outline-none transition-all duration-200 focus:border-[#2B293D] focus:ring-2 focus:ring-[#2B293D]/20 bg-[#2B293D]/5 placeholder:text-gray-400"
-                      placeholder="your.email@example.com"
+                      placeholder={t("form.emailPlaceholder")}
                     />
                   </div>
                 </div>
@@ -136,7 +135,7 @@ function Page() {
                       htmlFor="phone"
                       className="text-sm font-medium text-text-primary"
                     >
-                      Phone
+                      {t("form.phone")}
                     </label>
                     <input
                       type="tel"
@@ -145,7 +144,7 @@ function Page() {
                       value={formData.phone}
                       onChange={handleChange}
                       className="w-full px-4 py-3 text-sm border-2 border-[#2B293D]/20 rounded-lg outline-none transition-all duration-200 focus:border-[#2B293D] focus:ring-2 focus:ring-[#2B293D]/20 bg-[#2B293D]/5 placeholder:text-gray-400"
-                      placeholder="+20 123 456 7890"
+                      placeholder={t("form.phonePlaceholder")}
                     />
                   </div>
                   <div className="flex flex-col gap-2">
@@ -153,7 +152,7 @@ function Page() {
                       htmlFor="subject"
                       className="text-sm font-medium text-text-primary"
                     >
-                      Subject
+                      {t("form.subject")}
                     </label>
                     <input
                       type="text"
@@ -163,7 +162,7 @@ function Page() {
                       onChange={handleChange}
                       required
                       className="w-full px-4 py-3 text-sm border-2 border-[#2B293D]/20 rounded-lg outline-none transition-all duration-200 focus:border-[#2B293D] focus:ring-2 focus:ring-[#2B293D]/20 bg-[#2B293D]/5 placeholder:text-gray-400"
-                      placeholder="What's this about?"
+                      placeholder={t("form.subjectPlaceholder")}
                     />
                   </div>
                 </div>
@@ -173,7 +172,7 @@ function Page() {
                     htmlFor="message"
                     className="text-sm font-medium text-text-primary"
                   >
-                    Message
+                    {t("form.message")}
                   </label>
                   <textarea
                     id="message"
@@ -183,7 +182,7 @@ function Page() {
                     required
                     rows={6}
                     className="w-full px-4 py-3 text-sm border-2 border-[#2B293D]/20 rounded-lg outline-none transition-all duration-200 focus:border-[#2B293D] focus:ring-2 focus:ring-[#2B293D]/20 bg-[#2B293D]/5 placeholder:text-gray-400 resize-none"
-                    placeholder="Tell us more about your inquiry..."
+                    placeholder={t("form.messagePlaceholder")}
                   />
                 </div>
 
@@ -193,11 +192,11 @@ function Page() {
                   className="btn-gradient-primary w-full py-3.5 text-white text-lg font-bold rounded-lg shadow-lg hover:shadow-primary/30 transform transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? (
-                    "Sending..."
+                    t("form.sending")
                   ) : (
                     <>
                       <FaPaperPlane className="w-5 h-5" />
-                      <span>Send Message</span>
+                      <span>{t("form.sendButton")}</span>
                     </>
                   )}
                 </button>
@@ -211,11 +210,10 @@ function Page() {
               <div className="absolute -top-20 -right-20 w-40 h-40 bg-accent/20 rounded-full blur-3xl pointer-events-none"></div>
               <div className="relative z-10">
                 <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-6">
-                  Contact Information
+                  {t("contactInformation")}
                 </h2>
                 <p className="text-text-primary/70 mb-8">
-                  Feel free to reach out to us through any of these channels.
-                  We&apos;re here to help!
+                  {t("contactDescription")}
                 </p>
 
                 <div className="space-y-6">
@@ -248,20 +246,20 @@ function Page() {
               <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-secondary/20 rounded-full blur-3xl pointer-events-none"></div>
               <div className="relative z-10">
                 <h3 className="text-xl font-bold text-text-primary mb-4">
-                  Business Hours
+                  {t("businessHours")}
                 </h3>
                 <div className="space-y-2 text-text-primary/70">
                   <p className="flex justify-between">
-                    <span className="font-medium">Monday - Friday:</span>
+                    <span className="font-medium">{t("mondayFriday")}</span>
                     <span>9:00 AM - 6:00 PM</span>
                   </p>
                   <p className="flex justify-between">
-                    <span className="font-medium">Saturday:</span>
+                    <span className="font-medium">{t("saturday")}</span>
                     <span>10:00 AM - 4:00 PM</span>
                   </p>
                   <p className="flex justify-between">
-                    <span className="font-medium">Sunday:</span>
-                    <span>Closed</span>
+                    <span className="font-medium">{t("sunday")}</span>
+                    <span>{t("closed")}</span>
                   </p>
                 </div>
               </div>

@@ -3,8 +3,10 @@ import useEventStore from "@/store/useEventStore";
 import { EgyptTopEventInterace } from "@/types/EgyptTopEventInterface";
 import { useEffect, useState } from "react";
 import TopEventCard from "./EgyptTopEventCard";
+import { useTranslations } from "next-intl";
 
 export default function EgyptTopEvents({events}: {events: EgyptTopEventInterace[]}) {
+  const t = useTranslations("homePage.egyptTopEvents");
   const [expanded, setExpanded] = useState(false);
   // const { events: allEvents, fetchEvents } = useEventStore();
 
@@ -93,7 +95,7 @@ export default function EgyptTopEvents({events}: {events: EgyptTopEventInterace[
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center sm:text-left mb-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 px-4 sm:px-6 lg:px-8">
-            Top Events In Egypt
+            {t("title")}
           </h2>
         </div>
 
@@ -123,7 +125,7 @@ export default function EgyptTopEvents({events}: {events: EgyptTopEventInterace[
               className="border border-indigo-600 text-indigo-600 hover:bg-indigo-50 px-8 py-3 rounded-xl font-semibold transition-transform duration-300 hover:-translate-y-1"
               aria-expanded={expanded}
             >
-              {expanded ? "Show less" : `Show ${hiddenEvents.length} more`}
+              {expanded ? t("showLess") : t("showMore", { count: hiddenEvents.length })}
             </button>
           </div>
         )}

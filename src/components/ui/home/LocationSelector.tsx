@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { FiMapPin } from "react-icons/fi";
+import { useTranslations } from "next-intl";
 
 const LocationSelector = ({
   query,
@@ -9,6 +10,7 @@ const LocationSelector = ({
   query: string;
   setQuery: (q: string) => void;
 }) => {
+  const t = useTranslations("homePage.locationSelector");
   const [allGovs, setAllGovs] = useState<string[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -58,7 +60,7 @@ const LocationSelector = ({
             setIsOpen(true);
           }}
           onFocus={() => setIsOpen(true)}
-          placeholder="Select Location (e.g. Cairo)"
+          placeholder={t("placeholder")}
           className="w-full h-full bg-gray-50 text-gray-900 text-sm font-medium rounded-xl border-0 px-4 py-3 pl-10 shadow-sm placeholder-gray-400 ring-1 ring-inset ring-gray-200 focus:ring-2 focus:ring-inset focus:ring-indigo-600 transition-all outline-none"
         />
         {!query && (

@@ -9,9 +9,11 @@ import { parseJwt } from "@/shared/jwt";
 import { OrderResponse } from "@/types/order";
 import { toast } from "react-toastify";
 import { OrderDocument } from "@/types/orderInterface";
+import { useTranslations } from "next-intl";
 
 function Page() {
-const [orders, setOrders] = useState<OrderDocument[]>([]);
+  const t = useTranslations("myOrders");
+  const [orders, setOrders] = useState<OrderDocument[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -53,7 +55,7 @@ const [orders, setOrders] = useState<OrderDocument[]>([]);
         }
       } catch (error) {
         console.error("Error fetching orders:", error);
-        toast.error("Failed to load orders");
+        toast.error(t("failedToLoad"));
       } finally {
         setLoading(false);
       }
@@ -65,8 +67,8 @@ const [orders, setOrders] = useState<OrderDocument[]>([]);
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-800">Orders</h1>
-        <p className="text-slate-500">View and manage your orders</p>
+        <h1 className="text-2xl font-bold text-slate-800">{t("title")}</h1>
+        <p className="text-slate-500">{t("subtitle")}</p>
       </div>
 
       <OrganizerOrdersTable rowData={orders} loading={loading} />

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { FaLinkedin, FaGithub, FaEnvelope } from "react-icons/fa";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 interface TeamMember {
   name: string;
@@ -18,62 +19,63 @@ const teamMembers: TeamMember[] = [
 
   {
     name: "Saied Ebrahim",
-    role: "Team Leader",
-    image: "/team/saied.jpg", // Placeholder - replace with actual image path
-    bio: "I am a full stack developer with a passion for building web applications. I am a quick learner and I am always looking to improve my skills.",
+    role: "Full Stack Developer",
+    image: "https://pub-c00f3c4174b8458d8db60aeff42f8480.r2.dev/saied.jpg", // Placeholder - replace with actual image path
+    // bio: "I am a full stack developer with a passion for building web applications. I am a quick learner and I am always looking to improve my skills.",
     linkedin: "https://www.linkedin.com/in/saied-ebrahim/",
     github: "https://github.com/saied-ebrahim",
     email: "saiedebrahim854@gmail.com",
   }, {
     name: "Omar abdelmoaty ",
     role: "Full Stack Developer",
-    image: "/team/member1.jpg", // Placeholder - replace with actual image path
-    bio: "I am a full stack developer with a passion for building web applications. I am a quick learner and I am always looking to improve my skills.",
+    image: "https://pub-c00f3c4174b8458d8db60aeff42f8480.r2.dev/omar.jpg", // Placeholder - replace with actual image path
+    // bio: "I am a full stack developer with a passion for building web applications. I am a quick learner and I am always looking to improve my skills.",
     linkedin: "https://www.linkedin.com/in/omarabdelmoaty816/",
     github: "https://github.com/Omar1030",
     email: "omarabdelmoaty816@gmail.com",
   },
   {
-    name: "Team Member 3",
-    role: "Role/Position",
-    image: "/team/member3.jpg", // Placeholder - replace with actual image path
-    bio: "Brief description of team member's contribution",
+    name: "hussein elassy",
+    role: "Full Stack Developer",
+    image: "https://pub-c00f3c4174b8458d8db60aeff42f8480.r2.dev/hussien.jpg", // Placeholder - replace with actual image path
+    // bio: "Brief description of team member's contribution",
     linkedin: "https://www.linkedin.com/in/hussein-elassy",
     github: "https://github.com/hussien450",
     email: "member3@spotly.com",
   },
   {
-    name: "Team Member 4",
-    role: "Role/Position",
-    image: "/team/member4.jpg", // Placeholder - replace with actual image path
-    bio: "Brief description of team member's contribution",
+    name: "tareq sheta",
+    role: "Full Stack Developer",
+    image: "https://pub-c00f3c4174b8458d8db60aeff42f8480.r2.dev/tarq.jpg", // Placeholder - replace with actual image path
+    // bio: "Brief description of team member's contribution",
     linkedin: "#GitHub: github.com/tareq-sheta",
     github: "linkedin.com/in/tareqahmadsheta/",
     email: "member4@spotly.com",
   },
   {
-    name: "Team Member 5",
-    role: "Role/Position",
-    image: "/team/member5.jpg", // Placeholder - replace with actual image path
-    bio: "Brief description of team member's contribution",
+    name: "ahmed salah",
+    role: "Full Stack Developer",
+    image: "https://pub-c00f3c4174b8458d8db60aeff42f8480.r2.dev/ahmed.jpg", // Placeholder - replace with actual image path
+    // bio: "Brief description of team member's contribution",
     linkedin: "linkedin.com/in/ahmed-salah-dev",
     github: "github.com/ahmedsalah200",
-    // email: "ahmedsalah200@gmail.com",
+    email: "ahmedsalah200@gmail.com",
   },
 ];
 
 function Page() {
+  const t = useTranslations("about");
+  
   return (
     <div className="min-h-screen bg-gradient-app">
       {/* Hero Section */}
       <section className="pt-20 pb-12 container">
         <div className="text-center space-y-4">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-text-primary">
-            About Us
+            {t("title")}
           </h1>
           <p className="text-lg text-text-primary/80 max-w-2xl mx-auto">
-            Meet the talented team behind Spotly. We&apos;re passionate about
-            creating exceptional experiences and delivering innovative solutions.
+            {t("subtitle")}
           </p>
         </div>
       </section>
@@ -87,25 +89,17 @@ function Page() {
 
           <div className="relative z-10">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-text-primary mb-6">
-              Our Story
+              {t("ourStory")}
             </h2>
             <div className="space-y-4 text-text-primary/80 leading-relaxed">
               <p>
-                Spotly is a cutting-edge platform designed to revolutionize how
-                you discover and explore properties. Our mission is to provide
-                seamless, intuitive experiences that connect people with their
-                perfect spaces.
+                {t("story1")}
               </p>
               <p>
-                Built with passion and dedication, Spotly combines innovative
-                technology with user-centric design to deliver exceptional
-                results. We believe in creating solutions that not only meet
-                your needs but exceed your expectations.
+                {t("story2")}
               </p>
               <p>
-                Our team of five talented individuals has worked tirelessly to
-                bring this vision to life, combining diverse skills and expertise
-                to create something truly special.
+                {t("story3")}
               </p>
             </div>
           </div>
@@ -116,10 +110,10 @@ function Page() {
       <section className="pb-20 container">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-text-primary mb-4">
-            Our Team
+            {t("ourTeam")}
           </h2>
           <p className="text-lg text-text-primary/80 max-w-2xl mx-auto">
-            The passionate individuals who made Spotly possible
+            {t("teamSubtitle")}
           </p>
         </div>
 
@@ -159,7 +153,7 @@ function Page() {
 
                     {/* Team Member Info */}
                     <div className="text-center space-y-2">
-                      <h3 className="text-xl font-bold text-text-primary">
+                      <h3 className="text-xl capitalize font-bold text-text-primary">
                         {member.name}
                       </h3>
                       <p className="text-sm text-primary font-medium">
@@ -179,7 +173,7 @@ function Page() {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center hover:bg-primary/20 transition-colors duration-200 group/link"
-                            aria-label={`${member.name}'s LinkedIn`}
+                            aria-label={t("teamMember.linkedin", { name: member.name })}
                           >
                             <FaLinkedin className="w-4 h-4 text-primary group-hover/link:scale-110 transition-transform" />
                           </a>
@@ -190,7 +184,7 @@ function Page() {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center hover:bg-primary/20 transition-colors duration-200 group/link"
-                            aria-label={`${member.name}'s GitHub`}
+                            aria-label={t("teamMember.github", { name: member.name })}
                           >
                             <FaGithub className="w-4 h-4 text-primary group-hover/link:scale-110 transition-transform" />
                           </a>
@@ -199,7 +193,7 @@ function Page() {
                           <a
                             href={`mailto:${member.email}`}
                             className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center hover:bg-primary/20 transition-colors duration-200 group/link"
-                            aria-label={`Email ${member.name}`}
+                            aria-label={t("teamMember.email", { name: member.name })}
                           >
                             <FaEnvelope className="w-4 h-4 text-primary group-hover/link:scale-110 transition-transform" />
                           </a>
@@ -221,19 +215,19 @@ function Page() {
         <div className="grid md:grid-cols-3 gap-6">
           {[
             {
-              title: "Innovation",
-              description:
-                "We constantly push boundaries and explore new possibilities to deliver cutting-edge solutions.",
+              key: "innovation",
+              title: t("values.innovation.title"),
+              description: t("values.innovation.description"),
             },
             {
-              title: "Excellence",
-              description:
-                "We strive for perfection in every detail, ensuring the highest quality in everything we do.",
+              key: "excellence",
+              title: t("values.excellence.title"),
+              description: t("values.excellence.description"),
             },
             {
-              title: "Collaboration",
-              description:
-                "We believe in the power of teamwork and working together to achieve extraordinary results.",
+              key: "collaboration",
+              title: t("values.collaboration.title"),
+              description: t("values.collaboration.description"),
             },
           ].map((value, index) => (
             <div
