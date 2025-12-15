@@ -709,7 +709,10 @@
     "openInGoogleMaps": "Open in Google Maps",
     "eventDescription": "Event Description",
     "tags": "Tags",
-    "noTags": "No tags"
+    "noTags": "No tags",
+    "soldOut": "Sold Out",
+    "buyTickets": "Buy Tickets",
+    "getTickets": "Get Tickets"
   }
 }
 

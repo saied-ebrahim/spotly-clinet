@@ -705,7 +705,10 @@
     "openInGoogleMaps": "فتح في خرائط جوجل",
     "eventDescription": "وصف الفعالية",
     "tags": "العلامات",
-    "noTags": "لا توجد علامات"
+    "noTags": "لا توجد علامات",
+    "soldOut": "نفذت التذاكر",
+    "buyTickets": "شراء التذاكر",
+    "getTickets": "الحصول على التذاكر"
   }
 }
 
