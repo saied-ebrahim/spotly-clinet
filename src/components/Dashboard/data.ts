@@ -44,7 +44,6 @@ export const navSections: NavSection[] = [
         link: "orders",
       },
       {
-
         icon: FiPackage,
         key: "sold-products",
         link: "sold-products",
@@ -68,7 +67,6 @@ export const navSections: NavSection[] = [
         link: "users",
         allowedRoles: ["Admin"],
       },
-    
     ],
   },
 ];

@@ -22,7 +22,7 @@ export function SoldProductsTable({
   loading = false,
   onSearch,
 }: SoldProductsTableProps) {
-  const t = useTranslations('organizerDashboard.soldEvents');
+  const t = useTranslations("organizerDashboard.soldEvents");
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
@@ -57,13 +57,13 @@ export function SoldProductsTable({
     () => [
       {
         field: "_id",
-        headerName: t('orderId'),
+        headerName: t("orderId"),
         width: 220,
         sortable: true,
         filter: true,
       },
       {
-        headerName: t('user'),
+        headerName: t("user"),
         field: "userID",
         valueGetter: (params: ValueGetterParams<SoldProduct>) => {
           if (!params.data?.userID) return "N/A";
@@ -74,7 +74,7 @@ export function SoldProductsTable({
         filter: true,
       },
       {
-        headerName: t('eventTitle'),
+        headerName: t("eventTitle"),
         valueGetter: (params: ValueGetterParams<SoldProduct>) => {
           return params.data?.eventID?.title || "N/A";
         },
@@ -85,7 +85,7 @@ export function SoldProductsTable({
       },
       {
         field: "ticketTypeID",
-        headerName: t('ticketTypeId'),
+        headerName: t("ticketTypeId"),
         flex: 1,
         minWidth: 200,
         sortable: true,
@@ -93,13 +93,13 @@ export function SoldProductsTable({
       },
       {
         field: "quantity",
-        headerName: t('quantity'),
+        headerName: t("quantity"),
         width: 100,
         sortable: true,
       },
       {
         field: "totalAfterDiscount",
-        headerName: t('total'),
+        headerName: t("total"),
         width: 120,
         sortable: true,
         valueFormatter: (params: ValueFormatterParams<SoldProduct, number>) => {
@@ -108,7 +108,7 @@ export function SoldProductsTable({
       },
       {
         field: "createdAt",
-        headerName: t('date'),
+        headerName: t("date"),
         flex: 1,
         minWidth: 150,
         sortable: true,
@@ -123,11 +123,11 @@ export function SoldProductsTable({
   return (
     <div className="w-full bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
       <div className="p-4 border-b border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <h2 className="text-lg font-bold text-slate-800">{t('tableTitle')}</h2>
+        <h2 className="text-lg font-bold text-slate-800">{t("tableTitle")}</h2>
         <div className="w-full sm:w-64 relative">
           <input
             type="text"
-            placeholder={t('searchPlaceholder')}
+            placeholder={t("searchPlaceholder")}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="px-4 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary w-full pr-8"

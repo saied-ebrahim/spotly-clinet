@@ -8,7 +8,7 @@ import { SoldProduct, SoldProductsResponse } from "@/types/soldProduct";
 import { toast } from "react-toastify";
 
 export default function SoldProductsPage() {
-  const t = useTranslations('organizerDashboard.soldEvents');
+  const t = useTranslations("organizerDashboard.soldEvents");
   const [soldProducts, setSoldProducts] = useState<SoldProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -44,8 +44,8 @@ export default function SoldProductsPage() {
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-800">{t('title')}</h1>
-        <p className="text-slate-500">{t('subtitle')}</p>
+        <h1 className="text-2xl font-bold text-slate-800">{t("title")}</h1>
+        <p className="text-slate-500">{t("subtitle")}</p>
       </div>
 
       <SoldProductsTable

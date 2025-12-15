@@ -16,7 +16,7 @@ import { useTranslations } from "next-intl";
 export default function Header() {
   const pathname = usePathname();
   const locale = useLocale();
-  const t = useTranslations('header');
+  const t = useTranslations("header");
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<{ name?: string; role?: string } | null>(
     null
@@ -133,11 +133,11 @@ export default function Header() {
   };
 
   const nav = [
-    { label: t('home'), href: "/" },
-    { label: t('events'), href: "/events" },
-    { label: t('favorites'), href: "/favorites" },
-    { label: t('about'), href: "/about" },
-    { label: t('contact'), href: "/contact" },
+    { label: t("home"), href: "/" },
+    { label: t("events"), href: "/events" },
+    { label: t("favorites"), href: "/favorites" },
+    { label: t("about"), href: "/about" },
+    { label: t("contact"), href: "/contact" },
   ];
 
   const getDashboardLink = () => {
@@ -215,28 +215,28 @@ export default function Header() {
                     className="block px-4 py-2.5 hover:bg-gray-50 transition-colors font-medium"
                     onClick={() => setDropdownOpen(false)}
                   >
-                    {t('dashboard')}
+                    {t("dashboard")}
                   </Link>
                   <Link
                     href="/auth/Profile"
                     className="block px-4 py-2.5 hover:bg-gray-50 transition-colors font-medium"
                     onClick={() => setDropdownOpen(false)}
                   >
-                    {t('profile')}
+                    {t("profile")}
                   </Link>
                   <Link
                     href="/my-orders"
                     className="block px-4 py-2.5 hover:bg-gray-50 transition-colors font-medium"
                     onClick={() => setDropdownOpen(false)}
                   >
-                    {t('myOrders')}
+                    {t("myOrders")}
                   </Link>
                   <div className="h-px bg-gray-100 my-1"></div>
                   <button
                     onClick={handleLogout}
                     className="block w-full text-left px-4 py-2.5 hover:bg-red-50 text-red-600 transition-colors font-medium"
                   >
-                    {t('logout')}
+                    {t("logout")}
                   </button>
                 </div>
               )}
@@ -247,14 +247,14 @@ export default function Header() {
                 href="/auth/login"
                 className="hover:text-green-300 transition"
               >
-                {t('login')}
+                {t("login")}
               </Link>
 
               <Link
                 href="/auth/register"
                 className="px-4 py-2 bg-yellow-400 text-black rounded-xl font-semibold shadow hover:scale-105 transition text-center"
               >
-                {t('signUp')}
+                {t("signUp")}
               </Link>
             </>
           )}
@@ -307,20 +307,20 @@ export default function Header() {
                 className="block py-2 hover:text-green-300 transition"
                 onClick={() => setOpen(false)}
               >
-                {t('dashboard')}
+                {t("dashboard")}
               </Link>
               <Link
                 href="/profile"
                 className="block py-2 hover:text-green-300 transition"
                 onClick={() => setOpen(false)}
               >
-                {t('profile')}
+                {t("profile")}
               </Link>
               <button
                 onClick={handleLogout}
                 className="block w-full text-left py-2 text-red-400 hover:text-red-300 transition"
               >
-                {t('logout')}
+                {t("logout")}
               </button>
             </div>
           ) : (
@@ -331,7 +331,7 @@ export default function Header() {
                 className="block hover:text-green-300 transition"
                 onClick={() => setOpen(false)}
               >
-                {t('login')}
+                {t("login")}
               </Link>
 
               {/* SIGN UP */}
@@ -339,7 +339,7 @@ export default function Header() {
                 href="/auth/register"
                 className="w-full py-2 bg-yellow-400 text-black rounded-xl font-semibold shadow text-center block"
               >
-                {t('signUp')}
+                {t("signUp")}
               </Link>
             </>
           )}

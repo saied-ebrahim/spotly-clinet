@@ -31,12 +31,12 @@ export function CategoryModal({
   onCategorySaved,
   category,
 }: CategoryModalProps) {
-  const t = useTranslations('dashboardAdmin.categories.modal');
+  const t = useTranslations("dashboardAdmin.categories.modal");
 
   const categorySchema = yup.object().shape({
-    name: yup.string().required(t('nameRequired')),
-    description: yup.string().required(t('descriptionRequired')),
-    image: yup.string().required(t('imageRequired')),
+    name: yup.string().required(t("nameRequired")),
+    description: yup.string().required(t("descriptionRequired")),
+    image: yup.string().required(t("imageRequired")),
   });
 
   type FormData = yup.InferType<typeof categorySchema>;
@@ -141,7 +141,7 @@ export function CategoryModal({
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
         <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-white sticky top-0 z-10">
           <h3 className="text-lg font-bold text-slate-800">
-            {category ? t('editCategory') : t('createNewCategory')}
+            {category ? t("editCategory") : t("createNewCategory")}
           </h3>
           <button
             onClick={onClose}
@@ -157,7 +157,7 @@ export function CategoryModal({
             <div className="space-y-2">
               <label className="text-sm font-medium text-slate-700 flex items-center gap-2">
                 <FiImage className="text-brand-primary" />
-                {t('categoryImage')}
+                {t("categoryImage")}
               </label>
 
               <div className="flex flex-col gap-4">
@@ -169,7 +169,7 @@ export function CategoryModal({
                     className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors disabled:opacity-50 text-sm font-medium"
                   >
                     <FiCloud />
-                    {uploading ? t('uploading') : t('uploadImage')}
+                    {uploading ? t("uploading") : t("uploadImage")}
                   </button>
                   <input
                     type="file"
@@ -184,7 +184,7 @@ export function CategoryModal({
                   <div className="relative w-full aspect-video bg-slate-100 rounded-lg overflow-hidden border border-slate-200">
                     <Image
                       src={currentImage}
-                      alt={t('categoryPreview')}
+                      alt={t("categoryPreview")}
                       fill
                       className="object-cover"
                     />
@@ -208,12 +208,12 @@ export function CategoryModal({
             <div className="space-y-2">
               <label className="text-sm font-medium text-slate-700 flex items-center gap-2">
                 <FiTag className="text-brand-primary" />
-                {t('categoryName')}
+                {t("categoryName")}
               </label>
               <input
                 {...register("name")}
                 type="text"
-                placeholder={t('namePlaceholder')}
+                placeholder={t("namePlaceholder")}
                 className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all"
               />
               {errors.name && (
@@ -224,11 +224,11 @@ export function CategoryModal({
             <div className="space-y-2">
               <label className="text-sm font-medium text-slate-700 flex items-center gap-2">
                 <FiFileText className="text-brand-primary" />
-                {t('description')}
+                {t("description")}
               </label>
               <textarea
                 {...register("description")}
-                placeholder={t('descriptionPlaceholder')}
+                placeholder={t("descriptionPlaceholder")}
                 rows={4}
                 className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all resize-none"
               />
@@ -245,7 +245,7 @@ export function CategoryModal({
                 onClick={onClose}
                 className="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-lg font-medium transition-colors"
               >
-                {t('cancel')}
+                {t("cancel")}
               </button>
               <button
                 type="submit"
@@ -255,12 +255,12 @@ export function CategoryModal({
                 {isSubmitting ? (
                   <>
                     <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                    {category ? t('saving') : t('creating')}
+                    {category ? t("saving") : t("creating")}
                   </>
                 ) : category ? (
-                  t('saveChanges')
+                  t("saveChanges")
                 ) : (
-                  t('createCategory')
+                  t("createCategory")
                 )}
               </button>
             </div>

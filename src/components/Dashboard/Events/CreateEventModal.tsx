@@ -47,7 +47,7 @@ export function CreateEventModal({
   onClose,
   onSuccess,
 }: CreateEventModalProps) {
-  const t = useTranslations('organizerDashboard.createEventModal');
+  const t = useTranslations("organizerDashboard.createEventModal");
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
@@ -318,16 +318,14 @@ export function CreateEventModal({
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-4xl my-8 overflow-hidden flex flex-col max-h-[90vh]">
         <div className="flex items-center justify-between p-6 border-b border-slate-100 bg-white sticky top-0 z-10">
           <div className="flex items-center gap-4">
-            <h3 className="text-xl font-bold text-slate-900">
-              {t('title')}
-            </h3>
+            <h3 className="text-xl font-bold text-slate-900">{t("title")}</h3>
             <button
               type="button"
               onClick={() => setIsAIModalOpen(true)}
               className="flex items-center gap-2 px-3 py-1.5 text-sm bg-linear-to-r from-brand-primary/10 to-brand-secondary/10 text-brand-primary rounded-lg hover:from-brand-primary/20 hover:to-brand-secondary/20 transition-all font-medium border border-brand-primary/20"
             >
               <FaMagic size={12} />
-              {t('autoFillWithAI')}
+              {t("autoFillWithAI")}
             </button>
           </div>
           <button
@@ -351,12 +349,12 @@ export function CreateEventModal({
             {/* Basic Info */}
             <div className="space-y-4">
               <h4 className="font-semibold text-slate-800 border-b pb-2">
-                {t('basicInformation')}
+                {t("basicInformation")}
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="col-span-2">
                   <label className="block text-sm font-medium text-slate-700 mb-1">
-                    {t('titleLabel')}
+                    {t("titleLabel")}
                   </label>
                   <input
                     {...register("title")}
@@ -373,7 +371,7 @@ export function CreateEventModal({
                 </div>
                 <div className="col-span-2">
                   <label className="block text-sm font-medium text-slate-700 mb-1">
-                    {t('descriptionLabel')}
+                    {t("descriptionLabel")}
                   </label>
                   <textarea
                     {...register("description")}
@@ -390,7 +388,7 @@ export function CreateEventModal({
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
-                    {t('dateLabel')}
+                    {t("dateLabel")}
                   </label>
                   <input
                     {...register("date")}
@@ -407,7 +405,7 @@ export function CreateEventModal({
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
-                    {t('timeLabel')}
+                    {t("timeLabel")}
                   </label>
                   <input
                     {...register("time")}
@@ -424,7 +422,7 @@ export function CreateEventModal({
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
-                    {t('organizerLabel')}
+                    {t("organizerLabel")}
                   </label>
                   <div className="w-full px-4 py-2 rounded-lg border border-slate-300 bg-slate-50 text-slate-600">
                     {organizerName || "Loading..."}
@@ -433,7 +431,7 @@ export function CreateEventModal({
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
                     <label className="block text-sm font-medium text-slate-700">
-                      {t('priceLabel')}
+                      {t("priceLabel")}
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input
@@ -450,7 +448,7 @@ export function CreateEventModal({
                         className="w-4 h-4 text-brand-primary rounded border-slate-300 focus:ring-brand-primary"
                       />
                       <span className="text-sm font-medium text-slate-700">
-                        {t('freeLabel')}
+                        {t("freeLabel")}
                       </span>
                     </label>
                   </div>
@@ -477,7 +475,7 @@ export function CreateEventModal({
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
-                    {t('quantityLabel')}
+                    {t("quantityLabel")}
                   </label>
                   <input
                     {...register("ticketType.quantity")}
@@ -499,7 +497,7 @@ export function CreateEventModal({
                 {/* Categories Dropdown */}
                 <div className="relative" ref={categoryDropdownRef}>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
-                    {t('categoriesLabel')}
+                    {t("categoriesLabel")}
                   </label>
                   <button
                     type="button"
@@ -512,8 +510,8 @@ export function CreateEventModal({
                   >
                     <span className="text-slate-700 truncate">
                       {selectedCategories?.length > 0
-                        ? `${selectedCategories.length} ${t('selected')}`
-                        : t('selectCategories')}
+                        ? `${selectedCategories.length} ${t("selected")}`
+                        : t("selectCategories")}
                     </span>
                     <FaChevronDown
                       className={`text-slate-400 transition-transform ${
@@ -586,7 +584,7 @@ export function CreateEventModal({
                       className="w-4 h-4 text-brand-primary rounded border-slate-300 focus:ring-brand-primary"
                     />
                     <span className="text-sm font-medium text-slate-700">
-                      {t('isOnlineLabel')}
+                      {t("isOnlineLabel")}
                     </span>
                   </label>
                 </div>
@@ -597,20 +595,22 @@ export function CreateEventModal({
             {!watch("isonline") && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between border-b pb-2">
-                  <h4 className="font-semibold text-slate-800">{t('locationLabel')}</h4>
+                  <h4 className="font-semibold text-slate-800">
+                    {t("locationLabel")}
+                  </h4>
                   <button
                     type="button"
                     onClick={() => setIsMapModalOpen(true)}
                     className="text-sm text-brand-primary hover:text-brand-primary/80 font-medium flex items-center gap-1"
                   >
-                    <FaMapMarkerAlt /> {t('chooseOnMap')}
+                    <FaMapMarkerAlt /> {t("chooseOnMap")}
                   </button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">
-                      {t('countryLabel')}
+                      {t("countryLabel")}
                     </label>
                     <input
                       {...register("location.country")}
@@ -629,7 +629,7 @@ export function CreateEventModal({
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">
-                      {t('cityLabel')}
+                      {t("cityLabel")}
                     </label>
                     <input
                       {...register("location.city")}
@@ -648,7 +648,7 @@ export function CreateEventModal({
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">
-                      {t('districtLabel')}
+                      {t("districtLabel")}
                     </label>
                     <input
                       {...register("location.district")}
@@ -667,7 +667,7 @@ export function CreateEventModal({
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">
-                      {t('addressLabel')}
+                      {t("addressLabel")}
                     </label>
                     <input
                       {...register("location.address")}
@@ -686,7 +686,7 @@ export function CreateEventModal({
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">
-                      {t('latitudeLabel')}
+                      {t("latitudeLabel")}
                     </label>
                     <input
                       {...register("location.latitude")}
@@ -706,7 +706,7 @@ export function CreateEventModal({
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1">
-                      {t('longitudeLabel')}
+                      {t("longitudeLabel")}
                     </label>
                     <input
                       {...register("location.longitude")}
@@ -764,7 +764,7 @@ export function CreateEventModal({
             {/* Media */}
             <div className="space-y-4">
               <h4 className="font-semibold text-slate-800 border-b pb-2">
-                {t('mediaLabel')}
+                {t("mediaLabel")}
               </h4>
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
@@ -775,7 +775,7 @@ export function CreateEventModal({
                     className="flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors disabled:opacity-50"
                   >
                     <FaCloudUploadAlt />
-                    {uploading ? t('uploading') : t('uploadImagesVideos')}
+                    {uploading ? t("uploading") : t("uploadImagesVideos")}
                   </button>
                   <input
                     type="file"
@@ -797,7 +797,7 @@ export function CreateEventModal({
                       {currentMedia.mediaType === "image" ? (
                         <Image
                           src={currentMedia.mediaUrl}
-                          alt={t('eventMedia')}
+                          alt={t("eventMedia")}
                           fill
                           className="object-cover"
                         />
@@ -823,7 +823,7 @@ export function CreateEventModal({
             {/* Tags */}
             <div className="space-y-4">
               <h4 className="font-semibold text-slate-800 border-b pb-2">
-                {t('tagsLabel')}
+                {t("tagsLabel")}
               </h4>
               <div className="relative" ref={tagDropdownRef}>
                 <button
@@ -835,8 +835,8 @@ export function CreateEventModal({
                 >
                   <span className="text-slate-700 truncate">
                     {selectedTags?.length > 0
-                      ? `${selectedTags.length} ${t('selected')}`
-                      : t('selectTags')}
+                      ? `${selectedTags.length} ${t("selected")}`
+                      : t("selectTags")}
                   </span>
                   <FaChevronDown
                     className={`text-slate-400 transition-transform ${
@@ -910,14 +910,14 @@ export function CreateEventModal({
             onClick={handleClose}
             className="px-6 py-2 rounded-lg text-slate-600 hover:bg-slate-50 font-medium transition-colors"
           >
-            {t('cancel')}
+            {t("cancel")}
           </button>
           <button
             onClick={handleSubmit(onSubmit)}
             disabled={loading || uploading}
             className="px-6 py-2 rounded-lg bg-brand-primary text-white font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center gap-2"
           >
-            {loading ? t('creating') : t('createEvent')}
+            {loading ? t("creating") : t("createEvent")}
           </button>
         </div>
       </div>

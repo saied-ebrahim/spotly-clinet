@@ -22,7 +22,11 @@ import SpotlyLogo from "../Layout/SpotlyLogo";
 import { CreateEventModal } from "./Events/CreateEventModal";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 
-export function DashboardHeader({ onMobileMenuToggle }: { onMobileMenuToggle: () => void }) {
+export function DashboardHeader({
+  onMobileMenuToggle,
+}: {
+  onMobileMenuToggle: () => void;
+}) {
   const [user, setUser] = useState<{ name?: string; email?: string } | null>(
     null
   );
@@ -30,7 +34,7 @@ export function DashboardHeader({ onMobileMenuToggle }: { onMobileMenuToggle: ()
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const t = useTranslations('dashboardHeader');
+  const t = useTranslations("dashboardHeader");
 
   const handleCreateSuccess = () => {
     // Refresh logic here if needed, e.g., refetch events
@@ -118,7 +122,10 @@ export function DashboardHeader({ onMobileMenuToggle }: { onMobileMenuToggle: ()
     <header className="sticky top-0 z-10 border-b border-slate-200 bg-white px-4 py-3 sm:px-8">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4">
-          <button onClick={onMobileMenuToggle} className="rounded-lg p-2 text-slate-500 hover:bg-slate-50 lg:hidden">
+          <button
+            onClick={onMobileMenuToggle}
+            className="rounded-lg p-2 text-slate-500 hover:bg-slate-50 lg:hidden"
+          >
             <FiMenu size={24} />
           </button>
           <LinkTo href="/" className="flex items-center gap-2">
@@ -132,7 +139,7 @@ export function DashboardHeader({ onMobileMenuToggle }: { onMobileMenuToggle: ()
             className="flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
           >
             <FiMaximize />
-            {t('scanTicket')}
+            {t("scanTicket")}
           </Link>
 
           <button
@@ -140,7 +147,7 @@ export function DashboardHeader({ onMobileMenuToggle }: { onMobileMenuToggle: ()
             className="flex items-center gap-2 rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50"
           >
             <FiPlus />
-            {t('create')}
+            {t("create")}
           </button>
 
           <LanguageSwitcher />
@@ -184,7 +191,7 @@ export function DashboardHeader({ onMobileMenuToggle }: { onMobileMenuToggle: ()
                   onClick={() => setDropdownOpen(false)}
                 >
                   <FiUser size={16} />
-                  {t('profile')}
+                  {t("profile")}
                 </Link>
 
                 <button
@@ -192,7 +199,7 @@ export function DashboardHeader({ onMobileMenuToggle }: { onMobileMenuToggle: ()
                   className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors text-left"
                 >
                   <FiLogOut size={16} />
-                  {t('logout')}
+                  {t("logout")}
                 </button>
               </div>
             )}
