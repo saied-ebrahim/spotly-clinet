@@ -17,7 +17,8 @@ import { useLoaderStore } from "@/store/useLoaderStore";
 
 
 export default function LoginForm() {
-  const t = useTranslations();
+  const t = useTranslations("auth.login");
+  const tAuth = useTranslations("auth");
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -25,7 +26,7 @@ export default function LoginForm() {
     handleSubmit,
     formState: { errors },
   } = useForm<LoginSchema>({
-    resolver: yupResolver(loginSchema(t)),
+    resolver: yupResolver(loginSchema(tAuth)),
   });
 
   const onSubmit = async (data: LoginSchema) => {
