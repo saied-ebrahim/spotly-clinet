@@ -88,7 +88,6 @@ export default function Header() {
                   token: response.token,
                   deviceID,
                 });
-                Cookies.set("token", encryptedData, { path: "/" });
                 setUser(newUser);
                 console.log("Token refreshed successfully");
                 return;
